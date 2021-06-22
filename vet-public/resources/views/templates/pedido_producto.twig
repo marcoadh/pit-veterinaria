@@ -14,7 +14,7 @@
 <div id="load"></div>
 <div class="container">
    <div class="row">
-      <div class="col-md-7  section-padding">
+      <div class="col-md-12  section-padding">
          <div class="course-syllabus-title underline">Pedido: {{ pedido.numero_pedido }}</div>
          <div class="col-xs-8 col-md-8">
             <div class="form-group">
@@ -57,10 +57,14 @@
             <button type="button" onclick="Pagar()" class="btn btn-lg btn-block btn-primary">Pagar</button>
          </div>
       </div>
-      {# Sección Derecha - Listado de Productos#}
-      <div class="col-md-5">
+      {# Sección Derecha - Listado de Productos#} 
+   </div>
+  
+    <div class="container" id="main">
+    <div class="row">
          {% for productos in ProductosController.listaproductos %}
-         <div class="col-12">
+         <div class="col-md-4">
+         
             <div class="panel panel-default">
                <div class="panel-heading ">
                   <div class="card p-2 py-3 text-center">
@@ -69,7 +73,7 @@
                </div>
                <div class="panel-body">
                   <center>
-                     <img src='http://localhost/pit-veterinaria/vet/public/{{productos.foto1}}' width="100%" class="zoomInDown animated" height="250px">
+                     <img src='http://localhost/pit-veterinaria/vet/public/{{productos.foto1}}' width="280px" class="zoomInDown animated" height="280px">
                   </center>
                </div>
                <div class="panel-footer">
@@ -84,7 +88,7 @@
          </div>
          {% endfor %}
       </div>
-   </div>
+      </div>
 </div>
 {% include 'templates/partials/footer.twig' %}
 <script type="text/javascript">
