@@ -14,7 +14,7 @@
 <div id="load"></div>
 <div class="container">
    <div class="row">
-      <div class="col-md-9  section-padding">
+      <div class="col-md-7  section-padding">
          <div class="course-syllabus-title underline">Pedido: {{ pedido.numero_pedido }}</div>
          <div class="col-xs-8 col-md-8">
             <div class="form-group">
@@ -58,7 +58,7 @@
          </div>
       </div>
       {# Sección Derecha - Listado de Productos#}
-      <div class="col-md-3">
+      <div class="col-md-5">
          {% for productos in ProductosController.listaproductos %}
          <div class="col-12">
             <div class="panel panel-default">
@@ -69,7 +69,7 @@
                </div>
                <div class="panel-body">
                   <center>
-                     <img src='http://localhost/pit-veterinaria/vet/public/{{productos.foto1}}' width="100%" class="zoomInDown animated" height="100px">
+                     <img src='http://localhost/pit-veterinaria/vet/public/{{productos.foto1}}' width="100%" class="zoomInDown animated" height="250px">
                   </center>
                </div>
                <div class="panel-footer">
