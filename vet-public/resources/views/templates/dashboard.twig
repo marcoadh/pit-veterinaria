@@ -16,19 +16,13 @@
                                         <img src="images/mascota.png" alt="" class="intro-image fadeInLeft    animated">
                                     </div>
                                     <div class="col-md-7">
-                                        <div class="intro-title">¡Hola {{ AuthController.usuario.nombre }}!<br> Bienvenido a<b> Veterinaria “Mr. Vet”</b></div>
+                                        <div class="intro-title">
+                                            ¡Hola {{ AuthController.usuario.nombre }}!<br>
+                                            Bienvenido a <b>Veterinaria “Mr. Vet”</b>
+                                        </div>
                                         <div class="intro-content">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel neque justo.
-                                                Nulla sit amet egestas mi. Donec erat nibh, sagittis vitae egestas a, auctor vitae elit. 
-                                                Morbi congue odio et feugiat tincidunt. Vestibulum nec feugiat sem. Donec cursus, 
-                                                elit posuere vestibulum tempor, lorem turpis ullamcorper ipsum, porttitor malesuada 
-                                                diam dolor sed dolor. </p>
-
-                                            <p>Aliquam quam mi, dignissim sed elit vitae, dictum ultricies velit. 
-                                                Sed justo odio, pulvinar ac est quis, convallis interdum arcu. Etiam consectetur nisl quis
-                                                ligula commodo interdum. Maecenas gravida tortor in arcu euismod cursus. Quisque
-                                                vitae iaculis justo, eget interdum odio. Ut non massa quam. Curabitur libero magna, 
-                                                vehicula eu ornare pharetra, tincidunt et augue. Sed vestibulum tellus in nunc vestibulum pulvinar.
+                                            <p>
+                                                Las mascotas merecen un cuidado excelente. Siempre estamos completamente enfocados en ayudar a su mascota y a usted a superar cualquier obstáculo. El amor es la mejor medicina.
                                             </p>
                                         </div>
                                         <div class="group-button">
@@ -63,17 +57,11 @@
                         <div class="container">
                             <div class="courses-detail-wrapper">
                                 <div class="row">
-                                    <div class="col-md-9 layout-left">
+                                    <div class="col-md-12 layout-left">
                                         <div class="course-syllabus-title underline">Mis mascotas</div>
-                                        <div class="course-des-content">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel neque justo.
-                                                Nulla sit amet egestas mi. Donec erat nibh, sagittis vitae egestas a, auctor vitae elit. 
-                                                Morbi congue odio et feugiat tincidunt. Vestibulum nec feugiat sem. Donec cursus, 
-                                                elit posuere vestibulum tempor, lorem turpis ullamcorper ipsum, porttitor malesuada 
-                                                diam dolor sed dolor.  
-                                            </p>
-                                        </div>
-                                        <div class="table-responsive bg-w-form  ">
+
+
+                                        {# <div class="table-responsive bg-w-form  ">
                                             <table id="ListOrganizaciones" class="table table-bordered responsive">
                                                 <thead>
                                                     <tr class="heading-table">
@@ -100,18 +88,41 @@
                                                         </tr>
                                                     {% endfor %}
                                                 </tbody>
-                                                <thead>
-                                                    <tr class="heading-table">
-                                                        <th>Nombre</th>
-                                                        <th>Tipo</th>
-                                                        <th>Fecha de nacimiento</th>
-                                                        <th>Descripción</th>
-                                                        <th>Editar</th>
-                                                    </tr>
-                                                </thead>
                                             </table>
-                                        </div>
+                                        </div> #}
+
+
                                     </div>
+
+
+                                    
+
+
+                                    <div class="col-12">
+                                        <br>
+                                        {% for mascotas in MascotasController.listamascotas %}
+                                        <br>
+                                        <div class="col-md-4">
+                                            <div class="card p-2 py-3 text-center">
+                                                <div class="img mb-2">
+                                                    <img src="http://localhost/veterinaria/vet-public/public/{{mascotas.foto}}" width="150" class="fadeInDown animated">
+                                                </div>
+                                                <h2 class="mb-0">{{mascotas.nombre}}</h2>
+                                                <h5 class="mb-0">{{mascotas.descripcion}}</h5>
+                                                <h5 class="mb-0">{{mascotas.edad}}</h5>
+                                                <a class="btn btn-success btn-lg"
+                                                onclick="EditarMascota({{ mascotas.id_mascota }})"
+                                                data-toggle="modal">
+                                                    <i class="fa fa-pencil"></i> Editar
+                                                </a>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+
+
+
+
                                 </div>
                             </div>
                         </div>
