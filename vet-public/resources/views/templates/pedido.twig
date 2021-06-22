@@ -1,0 +1,14 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+{% include 'templates/partials/navegacion.twig' %}
+
+
+
+{% if pedido.tipo_pedido == 1 %}
+    {% include 'templates/pedido_producto.twig' %}
+{% else %}
+     {% include 'templates/pedido_servicio.twig' %}
+{% endif %}
+
+
+{% endblock content %}

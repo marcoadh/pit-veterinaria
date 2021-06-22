@@ -1,0 +1,563 @@
+{% extends 'admin/templates/app.twig' %}
+{% block content %}
+
+    <body class="hold-transition skin-blue sidebar-mini ">
+    <div class="pace  pace-inactive">
+        <div class="pace-progress" data-progress-text="100%" data-progress="99"
+             style="transform: translate3d(100%, 0px, 0px);">
+            <div class="pace-progress-inner"></div>
+        </div>
+        <div class="pace-activity"></div>
+    </div>
+    <section class="wrapper">
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b>R</b>S</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b style="font-style:oblique;">RUOS</b></span>
+            </a>
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <!-- User Account: style can be found in dropdown.less -->
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="{{ base_url() }}/dist/img/logini.jpg" class="user-image" alt="User Image">
+                                <span class="hidden-xs"><?php echo $_SESSION['ses_correouser'];?></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- User image -->
+                                <li class="user-header">
+                                    <img src="{{ base_url() }}/dist/img/logini.jpg" class="img-circle" alt="User Image">
+                                    <p>
+                                        {{ AdminController.admin.nombres }}
+                                        <small>{{ AdminController.admin.dni }}</small>
+                                        <small>Administrador</small>
+                                    </p>
+                                </li>
+                                <!-- Menu Footer-->
+                                <li class="user-footer" style="border: 1px solid #3C8DBC;">
+                                    <div class="pull-right">
+                                        <a href="#" class="btn btn-default btn-flat" id="changeses"
+                                           style="border: 1px solid #3C8DBC;">Cerrar sesión</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- Control Sidebar Toggle Button -->
+                        <li>
+                            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                        </li>
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <aside class="main-sidebar">
+            {% include 'admin/templates/menu.twig' %}
+        </aside>
+
+        <section class="content-wrapper">
+            <section class="content-header">
+                <h1 id="tipodesol">
+                    SOLICITUD <strong> {{ reconocimiento.num_rec }} </strong> | {{ reconocimiento.nombres }}
+                </h1>
+            </section>
+            <section class="content">
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div class="col-md-9">
+                            <div class="box">
+                                <div class="box-body">
+                                    <table id="Solicitudes" class="table table-bordered table-hover" width="100%">
+
+                                        <thead>
+                                        <tr class="heading-table">
+
+                                            <th>Nº DE SOLICITUD</th>
+                                            <th>ORGANIZACIÓN</th>
+                                            <th>TIPO</th>
+                                            <th>DOCUMENTO</th>
+                                            <th>ESTADO</th>
+                                            <th>APROBAR</th>
+                                        </tr>
+                                        </thead>
+
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="col-md-12">
+                                <div class="box">
+                                    {% if reconocimiento.estado == 2 %}
+                                        <div class="callout callout-warning">
+                                            <h4>PENDIENTE</h4>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if reconocimiento.estado == 3 %}
+                                        <div class="callout callout-success">
+                                            <h4>APROBADO</h4>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if reconocimiento.estado == 4 %}
+                                        <div class="callout callout-danger">
+                                            <h4>ARCHIVADO</h4>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="box box-solid ">
+                                    <div class="box-header with-border">
+                                        <i class="fa fa-file-text"></i>
+
+                                        <h3 class="box-title">Solicitud</h3>
+                                    </div>
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+
+                                        <table class="table table-bordered" cellpadding="5">
+                                            <tbody>
+                                            <tr><th><b>NÚMERO:</b></th>
+                                                <td>
+                                                    {{ reconocimiento.num_rec }}
+                                                </td>
+                                            </tr>
+                                            <tr><th><b>FECHA DE INICIO DE ATENCIÓN:</b> </th>
+                                                <td>
+                                                    {{ reconocimiento.inicio }}
+                                                </td>
+                                            </tr>
+                                            <tr><th><b>FECHA MÁXIMA DE ATENCIÓN:</b> </th>
+                                                <td>{{ reconocimiento.fin }}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="box">
+                                    <div class="box-body">
+                                        <div class="invoice-col">
+
+                                            {% if not ver %}
+                                                <a class="btn btn-block btn-default btn-flat"
+                                                   data-toggle="modal"
+                                                   data-target="#modalresolucion"
+                                                   data-sol="{{ reconocimiento.codigo }}">
+                                                    Subir Resolución
+                                                </a>
+                                            {% endif %}
+
+                                            {% if reconocimiento.estado == 2 %}
+                                                <a class="btn btn-block btn-default btn-flat" type="button"
+                                                   data-toggle="modal"
+                                                   data-target="#modalaprobar"
+                                                   data-whatever="aprobar"
+                                                   data-content="{{ reconocimiento.codigo }}"
+                                                   data-numero="{{ reconocimiento.num_rec }}">
+                                                    Aprobar Solicitud
+                                                </a>
+                                            {% endif %}
+
+                                            {% if reconocimiento.estado == 2 %}
+                                                <a class="btn btn-block btn-default btn-flat"
+                                                   data-toggle="modal"
+                                                   data-target="#modalrechazo">
+                                                    Archivar Solicitud
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="box">
+                                    <div class="box-header with-border">
+                                        <i class="fa  fa-calendar-check-o"></i>
+                                        <h3 class="box-title">RESOLUCIÓN</h3>
+                                        {% if ver %}
+                                            <a class="pull-right"
+                                               type="button"
+                                               data-toggle="modal"
+                                               data-target="#EliminarResolucion"
+                                               data-operation="delete"
+                                               data-form="resolucion"
+                                               data-content="{{ ver.codigo }}">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="box-body">
+                                        <table class="table table-bordered" cellpadding="5">
+                                            <tbody>
+                                            <tr>
+                                                <th><b>NÚMERO:</b></th>
+                                                <td>
+                                                    {% if ver %}
+                                                        {{ ver.num_ver }}
+                                                    {% else %}
+                                                        ---
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><b>FECHA DE REGISTRO:</b></th>
+                                                <td>
+                                                    {% if ver %}
+                                                        {{ ver.fecha }}
+                                                    {% else %}
+                                                        ---
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><b>ARCHIVO:</b></th>
+                                                <td>
+                                                    {% if ver %}
+                                                        <a target="_blank" href="{{ base_url() }}/{{ ver.url_doc }}"
+                                                           class="btn btn-primary">Ver
+                                                            resolución</a>
+                                                    {% else %}
+                                                        ---
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </section>
+        </section>
+    </section>
+    </div>
+
+    <div class="modal fade in" id="modalresolucion" tabindex="-1" role="dialog" aria-labelledby="modalresolucion">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header mod">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"
+                                                                                                      style="color:#fff;">&times;</span>
+                    </button>
+                    <h4 class="modal-title modtitle" id="modalresolucion"><strong>SUBIR RESOLUCIÓN</strong></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+
+                        <div class="col-sm-12">
+                            <form name="verificacion" id="verificacion" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="reconocimiento" id="reconocimiento"
+                                       value="{{ reconocimiento.codigo }}"/>
+                                <input type="hidden" name="admin" id="admin" value="{{ admin.codigo }}"/>
+                                <input type="hidden" name="distrito" id="distrito"
+                                       value="{{ reconocimiento.distrito }}"/>
+                                <div class="form-group">
+                                    <label>Número de resolución</label>
+                                    <input type="text" class="form-control obligate2" name="num_ver" id="num_ver"
+                                           data-content="Ingrese el número de resolución" value=""/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Fecha de registro</label>
+                                    <input type="date" class="form-control obligate2" name="fecha" id="fecha"
+                                           data-content="Ingrese fecha de registro" value=""/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Adjuntar resolución</label>
+                                    <input class="form-control obligate2" type="file" name="file" id="file"
+                                           data-content="Debe seleccionar un documento"/>
+                                </div>
+                                {{ csrf.field | raw }}
+                            </form>
+                        </div>
+
+                        <div class="col-sm-12 barra2 mybarra">
+                        </div>
+                        <div class="col-sm-12 msgu2"></div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="subirverificacion" class="btn btn-primary subirverificacion pull-left">
+                        Subir
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalrechazo" tabindex="-1" role="dialog" aria-labelledby="modalrechazo">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header modalert">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title modtitle" id="modalrechazo"><strong>[ARCHIVAR SOLICITUD]</strong></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Motivo: </label>
+                                <form name="rechazarrec" id="rechazarrec" method="post">
+                                    <input type="hidden" name="codigo_rec" id="codigo_rec" value="{{ reconocimiento.codigo }}">
+                                    <input type="hidden" name="estado" id="estado" value="4">
+                                    <textarea class="form-control obligatearchivar" id="observacion" data-content="Debe ingresar un motivo." rows="4" name="observacion"  placeholder="Motivo del archivamiento"></textarea>
+                                    {{ csrf.field | raw }}
+                                </form>
+                            </div>
+                            <div  class="msg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa  fa-remove"></i>
+                        Cancelar
+                    </button>
+                    <button type="button" id="rechazarreconocimiento" class="btn btn-primary rechazarreconocimiento pull-left">
+                        Archivar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalaprobar" tabindex="-1" role="dialog" aria-labelledby="modalaprobar">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header modalert">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title modtitle" id="modalaprobar"><strong>APROBACIÓN DE SOLICITUD</strong></h4>
+                </div>
+                <div class="modal-body">
+                    <h3> ¿Confirmar aprobación de la solicitud [{{ reconocimiento.num_rec }}] ?</h3>
+                    <div class="box-body row">
+                        <form name="aprobar_form" id="aprobar_form" method="post">
+                            <input type="hidden" name="codigo_rec" id="codigo_rec" value="{{ reconocimiento.codigo }}">
+                            <input type="hidden" name="estado" id="estado" value="3">
+                            {{ csrf.field | raw }}
+                        </form>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="aprobar-verificacion" data-loading-text="Aprobando..."
+                            class="btn btn-primary pull-left">
+                        Aprobar
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </body>
+    <script type="text/javascript">
+
+
+        $('.searchRes').click(function () {
+            estado = $('.obj_estado').val();
+            cod_mes = $('.obj_mes').val();
+            cod_anio = $('.obj_anio').val();
+            ListarSolicitudes(estado, cod_anio, cod_mes);
+        })
+
+        //APROBAR SOLICITUD DE DISTRITOS
+        function aprobarsolicitud(codigo, estado) {
+            col = $(this);
+            var id = "#" + codigo;
+            $(id).html('<img src="../../../dist/img/loader.gif"  style="margin-left:-3px;"/>');
+            dataString = "codigo=" + codigo + "&estado=" + estado;
+            $.ajax({
+                type: "get",
+                url: "{{ base_url() }}/solicitud/aprobarsoldistrito",
+                data: dataString,
+                dataType: 'json',
+                success: function (datos) {
+                    if (datos.response == 'aprobado') {
+                        $(id).html('<i class="fa fa-check"></i>');
+                    } else if (datos.response == 'existe') {
+                        alert("La solicitud ya fue aprobada.");
+                        $(id).html('<i class="fa fa-check"></i>');
+                    } else {
+                        alert("Ocurrió un error");
+                    }
+                },
+                error: function () {
+                    alert("Ocurrió un error");
+                }
+
+            });
+        };
+
+
+        $(document).ready(function () {
+            ListarSolicitudes();
+        })
+
+
+        function ListarSolicitudes(estado, cod_anio, cod_mes) {
+
+            responsive: true
+
+            var dt = $('#Solicitudes').DataTable({
+
+
+                destroy: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
+                "buttons": [
+                    'copy', 'csv', 'excel', 'pdf'
+                ],
+
+                "language": {
+                    "lengthMenu": "Ver _MENU_ registros por página",
+                    "zeroRecords": "No se encontraron resultados",
+                    "info": "Viendo página _PAGE_ de _PAGES_",
+                    "infoEmpty": "No se encontraron responsables",
+                    "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "search": "Buscar:",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    },
+                },
+
+                "ajax": {
+                    "type": "get",
+                    "url": "{{ base_url() }}/admin/listadetallereconocimientodistritales",
+                    "data": {
+
+                        codigo: {{ solicitud }},
+                        anio: cod_anio,
+                        mes: cod_mes,
+                        estado: estado,
+
+                    }
+                },
+
+                "columns": [
+
+
+                    {
+                        "data": "num_sol",
+                        render: function (data) {
+                            if (data == null) {
+                                return '---';
+                            } else {
+                                return data;
+                            }
+
+                        },
+                    },
+                    {
+                        "data": "nombre_org",
+                    },
+                    {
+                        "data": "tipo_sol",
+                        render: function (data) {
+                            if (data == "1") {
+                                return '[NUEVO]';
+                            } else {
+                                return '[ACTUALIZACIÓN]';
+                            }
+
+                        },
+                    },
+                    {
+                        "data": "urldoc",
+                        render: function (data) {
+                            return "<a class='btn btn-default' target='blank_'" +
+                                "style='cursor:pointer;overflow: visible;'" +
+                                "href='{{ base_url() }}/" + data + "'>" +
+                                "<i class='fa fa-eye'></i></a>"
+                        }
+
+                    },
+                    {
+                        "data": "flag",
+                        render: function (data) {
+                            if (data == "1") {
+                                return "<span class='label label-info'>Incompleto</span>";
+                            } else if (data == "2") {
+                                return "<span class='label label-warning'>Pendiente</span>";
+                            } else if (data == "3") {
+                                return "<span class='label label-success'>Aprobado</span>";
+                            } else {
+                                return "<span class='label label-danger'>Archivado</span>";
+                            }
+
+                        },
+                    },
+                    {
+                        "data": "codsol",
+                        render: function (data) {
+                            return "<button type='button' title='Aprobar' id='" + data + "' onclick='aprobarsolicitud(" + data + ",3)'" +
+                                "class='btn btn-sm btn-success'>" +
+                                "<i class='fa fa-check'></i>" +
+                                "</button>"
+
+                        },
+                    },
+
+                ],
+
+
+                columnDefs: [
+                    {
+                        className: 'text-center',
+                        targets: [0, 2, 3, 4, 5],
+                    },
+                    {
+                        width: "5%",
+                        targets: [0, 2, 3, 4, 5]
+                    },
+                    {
+                        width: "20%",
+                        targets: [1]
+                    },
+
+                ]
+            });
+
+        }
+
+    </script>
+
+{% endblock content %}

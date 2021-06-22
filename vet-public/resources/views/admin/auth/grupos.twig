@@ -1,0 +1,1150 @@
+{% extends 'admin/templates/app.twig' %}
+{% block content %}
+
+    <body class="hold-transition skin-blue sidebar-mini ">
+        <div class="pace  pace-inactive">
+            <div class="pace-progress" data-progress-text="100%" data-progress="99">
+                <div class="pace-progress-inner"></div>
+            </div>
+            <div class="pace-activity"></div>
+        </div>
+        <div class="wrapper">
+
+            <header class="main-header">
+                {% include 'admin/templates/head.twig' %}
+            </header>
+
+            <aside class="main-sidebar">
+                {% include 'admin/templates/menu.twig' %}
+            </aside>
+
+            <div class="content-wrapper">
+                <section class="content-header">
+                    <h1 id="tipodease">
+                        Grupos
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="#"><i class="fa fa-book"></i> [Lista de Grupos]</a></li>
+                    </ol>
+                </section>
+                <section class="content">
+                    <div class="row">
+
+                        <div class="col-xs-12">
+                            <div class="box">
+
+                                <div class="box-body">
+                                    <div class="margin">
+                                        <div class="btn-group">
+                                            <button onclick="nuevanoticia()" type="button" class="btn btn-block btn-primary btn-flat">AGREGAR</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                        <div class="col-xs-8">
+                            <div class="box">
+                                <div class="box-body">
+                                    <table id="Noticias"  class="table table-bordered table-hover" width="100%">
+                                        <thead>
+                                            <tr class="heading-table">
+                                                <th></th>
+                                                <th>Inscripción</th>
+                                                <th>Nombre</th>
+                                                 <th>Días</th>
+                                                 <th>Horas</th>
+                                                <th>Voluntarios</th>
+                                                <th>Sesiones</th>
+                                                <th>Estado</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                </section>
+            </div>
+
+
+
+            <div class="modal fade" id="modalVideo" tabindex="-1" role="dialog" aria-labelledby="modalVideo">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header modalert">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
+                            <h4 class="modal-title modtitle">[ Grupo ]</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <form name="noticia" id="noticia" method="post" enctype="multipart/form-data">
+
+                                            <input type="hidden"  name="accion" id="accion" value="">
+                                            <input type="hidden"  name="codigo" id="codigo" value="">
+                                            <input type="hidden"  name="id_inscripcion" id="id_inscripcion" value="{{ InscripcionesController.inscripcionactiva.id_incripcion }}">
+
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Inscripción</label>
+                                                    <input type="text"disabled class="form-control" value="{{ InscripcionesController.inscripcionactiva.codigo }}">                                            
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-8">
+                                                <div class="form-group">
+                                                    <label>Nombre</label>
+                                                    <input type="text" name="nombre" id="nombre" class="form-control" value="">                                            
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Participantes</label>
+                                                    <input type="text" name="cupos" id="cupos" class="form-control" value="">                                            
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-8">
+                                                <div class="form-group">
+                                                    <label>Link</label>
+                                                    <input type="text" name="link" id="link" class="form-control" value="">                                            
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-8">
+                                                <div class="form-group">
+                                                    <label>Días </label>
+                                                    <input type="text" name="dias" id="dias" class="form-control" value="">                                            
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Horas</label>
+                                                    <input type="text" name="horas" id="horas" class="form-control" value="">                                            
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Descripción</label>
+                                                    <textarea type="text" name="descripcion" id="descripcion" class="form-control" value="" maxlength="1500">
+                                                    </textarea>
+                                                </div>
+                                            </div>  
+
+
+                                            <div class="col-sm-12" >
+                                                <div class="form-group">
+                                                    <label>Estado</label>
+                                                    <select id="estado" name="estado" value="" class="form-control">
+                                                        <option  value="1">Activar</option>
+                                                        <option value="2">Desactivar</option>
+                                                        <option value="3">Eliminar</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            {{ csrf.field | raw }}
+
+                                        </form>
+                                    </div>
+                                    <div  class="msg"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                            <button type="button" href="#" class="btn btn-success grabar">Guardar </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="modalVoluntarios" tabindex="-1" role="dialog" aria-labelledby="modalVoluntarios">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header modalert">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title modtitle">[ Gestión de Grupo ]</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <form name="seccion" id="seccion" method="post" enctype="multipart/form-data">
+
+                                            <input type="hidden"  name="cod" id="cod" value="">
+                                            <input type="hidden"  name="codigoseccion" id="codigoseccion" value="">
+
+                                            <div class="col-sm-12">
+                                                <div class="box">
+
+                                                    <div class="box-header with-border">
+                                                        <h3 class="box-title">Voluntarios</h3>
+                                                    </div>
+
+                                                    <div class="box-body">
+                                                        <table id="Voluntarios"  class="table table-bordered display compact" width="100%">
+                                                            <thead>
+                                                                <tr class="heading-table">
+                                                                    <th>DNI</th>
+                                                                    <th>Nombres</th>
+                                                                    <th>Apellidos</th>
+                                                                    <th></th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-12">
+                                                <div class="box">
+                                                    <div class="box-header with-border">
+                                                        <h3 class="box-title">Voluntarios en el grupo</h3>
+                                                    </div>
+                                                    <div class="box-body">
+                                                        <table id="DetalleGrupo"  class="table table-bordered display compact" width="100%">
+                                                            <thead>
+                                                                <tr class="heading-table">
+                                                                    <th>DNI</th>
+                                                                    <th>Nombres</th>
+                                                                    <th>Apellidos</th>
+                                                                    <th></th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            {{ csrf.field | raw }}
+
+                                        </form>
+
+                                    </div>
+                                    <div  class="msg"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                            <button type="button" href="#" class="btn btn-success guardarseccion">Guardar </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modalSesiones" tabindex="-1" role="dialog" aria-labelledby="modalSesiones">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header modalert">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title modtitle">[ Gestión de Sesiones ]</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <form name="sesion" id="sesion" method="post" enctype="multipart/form-data">
+
+                                            <input type="hidden"  name="cod" id="cod" value="">
+                                            <input type="hidden"  name="codigosesion" id="codigosesion" value="">
+                                            
+                                             <div class="col-sm-12">
+                                                <div class="form-group">    
+                                                    <label>Tema</label>
+                                                    <input type="text" name="tema" id="tema" class="form-control" value="">                                            
+                                                </div>
+                                            </div>
+                                                    
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Fecha</label>
+                                                    <input type="date" name="fecha" id="fecha" class="form-control pull-right" value="">                                            
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Hora de inicio</label>
+                                                    <input type="time" name="inicio" id="inicio" class="form-control" value="">                                            
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Hora de término</label>
+                                                    <input type="time" name="fin" id="fin" class="form-control" value="">                                            
+                                                </div>
+                                            </div>
+
+                                             <div class="col-sm-8">
+                                                <div class="form-group">    
+                                                    <label>Enlace videoconferencia</label>
+                                                    <input type="text" name="linkstream" id="linkstream" class="form-control" value="">                                            
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4" id="seccionestado">
+                                                <div class="form-group">
+                                                    <label>Estado</label>
+                                                    <select id="estado" name="estado" value="" class="form-control">
+                                                        <option  value="1">:: seleccionar ::</option>
+                                                        <option  value="1">Activar</option>
+                                                        <option value="2">Desactivar</option>
+                                                        <option value="3">Eliminar</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-12">
+                                                <div class="box">
+                                                    <div class="box-header with-border">
+                                                        <h3 class="box-title">Sesiones registradas</h3>
+                                                    </div>
+                                                    <div class="box-body">  
+                                                        <table id="DetalleSesiones"  class="table table-bordered display compact" width="100%">
+                                                            <thead>
+                                                                <tr class="heading-table">
+                                                                    <th>Tema</th>
+                                                                    <th>Fecha</th>
+                                                                    <th>Hora de inicio</th>  
+                                                                    <th>Hora de término</th> 
+                                                                    <th>Enlace</th>
+                                                                    <th>Asistencia</th>
+                                                                    <th></th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            {{ csrf.field | raw }}
+
+                                        </form>
+
+                                    </div>
+                                    <div  class="msg"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                            <button type="button" href="#" class="btn btn-success guardarsesion">Guardar </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                                            
+            <div class="modal fade" id="modalAsistencia" tabindex="-1" role="dialog" aria-labelledby="modalSesiones">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header modalert">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title modtitle">[ Gestión de Sesiones ]</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <form name="sesion" id="sesion" method="post" enctype="multipart/form-data">
+
+                                            <div class="col-sm-12">
+                                                <div class="box">
+                                                    <div class="box-header with-border">
+                                                        <h3 class="box-title">Sesiones registradas</h3>
+                                                    </div>
+                                                    <div class="box-body">  
+                                                        <table id="DetalleAsistencia"  class="table table-bordered display compact" width="100%">
+                                                            <thead>
+                                                                <tr class="heading-table">
+                                                                    <th>Tema</th>
+                                                                    <th>Fecha</th>
+                                                                    <th>Hora de inicio</th>  
+                                                                    <th>Hora de término</th> 
+                                                                    <th>Enlace</th>
+                                                                    <th>Asistencia</th>
+                                                                    <th></th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div  class="msg"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <script type="text/javascript">
+
+                function AgregarVoluntarios(codigo) {
+                    $("#seccion")[0].reset();
+                    var cod = codigo;
+                    $('#modalVoluntarios').modal('show');
+                    $('#codigoseccion').val(cod);
+                    ListaDetalleGrupo(cod);
+                    ListaVoluntarios(cod);
+                }
+
+                function AgregarSesiones(codigo) {
+                    $("#sesion")[0].reset();
+                    var cod = codigo;
+                    $('#modalSesiones').modal('show');
+                    $('#codigosesion').val(cod);
+                    ListaSesiones(cod);
+                }
+                
+                function ViewAsistencia(codigo) {
+                    var cod = codigo;
+                    $('#modalAsistencia').modal('show');
+                    ListaAsistencia(cod);
+                }
+
+                function ListaDetalleGrupo(cod) {
+                    responsive: true
+                    var dt = $('#DetalleGrupo').DataTable({
+                        destroy: true,
+
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ registros por página",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Viendo página _PAGE_ de _PAGES_",
+                            "infoEmpty": "No se encontraron registros",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "search": "Buscar:",
+                            "paginate": {
+                                "first": "Primero",
+                                "last": "Último",
+                                "next": "Siguiente",
+                                "previous": "Anterior"
+                            },
+                        },
+
+                        "ajax": {
+                            "type": "get",
+                            "url": "{{ base_url() }}/admin/detallegrupos/listar",
+                            "data": {
+                                codigo: cod
+                            }
+                        },
+
+                        "columns": [
+                            {"data": "dni"},
+                            {"data": "nombres"},
+                            {"data": "apellidos"},
+                            {
+                                "data": "codvol",
+                                "cod": "cod",
+                                render: function (data) {
+                                    return "<button type='button' title='Agregar' id='" + data + "' onclick='RemoverVoluntario(" + data + ", " + cod + ")'" +
+                                            "class=''>" +
+                                            "<i class='fa fa-times'></i>" +
+                                            "</button>"
+
+                                },
+                            },
+                        ],
+
+                    });
+
+
+                }
+
+                function AgregarVoluntario(cod_vol, cod_grupo) {
+                    col = $(this);
+                    var id = "#" + cod_vol;
+                    $(id).html('<img src="../dist/img/loader.gif"  style="margin-left:-3px;"/>');
+                    dataString = "cod_vol=" + cod_vol + "&cod_grupo=" + cod_grupo;
+                    $.ajax({
+                        type: "get",
+                        url: "{{ base_url() }}/admin/detallegrupos/registrar",
+                        data: dataString,
+                        dataType: 'json',
+                        success: function (datos) {
+                            if (datos.response == 'registrado') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Registro correcto!',
+                                    text: 'El voluntario fue añadido al grupo.',
+                                })
+                                $(id).html('<i class="fa fa-check"></i>');
+                                ListaDetalleGrupo(cod_grupo);
+                            } else if (datos.response == 'existe') {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: '¡Atención!',
+                                    text: 'El voluntario ya está en el grupo.',
+                                })
+                                $(id).html('<i class="fa fa-check"></i>');
+                            } else {
+                                alert("Ocurrió un error");
+                            }
+                        },
+                        error: function () {
+                            alert("Ocurrió un error");
+                        }
+
+                    });
+                }
+                ;
+
+                function RemoverVoluntario(cod_vol, cod_grupo) {
+                    col = $(this);
+                    var id = "#" + cod_vol;
+                    $(id).html('<img src="../dist/img/loader.gif"  style="margin-l  eft:-3px;"/>');
+                    dataString = "cod_vol=" + cod_vol + "&cod_grupo=" + cod_grupo;
+                    $.ajax({
+                        type: "get",
+                        url: "{{ base_url() }}/admin/detallegrupos/remover",
+                        data: dataString,
+                        dataType: 'json',
+                        success: function (datos) {
+                            if (datos.response == 'actualizado') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Voluntariado removido!',
+                                    text: 'El voluntario fue removido del grupo.',
+                                })
+                                $(id).html('<i class="fa fa-check"></i>');
+                                ListaDetalleGrupo(cod_grupo);
+                            } else {
+                                alert("Ocurrió un error");
+                            }
+                        },
+                        error: function () {
+                            alert("Ocurrió un error");
+                        }
+
+                    });
+                }
+                ;
+
+                function RemoverSesion(id_sesion, id_grupo_wsp) {
+                    col = $(this);
+                    var id = "#" + id_sesion;
+                    $(id).html('<img src="../dist/img/loader.gif"  style="margin-l  eft:-3px;"/>');
+                    dataString = "id_sesion=" + id_sesion + "&id_grupo_wsp=" + id_grupo_wsp;
+                    $.ajax({
+                        type: "get",
+                        url: "{{ base_url() }}/admin/sesiones/remover",
+                        data: dataString,
+                        dataType: 'json',
+                        success: function (datos) {
+                            if (datos.response == 'removida') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Sesión removida!',
+                                    text: 'La sesión fue removida del grupo.',
+                                })
+                                $(id).html('<i class="fa fa-check"></i>');
+                                ListaSesiones(id_grupo_wsp);
+                            } else {
+                                alert("Ocurrió un error");
+                            }
+                        },
+                        error: function () {
+                            alert("Ocurrió un error");
+                        }
+
+                    });
+                }
+                ;
+
+                function ListaVoluntarios(id_grupo_wsp) {
+                    responsive: true
+                    var dt = $('#Voluntarios').DataTable({
+                        destroy: true,
+                        pageLength: 5,
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ registros por página",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Viendo página _PAGE_ de _PAGES_",
+                            "infoEmpty": "No se encontraron registros",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "search": "Buscar:",
+                            "paginate": {
+                                "first": "Primero",
+                                "last": "Último",
+                                "next": "Siguiente",
+                                "previous": "Anterior"
+                            },
+                        },
+
+                        "ajax": {
+                            "type": "get",
+                            "url": "{{ base_url() }}/admin/voluntarios/listar",
+                            "data": {}
+                        },
+
+                        "columns": [
+                            {"data": "dni"},
+                            {"data": "nombres"},
+                            {"data": "apellidos"},
+                            {
+                                "data": "id_voluntario",
+                                "id_grupo_wsp": "id_grupo_wsp",
+                                render: function (data) {
+                                    return "<button type='button' title='Agregar' id='" + data + "' onclick='AgregarVoluntario(" + data + ", " + id_grupo_wsp + ")'" +
+                                            "class=''>" +
+                                            "<i class='fa fa-check'></i>" +
+                                            "</button>"
+
+                                },
+                            },
+                        ],
+
+                        columnDefs: [
+                            {
+                                className: 'text-center',
+                                targets: [3],
+                            },
+                        ]
+                    });
+
+                }
+
+                function ListaSesiones(id_grupo_wsp) {
+                    responsive: true
+                    var dt = $('#DetalleSesiones').DataTable({
+                        destroy: true,
+
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ registros por página",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Viendo página _PAGE_ de _PAGES_",
+                            "infoEmpty": "No se encontraron registros",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "search": "Buscar:",
+                            "paginate": {
+                                "first": "Primero",
+                                "last": "Último",
+                                "next": "Siguiente",
+                                "previous": "Anterior"
+                            },
+                        },
+
+                        "ajax": {
+                            "type": "get",
+                            "url": "{{ base_url() }}/admin/sesiones/listar",
+                            "data": {
+                                codigo: id_grupo_wsp}
+                        },
+
+                        "columns": [
+                            {"data": "tema"},
+                            {"data": "fecha"},
+                            {"data": "inicio"},
+                            {"data": "fin"},
+                            {
+                                "data": "linkstream",
+                                render: function (data) {
+                                    return "<a class='btn'" +
+                                             "target='_blank'" +
+                                             "class='btn'" +
+                                            "href='" + data + "'>" +
+                                            "<i class='fa fa-external-link-square'><i/></a>"
+
+                                },
+                            },                            
+                            {
+                                "data": "id_sesion",
+                                render: function (data) {
+                                    return "<a class='btn'" +
+                                            "style='cursor:pointer;overflow: visible;'" +
+                                            "onclick='ViewAsistencia(" + data + ")'" +
+                                            "data-toggle='modal'" +
+                                            "data-content=''>" +
+                                            "<i class='fa fa-users'><i/></a>"
+                                    
+                                },
+                            },
+                        ],
+
+                        columnDefs: [
+                            {
+                                className: 'text-center',
+                                targets: [1,2,3,4,5],
+                            },
+                        ]
+                    });
+
+                }
+                
+                   function ListaAsistencia(id_sesion) {
+                    responsive: true
+                    var dt = $('#DetalleAsistencia').DataTable({
+                        destroy: true,
+
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ registros por página",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Viendo página _PAGE_ de _PAGES_",
+                            "infoEmpty": "No se encontraron registros",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "search": "Buscar:",
+                            "paginate": {
+                                "first": "Primero",
+                                "last": "Último",
+                                "next": "Siguiente",
+                                "previous": "Anterior"
+                            },
+                        },
+
+                        "ajax": {
+                            "type": "get",
+                            "url": "{{ base_url() }}/admin/asistencia/listar",
+                            "data": {
+                                codigo: id_grupo_wsp}
+                        },
+
+                        "columns": [
+                            {"data": "tema"},
+                            {"data": "fecha"},
+                            {"data": "inicio"},
+                            {"data": "fin"},
+                            {
+                                "data": "linkstream",
+                                render: function (data) {
+                                    return "<a class='btn'" +
+                                             "target='_blank'" +
+                                             "class='btn'" +
+                                            "href='" + data + "'>" +
+                                            "<i class='fa fa-external-link-square'><i/></a>"
+
+                                },
+                            },
+                            {
+                                "data": "id_grupo_wsp",
+                                render: function (data) {
+                                    return "<a class='btn'" +
+                                            "style='cursor:pointer;overflow: visible;'" +
+                                            "onclick='AgregarSesiones(" + data + ")'" +
+                                            "data-toggle='modal'" +
+                                            "data-content=''>" +
+                                            "<i class='fa fa-calendar'><i/></a>"
+
+                                },
+                            },
+                            {
+                                "data": "id_sesion",
+                                render: function (data) {
+                                    return "<a class='btn'" +
+                                            "style='cursor:pointer;overflow: visible;'" +
+                                            "onclick='ViewAsistencia(" + data + ")'" +
+                                            "data-toggle='modal'" +
+                                            "data-content=''>" +
+                                            "<i class='fa fa-users'><i/></a>"
+
+                                },
+                            },
+                        ],
+
+                        columnDefs: [
+                            {
+                                className: 'text-center',
+                                targets: [1,2,3,4,5],
+                            },
+                        ]
+                    });
+
+                }
+                
+                function EditarNoticia(codigo) {
+                    var codigo = codigo;
+                    $('#modalVideo').modal('show');
+                    $('#codigo').val(codigo);
+                    $('#accion').val('editar');
+                    return $.ajax({
+                        type: "get",
+                        url: '{{ base_url() }}/admin/grupos/editar',
+                        data: {
+                            codigo: codigo
+                        },
+                        success: function (data) {
+                            $.each(data, function (i, item) {
+                                $('#nombre').val(item.nombre);
+                                $('#descripcion').val(item.descripcion);
+                                $('#dias').val(item.dias);
+                                $('#horas').val(item.horas);
+                                $('#cupos').val(item.cupos);
+                                $('#link').val(item.link);
+                                $('#linkstream').val(item.linkstream);
+                                $('#estado').val(item.estado);
+                            });
+                        },
+                        error: function () {
+                        }
+                    });
+
+                }
+
+
+                $(document).ready(function () {
+                    ListaNoticias();
+                })
+
+
+                function format(d) {
+                    return '<div class="col-md-12"><p style="float: left;"><strong>Link: </strong> ' + d.link + '<br>' +
+                            '<strong>Descripción: </strong> ' + d.descripcion + '</p> </div>';
+                }
+
+                var childRows = null;
+
+                function ListaNoticias() {
+                    responsive: true
+                    var dt = $('#Noticias').DataTable({
+                        destroy: true,
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ registros por página",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Viendo página _PAGE_ de _PAGES_",
+                            "infoEmpty": "No se encontraron responsables",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "search": "Buscar:",
+                            "paginate": {
+                                "first": "Primero",
+                                "last": "Último",
+                                "next": "Siguiente",
+                                "previous": "Anterior"
+                            },
+                        },
+
+                        "ajax": {
+                            "type": "get",
+                            "url": "{{ base_url() }}/admin/grupos/listar",
+                        },
+
+                        "columns": [
+                            {
+                                "class": "details-control",
+                                "orderable": false,
+                                "data": null,
+                                "defaultContent": ""
+                            },
+                            {"data": "codigo"},
+                            {"data": "nombre"},
+                            {"data": "dias"},
+                            {"data": "horas"},
+                            {
+                                "data": "id_grupo_wsp",
+                                render: function (data) {
+                                    return "<a class='btn'" +
+                                            "style='cursor:pointer;overflow: visible;'" +
+                                            "onclick='AgregarVoluntarios(" + data + ")'" +
+                                            "data-toggle='modal'" +
+                                            "data-content=''>" +
+                                            "<i class='fa fa-users'><i/></a>"
+
+                                },
+                            },
+                            {
+                                "data": "id_grupo_wsp",
+                                render: function (data) {
+                                    return "<a class='btn'" +
+                                            "style='cursor:pointer;overflow: visible;'" +
+                                            "onclick='AgregarSesiones(" + data + ")'" +
+                                            "data-toggle='modal'" +
+                                            "data-content=''>" +
+                                            "<i class='fa fa-calendar'><i/></a>"
+
+                                },
+                            },
+                            {
+                                "data": "estado",
+                                render: function (data) {
+                                    if (data == "1") {
+                                        return "<span class='label label-success'>Activado</span>";
+                                    } else if (data == "2") {
+                                        return "<span class='label label-warning'>Desactivado</span>";
+                                    } else {
+                                        return "<span class='label label-danger'>Eliminado</span>";
+                                    }
+                                },
+                            },
+                            {
+                                "data": "id_grupo_wsp",
+                                render: function (data) {
+                                    return "<a class='btn btn-default'" +
+                                            "style='cursor:pointer;overflow: visible;'" +
+                                            "onclick='EditarNoticia(" + data + ")'" +
+                                            "data-toggle='modal'" +
+                                            "data-content=''>" +
+                                            "Editar</a>"
+
+                                },
+                            },
+                        ],
+
+                        columnDefs: [
+                            {
+                                className: 'text-center',
+                                targets: [4,5,6,7,8],
+                            },
+                        ]
+                    });
+
+                    var detailRows = [];
+
+                    $('#Noticias tbody').off('click', 'tr td.details-control');
+                    $('#Noticias tbody').on('click', 'tr td.details-control', function () {
+                        var tr = $(this).closest('tr');
+                        var row = dt.row(tr);
+
+                        if (row.child.isShown()) {
+                            row.child.hide();
+                            tr.removeClass('shown');
+                        } else {
+                            // Open this row
+                            d = row.data();
+                            row.child(format(d)).show();
+                            tr.addClass('shown');
+                        }
+                    });
+
+                    dt.on('draw', function () {
+                        if (childRows) {
+
+                            childRows.every(function (rowIdx, tableLoop, rowLoop) {
+                                d = this.data();
+                                this.child($(format(d))).show();
+                                this.nodes().to$().addClass('shown');
+                            });
+                            childRows = null;
+                        }
+                    });
+
+
+                }
+
+                //Nueva noticia
+                function nuevanoticia() {
+                    var tipo = 1;
+                    $('#modalVideo').modal('show');
+                    $("#noticia")[0].reset();
+                    $('#accion').val('nuevo');
+                    $('#codigo').val('');
+                }
+
+
+                function GuardarVideo() {
+                    var formData = new FormData($("#noticia")[0]);
+                    var resultado = "";
+                    $.ajax({
+                        url: "{{ base_url() }}/admin/grupos/registrar",
+                        async: false,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        enctype: 'multipart/form-data',
+                        processData: false,
+                        dataType: 'json',
+                        success: function (datos) {
+                            resultado = datos.response;
+                            mensaje = datos.message;
+                        }
+                    });
+                    return [resultado, mensaje];
+                }
+
+                function GuardarSesion() {
+                    var formData = new FormData($("#sesion")[0]);
+                    var resultado = "";
+                    $.ajax({
+                        url: "{{ base_url() }}/admin/sesiones/registrar",
+                        async: false,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        enctype: 'multipart/form-data',
+                        processData: false,
+                        dataType: 'json',
+                        success: function (datos) {
+                            resultado = datos.response;
+                            mensaje = datos.message;
+                        }
+                    });
+                    return [resultado, mensaje];
+                }
+
+
+                $(".grabar").on("click", function (event) {
+
+                    event.preventDefault();
+
+                    var accion = $('#accion').val();
+                    var nombre = $('#nombre').val();
+                    var link = $('#link').val();
+                    var descripcion = $('#descripcion').val();
+
+
+                    if (nombre == "") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: 'Debe imgresar un nombre',
+                        })
+                    } else {
+                        if (link == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar un link.',
+                            })
+                        } else {
+                            if (descripcion == "") {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: '¡Advertencia!',
+                                    text: 'Debe ingresar una descripción.',
+                                })
+                            } else {
+
+
+                                Swal.fire({
+                                    title: 'Está seguro?',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Sí, guardar!'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        var resp = GuardarVideo();
+                                        //resp = JSON.parse(resp);
+                                        if (resp[0] == "success") {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: '¡Éxito!',
+                                                text: resp[1],
+                                            }).then((result) => {
+                                                if (result.value) {
+                                                    $('#modalVideo').modal('hide');
+                                                    ListaNoticias();
+                                                }
+                                            });
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: '¡Error!',
+                                                text: resp[1],
+                                            })
+                                        }
+                                    }
+                                })
+
+                            }
+                        }
+                    }
+                });
+
+                $(".guardarsesion").on("click", function (event) {
+
+                    event.preventDefault();
+                    var cod_grupo = $('#codigosesion').val();
+                    var accion = $('#accion').val();
+                    var fecha = $('#fecha').val();
+                    var inicio = $('#inicio').val();
+                    var fin = $('#fin').val();
+                    var tema = $('#tema').val();
+
+                    if (fecha == "") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: 'Debe imgresar la fecha de sesión',
+                        })
+                    } else {
+                        if (inicio == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar la hora de inicio',
+                            })
+                        } else {
+                            if (fin == "") {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: '¡Advertencia!',
+                                    text: 'Debe ingresar la hora de término ',
+                                })
+                            } else {
+                                if (tema == "") {
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: '¡Advertencia!',
+                                        text: 'Debe ingresar el tema',
+                                    })
+                                } else {
+                                    Swal.fire({
+                                        title: 'Está seguro?',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Sí, guardar!'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            var resp = GuardarSesion();
+                                            //resp = JSON.parse(resp);
+                                            if (resp[0] == "success") {
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: '¡Éxito!',
+                                                    text: resp[1],
+                                                }).then((result) => {
+                                                    if (result.value) {
+                                                        $("#sesion")[0].reset();
+                                                        ListaSesiones(cod_grupo);
+                                                    }
+                                                });
+                                            } else {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: '¡Error!',
+                                                    text: resp[1],
+                                                })
+                                            }
+                                        }
+                                    })
+                                }
+                            }
+                        }
+                    }
+                });
+
+            </script>
+        {% endblock content %}

@@ -1,0 +1,377 @@
+{% extends 'admin/templates/app.twig' %}
+{% block content %}
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 80%;
+            border: solid 2px #cccccc;
+            border-radius: 5px;
+        }
+
+        #map2 {
+            width: 100%;
+            height: 80%;
+            border: solid 2px #cccccc;
+            border-radius: 5px;
+        }
+
+        #coords {
+            width: 500px;
+        }
+
+
+    </style>
+
+    <body class="hold-transition skin-blue sidebar-mini ">
+    <div class="pace  pace-inactive">
+        <div class="pace-progress" data-progress-text="100%" data-progress="99"
+             style="transform: translate3d(100%, 0px, 0px);">
+            <div class="pace-progress-inner"></div>
+        </div>
+        <div class="pace-activity"></div>
+    </div>
+<div class="wrapper">
+    <header class="main-header">
+        <!-- Logo -->
+        <a href="" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><b>R</b>S</span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><b style="font-style:oblique;">RUOS</b></span>
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- User Account: style can be found in dropdown.less -->
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="{{ base_url() }}/dist/img/logini.jpg" class="user-image" alt="User Image">
+                            <span class="hidden-xs"><?php echo $_SESSION['ses_correouser'];?></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <img src="{{ base_url() }}/dist/img/logini.jpg" class="img-circle" alt="User Image">
+                                <p>
+                                    {{ AdminController.admin.nombres }}
+                                    <small>{{ AdminController.admin.dni }}</small>
+                                    <small>Administrador</small>
+                                </p>
+                            </li>
+                            <!-- Menu Footer-->
+                            <li class="user-footer" style="border: 1px solid #3C8DBC;">
+                                <div class="pull-right">
+                                    <a href="#" class="btn btn-default btn-flat" id="changeses"
+                                       style="border: 1px solid #3C8DBC;">Cerrar sesión</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Control Sidebar Toggle Button -->
+                    <li>
+                        <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <aside class="main-sidebar">
+        {% include 'admin/templates/menu.twig' %}
+    </aside>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1 id="tipodesol">
+                SOLICITUDES
+            </h1>
+        </section>
+        <section class="content">
+            <div class="row">
+
+                <div class="col-xs-8">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="search-input-wrapper">
+                                <form>
+
+                                    <div class="col-sm-3">
+                                        <h5 style="font-weight: bold; color: #000000; text-transform: uppercase;">
+                                            Búsqueda por año</h5>
+                                        <select class="form-control obj_estado" id="obj_estado" name="obj_estado">
+                                            <option value="">Todos</option>
+                                            <option value="2">Pendientes</option>
+                                            <option value="3">Aprobados</option>
+                                            <option value="1">Incompletos</option>
+                                            <option value="4">Archivados</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-3">
+                                        <h5 style="font-weight: bold; color: #000000; text-transform: uppercase;">
+                                            Búsqueda por año</h5>
+                                        <select class="form-control obj_anio" id="obj_anio" name="obj_anio">
+                                            <option value="">Todos</option>
+                                            <option value="2020">2020</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2017">2016</option>
+                                            <option value="2017">2015</option>
+                                            <option value="2017">2014</option>
+                                            <option value="2017">2013</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-3">
+                                        <h5 style="font-weight: bold; color: #000000; text-transform: uppercase;">
+                                            Búsqueda por mes</h5>
+                                        <select class="form-control obj_mes" id="obj_mes" name="obj_mes">
+                                            <option value="">Todos</option>
+                                            <option value="01">Enero</option>
+                                            <option value="02">Febrero</option>
+                                            <option value="03">Marzo</option>
+                                            <option value="04">Abril</option>
+                                            <option value="05">Mayo</option>
+                                            <option value="06">Junio</option>
+                                            <option value="07">Julio</option>
+                                            <option value="08">Agosto</option>
+                                            <option value="09">Septiembre</option>
+                                            <option value="10">Octubre</option>
+                                            <option value="11">Noviembre</option>
+                                            <option value="12">Diciembre</option>
+
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <h5 style="color: #ebebeb;"> __</h5>
+                                        <div type="submit" class="form-submit btn btn-default searchRes">
+                                            <span>Buscar <i class="fa fa-search"></i></span>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="clearfix"></div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-8">
+                    <div class="box">
+                        <div class="box-body">
+                            <table id="Solicitudes" class="table table-bordered table-hover" width="100%">
+
+                                <thead>
+                                <tr class="heading-table">
+                                    <th class="col-md-1">DISTRITO</th>
+                                    <th class="col-md-1">Nº DE SOLICITUD</th>
+                                    <th class="col-md-1">INICIO</th>
+                                    <th class="col-md-1">FIN</th>
+                                    <th class="col-md-1">ESTADO</th>
+                                    <th class="col-md-1">EVALUACIÓN</th>
+                                </tr>
+                                </thead>
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script type="text/javascript">
+
+
+        $('.searchRes').click(function () {
+            estado = $('.obj_estado').val();
+            cod_mes = $('.obj_mes').val();
+            cod_anio = $('.obj_anio').val();
+            ListarSolicitudes(estado, cod_anio, cod_mes);
+        })
+
+        //APROBAR SOLICITUD DE DISTRITOS
+        function aprobarsolicitud(codigo, estado) {
+            col = $(this);
+            var id = "#" + codigo;
+            $(id).html('<img src="../../dist/img/loader.gif"  style="margin-left:-3px;"/>');
+            dataString = "codigo=" + codigo + "&estado=" + estado;
+            $.ajax({
+                type: "get",
+                url: "{{ base_url() }}/solicitud/aprobarsoldistrito",
+                data: dataString,
+                dataType: 'json',
+                success: function (datos) {
+                    if (datos.response == 'aprobado') {
+                        $(id).html('<i class="fa fa-check"></i>');
+                    } else if (datos.response == 'existe') {
+                        alert("La solicitud ya fue aprobada.");
+                        $(id).html('<i class="fa fa-check"></i>');
+                    } else {
+                        alert("Ocurrió un error");
+                    }
+                },
+                error: function () {
+                    alert("Ocurrió un error");
+                }
+
+            });
+        };
+
+
+        $(document).ready(function () {
+            ListarSolicitudes();
+        })
+
+
+        function ListarSolicitudes(estado, cod_anio, cod_mes) {
+
+            responsive: true
+
+            var dt = $('#Solicitudes').DataTable({
+
+
+                destroy: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
+                "buttons": [
+                    'copy', 'csv', 'excel', 'pdf'
+                ],
+
+                "language": {
+                    "lengthMenu": "Ver _MENU_ registros por página",
+                    "zeroRecords": "No se encontraron resultados",
+                    "info": "Viendo página _PAGE_ de _PAGES_",
+                    "infoEmpty": "No se encontraron responsables",
+                    "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "search": "Buscar:",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    },
+                },
+
+                "ajax": {
+                    "type": "get",
+                    "url": "{{ base_url() }}/admin/listareconocimientodistritales",
+                    "data": {
+
+                        codigo: {{ solicitudes }},
+                        anio: cod_anio,
+                        mes: cod_mes,
+                        estado: estado,
+
+                    }
+                },
+
+                "columns": [
+
+                    {
+                        "data": "nombres",
+                    },
+
+                    {
+                        "data": "num_rec",
+                        render: function (data) {
+                            if (data == null) {
+                                return '---';
+                            } else {
+                                return data;
+                            }
+
+                        },
+                    },
+
+                    {
+                        "data": "inicio",
+                        render: function (data) {
+                            if (data == null) {
+                                return '---';
+                            } else {
+                                return data;
+                            }
+                        },
+                    },
+                    {
+                        "data": "fin",
+                        render: function (data) {
+                            if (data == null) {
+                                return '---';
+                            } else {
+                                return data;
+                            }
+                        },
+                    },
+                    {
+                        "data": "estado",
+                        render: function (data) {
+                            if (data == "1") {
+                                return "<span class='label label-info'>Incompleto</span>";
+                            } else if (data == "2") {
+                                return "<span class='label label-warning'>Pendiente</span>";
+                            } else if (data == "3") {
+                                return "<span class='label label-success'>Aprobado</span>";
+                            } else {
+                                return "<span class='label label-danger'>Archivado</span>";
+                            }
+
+                        },
+                    },
+                    {
+                        "data": "codigo",
+                        render: function (data) {
+                            return "<a class='btn btn-primary btn-xs'" +
+                                "style='cursor:pointer;overflow: visible;'" +
+                                "href='{{ base_url() }}/admin/solicitudes/detalle/" + data + "'>" +
+                                "<i class='fa fa-search-plus'></i></a>"
+                        },
+                    },
+
+                ],
+
+
+                columnDefs: [
+                    {
+                        className: 'text-center',
+                        targets: [1, 2, 3 , 4, 5],
+                    },
+
+                    {
+                        width: "20%",
+                        targets: [0]
+                    },
+                ]
+            });
+
+            dt
+                .order( [ 4, 'desc' ])
+                .draw();
+
+        }
+
+    </script>
+
+{% endblock content %}

@@ -1,0 +1,286 @@
+{% extends 'admin/templates/app.twig' %}
+{% block content %}
+
+    <style>
+        td.details-control {
+            background: url('{{ base_url() }}/images/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+        tr.shown  td.details-control {
+            background: url('{{ base_url() }}/images/details_close.png') no-repeat center center;
+        }
+    </style>
+
+    <body class="hold-transition skin-blue sidebar-mini ">
+        <div class="pace  pace-inactive">
+            <div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
+                <div class="pace-progress-inner"></div>
+            </div>
+            <div class="pace-activity"></div>
+        </div>
+        <div class="wrapper">
+            <header class="main-header">
+                {% include 'admin/templates/head.twig' %}
+            </header>
+
+            <aside class="main-sidebar">
+                {% include 'admin/templates/menu.twig' %}
+            </aside>
+
+            <div class="content-wrapper">
+                <section class="content-header">
+                    <h1 id="tipodease">
+                        FORMULARIO
+                    </h1>
+
+                </section>
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-body">
+                                    <table id="Donaciones"  class="table table-bordered table-hover" width="100%">
+                                        <thead>
+                                            <tr class="heading-table">
+                                                <th class="col-md-1"></th>
+                                                <th class="col-md-1">Nombres</th>
+                                                <th class="col-md-1">Correo</th>
+                                                <th class="col-md-1">Teléfono</th>
+                                                <th class="col-md-1">Mensaje</th>
+                                                <th class="col-md-1">Estado</th>
+                                                <th class="col-md-1"></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                </section>
+            </div>
+
+
+
+
+            <div class="modal fade" id="modalAtencion" tabindex="-1" role="dialog" aria-labelledby="modalAtencion">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header modalert">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title modtitle">[ ATENDER MENSAJE ]</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <form name="formulario" id="formulario" method="post">
+                                            <input type="hidden"  name="codigo" id="codigo" value="">
+                                            <div class="form-group">
+                                                <label>Acción</label>
+
+                                                <select class="form-control obligate" name="estado" id="estado" data-content="Debe seleccionar una acción." >
+                                                    <option value="">Selecione una acción</option>
+                                                    <option value="2">Atender</option>
+                                                    <option value="3">Eliminar</option>
+                                                </select>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Observaciones</label>
+                                                <textarea class="form-control obligate" data-content="Debe ingresar la observación."  name="observacion" id="observacion" placeholder="Ingrese las observacioens de la asesoria"></textarea>
+                                            </div>
+                                            {{ csrf.field | raw }}
+                                        </form>
+                                    </div>
+                                    <div  class="msg"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                            <button type="button" id="atender" class="btn btn-primary atenderasesoria pull-right"> Atender</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <script type="text/javascript">
+
+                CKEDITOR.replace('detalle', {
+                    height: 300,
+                    baseFloatZIndex: 10005
+                });
+
+                $(document).ready(function () {
+
+                    ListarFormulario();
+
+                })
+
+                function format(d) {
+                    return '<p style="float: left;"><strong>Mensaje: </strong> ' + d.mensaje + '<br>' +
+                            '<strong>Observacion: </strong> ' + d.observacion + '</p><br>' +
+                            '';
+                }
+                var childRows = null;
+
+                function ListarFormulario(origen) {
+
+                    responsive: true
+                    var dt = $('#Donaciones').DataTable({
+                        destroy: true,
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copy', 'csv', 'excel', 'pdf', 'print'
+                        ],
+                        "buttons": [
+                            'copy', 'csv', 'excel', 'pdf'
+                        ],
+
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ registros por página",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Viendo página _PAGE_ de _PAGES_",
+                            "infoEmpty": "No se encontraron resultados",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "search": "Buscar:",
+                            "paginate": {
+                                "first": "Primero",
+                                "last": "Último",
+                                "next": "Siguiente",
+                                "previous": "Anterior"
+                            },
+                        },
+
+                        "ajax": {
+                            "type": "get",
+                            "url": "{{ base_url() }}/admin/listarconsultas",
+                            "data": {
+                                origen: "centro",
+                            }
+                        },
+
+                        "columns": [
+                            {
+                                "class": "details-control",
+                                "orderable": false,
+                                "data": null,
+                                "defaultContent": ""
+                            },
+                            {"data": "nombres"},
+                            {"data": "correo"},
+                            {"data": "telefono"},
+                            {"data": "mensaje"},
+                            {
+                                "data": "estado",
+                                render: function (data) {
+                                    if (data == "1") {
+                                        return "<span class='label label-info'>Nuevo</span>";
+                                    } else {
+                                        return "<span class='label label-success'>Atendido</span>";
+                                    }
+
+                                },
+                            },
+                            {
+                                "data": "codigo",
+                                render: function (data) {
+                                    return "<a class='btn btn-default'" +
+                                            "style='cursor:pointer;overflow: visible;'" +
+                                            "onclick='abrirdonacion(" + data + ")'" +
+                                            "data-toggle='modal'" +
+                                            "data-content=''>" +
+                                            "Atender</a>"
+
+                                },
+                            },
+                        ],
+
+                        columnDefs: [
+                            {
+                                className: 'text-center',
+                                targets: [1, 2, 3, 4, 6],
+                            },
+
+                            {width: "3%",
+                                targets: [0]},
+
+                            {width: "4%",
+                                targets: [4, 5, 6]},
+                        ]
+                    });
+
+                    var detailRows = [];
+
+                    $('#Donaciones tbody').off('click', 'tr td.details-control');
+                    $('#Donaciones tbody').on('click', 'tr td.details-control', function () {
+                        var tr = $(this).closest('tr');
+                        var row = dt.row(tr);
+
+                        if (row.child.isShown()) {
+                            row.child.hide();
+                            tr.removeClass('shown');
+                        } else {
+                            // Open this row
+                            d = row.data();
+                            row.child(format(d)).show();
+                            tr.addClass('shown');
+                        }
+                    });
+
+                    dt.on('draw', function () {
+                        if (childRows) {
+
+                            childRows.every(function (rowIdx, tableLoop, rowLoop) {
+                                d = this.data();
+                                this.child($(format(d))).show();
+                                this.nodes().to$().addClass('shown');
+                            });
+                            childRows = null;
+                        }
+                    });
+
+                }
+                function abrirdonacion(codigo) {
+                    var codigo = codigo;
+                    $('#modalAtencion').modal('show');
+                    $('#codigo').val(codigo);
+                    $(".msg").html("");
+                    $(".msg").fadeIn(1500);
+                }
+
+                //Nueva noticia
+                function nuevanoticia() {
+                    var tipo = 1;
+                    $('#modalNoticia').modal('show');
+                    $('#tipo').val(tipo);
+                }
+
+                function GuardarReporte() {
+
+                    var formData = new FormData($("#noticia")[0]);
+                    formData.append('detalle', CKEDITOR.instances.detalle.getData());
+                    var resultado = "";
+                    $.ajax({
+                        url: "{{ base_url() }}/admin/registrarnoticia",
+                        async: false,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        enctype: 'multipart/form-data',
+                        processData: false,
+                        dataType: 'json',
+                        success: function (datos) {
+                            resultado = datos.response;
+                            mensaje = datos.message;
+                        }
+                    });
+                    return [resultado, mensaje];
+                }
+            </script>
+
+        {% endblock content %}

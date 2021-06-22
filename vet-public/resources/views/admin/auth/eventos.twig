@@ -1,0 +1,823 @@
+{% extends 'admin/templates/app.twig' %}
+{% block content %}
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            width: 100%;
+            height: 80%;
+            border: solid 2px #cccccc;
+            border-radius: 5px;
+        }
+        #map2 {
+            width: 100%;
+            height: 80%;
+            border: solid 2px #cccccc;
+            border-radius: 5px;
+        }
+        #coords{width: 500px;}
+
+        td.details-control {
+            background: url('{{ base_url() }}/images/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+        tr.shown  td.details-control {
+            background: url('{{ base_url() }}/images/details_close.png') no-repeat center center;
+        }
+    </style>
+
+    <body class="hold-transition skin-blue sidebar-mini ">
+        <div class="pace  pace-inactive">
+            <div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
+                <div class="pace-progress-inner"></div>
+            </div>
+            <div class="pace-activity"></div>
+        </div>
+        <div class="wrapper">
+            <header class="main-header">
+                <!-- Logo -->
+                <a href="../admin/dash" class="logo">
+                    <!-- mini logo for sidebar mini 50x50 pixels -->
+                    <span class="logo-mini"><b>B</b>L</span>
+                    <!-- logo for regular state and mobile devices -->
+                    <span class="logo-lg"><b style="font-style:oblique;">BENEFICENCIA</b></span>
+                </a>
+                <!-- Header Navbar: style can be found in header.less -->
+                <nav class="navbar navbar-static-top" role="navigation">
+                    <!-- Sidebar toggle button-->
+                    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+                            <!-- User Account: style can be found in dropdown.less -->
+                            <li class="dropdown user user-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <img src="{{ base_url() }}/dist/img/logini.jpg" class="user-image" alt="User Image">
+                                    <span class="hidden-xs"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <!-- User image -->
+                                    <li class="user-header">
+                                        <img src="{{ base_url() }}/dist/img/logini.jpg" class="img-circle" alt="User Image">
+                                        <p>
+                                            {{ AdminController.admin.nombres }}
+                                            <small>{{ AdminController.admin.dni }}</small>
+                                            <small>Administrador</small>
+                                        </p>
+                                    </li>
+                                    <!-- Menu Footer-->
+                                    <li class="user-footer" style="border: 1px solid #3C8DBC;">
+                                        <div class="pull-right">
+                                            <a href="#" class="btn btn-default btn-flat" id="changeses" style="border: 1px solid #3C8DBC;">Cerrar sesión</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- Control Sidebar Toggle Button -->
+                            <li>
+                                <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+
+            <aside class="main-sidebar">
+                {% include 'admin/templates/menu.twig' %}
+            </aside>
+
+            <div class="content-wrapper">
+                <section class="content-header">
+                    <h1 id="tipodease">
+                        EVENTOS
+                    </h1>
+             
+                </section>
+                <section class="content">
+                    <div class="row">
+
+                        <div class="col-xs-12">
+                            <div class="box">
+
+                                <div class="box-body">
+                                    <div class="margin">
+                                        <div class="btn-group">
+                                            <button onclick="nuevoevento()" type="button" class="btn btn-block btn-primary btn-flat">AGREGAR</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-body">
+                                    <table id="Eventos"  class="table table-bordered table-hover" width="100%">
+                                        <thead>
+                                            <tr class="heading-table">
+                                                <th class="col-md-1"></th>
+                                                <th class="col-md-1">Origen</th>
+                                                <th class="col-md-1">Evento</th>
+                                                <th class="col-md-1">Descripción</th>
+                                                <th class="col-md-1">Fecha</th>
+                                                <th class="col-md-1">Hora</th>
+                                                <th class="col-md-1">Estado</th>
+                                                <th class="col-md-1"></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                </section>
+            </div>
+
+
+
+            <div class="modal fade" id="modalEvento" tabindex="-1" role="dialog" aria-labelledby="modalEvento">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header modalert">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title modtitle">[ EVENTO NUEVO ]</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <form name="evento" id="evento" method="post" enctype="multipart/form-data">
+                                                    
+                                            <div class="form-group">
+                                                <label>Origen</label>
+                                                <select id="categoria" name="categoria" value="" class="form-control">
+                                                     <option value="">Seleccione un origen</option>
+                                                                    <option value="">Seleccione un origen</option>
+                                                                    <option value="Puericultorio Pérez Araníbar">Puericultorio Pérez Araníbar</option>
+                                                                    <option value="Hogar Canevaro">Hogar Canevaro</option>
+                                                                    <option value="Hogar San Vicente de Paúl">Hogar San Vicente de Paúl</option>
+                                                                    <option value="Instituto Sevilla">Instituto Sevilla</option>
+                                                                    <option value="Centro Esperanza">Centro Esperanza</option>
+                                                                    <option value="Hogar de la Madre">Hogar de la Madre</option>
+                                                                    <option value="Casa de todos">Casa de todos</option>
+                                                                    <option value="Presbítero Matías Maestro">Presbítero Matías Maestro</option>
+                                                                    <option value="Cementerio El Ángel">Cementerio El Ángel</option>
+                                                                    <option value="Plaza de Acho">Plaza de Acho</option>
+                                                                    <option value="Centro Cultural">Centro Cultural</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label>Nombre del evento</label>
+                                                <input type="text" name="nombre" id="nombre" class="form-control">
+                                            </div>
+
+                                             <div class="form-group">
+                                                <label>Descripcióndel evento</label>
+                                                <textarea cols="40" id="descripcion" name="descripcion" rows="3" class="form-control"></textarea> 
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label>Fecha</label>
+                                             <input type="date" name="fecha" id="fecha" class="form-control">
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label>Hora</label>
+                                                <input type="text" name="hora" id="hora" class="form-control">
+                                            </div>
+                                            
+                                               <div class="form-group">
+                                                <label>Detalle</label>
+                                                <textarea cols="40" id="detalle" name="detalle" rows="3" data-sample-short></textarea> 
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Foto</label>
+                                                <input type="file" name="foto" id="foto"  class="dropify-es">
+                                            </div>
+
+                                            {{ csrf.field | raw }}
+                                        </form>
+                                    </div>
+                                    <div  class="msg"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                          <button type="button" href="#" class="btn btn-success guardarevento">Guardar </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          <div class="modal fade" id="modalEditarEvento" tabindex="-1" role="dialog" aria-labelledby="modalEditarEvento">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header modalert">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title modtitle">[ EDITAR NOTICIA ]</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <form name="eventoedit" id="eventoedit" method="post" enctype="multipart/form-data">
+                                             <input type="hidden"  name="codigo" id="codigo" value="">          
+                                             
+                                            <div class="form-group">
+                                                <label>Estado</label>
+                                                <select id="estadoedi" name="estadoedi" value="" class="form-control">
+                                                    <option value="1">Activar</option>
+                                                    <option value="2">Desactivar</option>
+                                                    <option value="3">Eliminar</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label>Origen</label>
+                                                <select id="categoriaeditar" name="categoriaeditar" value="" class="form-control">
+                                                     <option value="">Seleccione un origen</option>
+                                                                    <option value="">Seleccione un origen</option>
+                                                                    <option value="Puericultorio Pérez Araníbar">Puericultorio Pérez Araníbar</option>
+                                                                    <option value="Hogar Canevaro">Hogar Canevaro</option>
+                                                                    <option value="Hogar San Vicente de Paúl">Hogar San Vicente de Paúl</option>
+                                                                    <option value="Instituto Sevilla">Instituto Sevilla</option>
+                                                                    <option value="Centro Esperanza">Centro Esperanza</option>
+                                                                    <option value="Hogar de la Madre">Hogar de la Madre</option>
+                                                                    <option value="Casa de todos">Casa de todos</option>
+                                                                    <option value="Presbítero Matías Maestro">Presbítero Matías Maestro</option>
+                                                                    <option value="Cementerio El Ángel">Cementerio El Ángel</option>
+                                                                    <option value="Plaza de Acho">Plaza de Acho</option>
+                                                                    <option value="Centro Cultural">Centro Cultural</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label>Nombre del evento</label>
+                                                <input type="text" name="nombreeditar" id="nombreeditar" class="form-control">
+                                            </div>
+
+                                             <div class="form-group">
+                                                <label>Descripción del evento</label>
+                                                <textarea cols="40" id="descripcioneditar" name="descripcioneditar" rows="3" class="form-control"></textarea> 
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label>Fecha</label>
+                                             <input type="date" name="fechaeditar" id="fechaeditar" class="form-control">
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label>Hora</label>
+                                                <input type="text" name="horaeditar" id="horaeditar" class="form-control">
+                                            </div>
+                                            
+                                               <div class="form-group">
+                                                <label>Detalle</label>
+                                                <textarea cols="40" id="detalleeditar" name="detalleeditar" rows="3" data-sample-short></textarea> 
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                 <div class="form-group">
+                                                     <label>Foto original</label>
+                                                     <img src="" class="img-responsive pad" id="fotooriginal" name="fotooriginal">
+                                                 </div>
+                                             </div>
+                                             
+                                             <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Foto a reemplazar</label>
+                                                <input type="file" name="fotoeditar" id="fotoeditar"  class="dropify-es">
+                                            </div>
+                                             </div>
+                                           
+                                             
+                                            {{ csrf.field | raw }}
+                                        </form>
+                                    </div>
+                                    <div  class="msg"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                          <button type="button" href="#" class="btn btn-success actualizarevento">Guardar </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <script type="text/javascript">
+                
+               function EditarEvento(codigo) {
+                    var codigo = codigo;
+                    $('#modalEditarEvento').modal('show');
+                    $('#codigo').val(codigo);
+                      
+                        return $.ajax({
+                        type: "get",
+                        url: '{{ base_url() }}/admin/evento/editar',
+                        data: {
+                            codigo: codigo
+                        },
+                        success: function (data) {
+                            $.each(data, function (i, item) {
+                                $('#nombreeditar').val(item.nombre);
+                                $('#categoriaeditar').val(item.categoria);
+                                $('#descripcioneditar').val(item.descripcion);
+                                CKEDITOR.instances.detalleeditar.setData(item.detalle);
+                                $('#fotooriginal').attr('src','{{base_url()}}/'+item.foto);
+                                $('#estadoedi').val(item.estado);
+                                $('#fechaeditar').val(item.fecha);
+                                $('#horaeditar').val(item.hora);
+                                $('#estadoedi').val(item.estado);
+                            });
+                        },
+                        error: function () {
+                        }
+                    });
+                    
+                }
+                
+                    CKEDITOR.replace('detalle', {
+                        height: 300,
+                        baseFloatZIndex: 10005
+                    });
+                
+                   CKEDITOR.replace('detalleeditar', {
+                    height: 300,
+                    baseFloatZIndex: 10005
+                });
+
+                $(document).ready(function () {
+                    
+                    ListaNoticias();
+                    
+                    $(".cogepx").on("click", function () {
+                        var valor = $(this).data('codigo');
+                        $("#Selecciones").modal('hide');
+                        $('.foto').val(valor);
+                    });
+
+                    // Translated
+                    $('.dropify-es').dropify({
+                        messages: {
+                            default: 'Arrastra y suelta un archivo aquí o haz clic',
+                            replace: 'Arrastre y suelte un archivo o haga clic para reemplazar',
+                            remove: 'Suprimir',
+                            error: 'Lo sentimos, el archivo es demasiado grande'
+                        }
+                    });
+
+                    // Used events
+                    var drEvent = $('#input-file-events').dropify();
+
+                    drEvent.on('dropify.beforeClear', function (event, element) {
+                        return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
+                    });
+
+                    drEvent.on('dropify.afterClear', function (event, element) {
+                        alert('File deleted');
+                    });
+
+                    drEvent.on('dropify.errors', function (event, element) {
+                        console.log('Has Errors');
+                    });
+
+                    var drDestroy = $('#input-file-to-destroy').dropify();
+                    drDestroy = drDestroy.data('dropify')
+                    
+                    $('#toggleDropify').on('click', function (e) {
+                        e.preventDefault();
+                        if (drDestroy.isDropified()) {
+                            drDestroy.destroy();
+                        } else {
+                            drDestroy.init();
+                        }
+                    })
+
+                })
+
+                function format(d) {
+
+                    if (d.titulo) {
+                        return '<div class="col-md-8"><div class="col-md-12"><p style="float: left;"><strong>OBSERVACIONES: </strong> ' + d.titulo + '</p><br></div>';
+                    } else {
+                        return '<div class="col-md-8"><div class="col-md-12"><p style="float: left;"><strong>OBSERVACIONES: </strong> No se registraron observaciones.</p><br></div>';
+                    }
+
+                }
+                var childRows = null;
+                
+                function ListaNoticias() {
+                    responsive: true
+                    var dt = $('#Eventos').DataTable({
+                        destroy: true,
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copy', 'csv', 'excel', 'pdf', 'print'
+                        ],
+                        "buttons": [
+                            'copy', 'csv', 'excel', 'pdf'
+                        ],
+
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ registros por página",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Viendo página _PAGE_ de _PAGES_",
+                            "infoEmpty": "No se encontraron responsables",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "search": "Buscar:",
+                            "paginate": {
+                                "first": "Primero",
+                                "last": "Último",
+                                "next": "Siguiente",
+                                "previous": "Anterior"
+                            },
+                        },
+
+                        "ajax": {
+                            "type": "get",
+                            "url": "{{ base_url() }}/admin/evento/listar",
+                            "data": {
+                                
+                            }
+                        },
+
+                        "columns": [
+                            {
+                                "class": "details-control",
+                                "orderable": false,
+                                "data": null,
+                                "defaultContent": ""
+                            },
+                            {"data": "categoria"},
+                            {"data": "nombre" },
+                            {"data": "descripcion" },
+                            {"data": "fecha" },
+                            {"data": "hora" },
+                            {
+                                "data": "estado",
+                                render: function(data) {
+                                    if(data=="1") {
+                                        return "<span class='label label-success'>Publicado</span>";
+                                    }  else if(data=="2") {
+                                        return "<span class='label label-warning'>Desactivado</span>";
+                                    }
+                                    else{
+                                        return "<span class='label label-danger'>Eliminado</span>";
+                                    }
+                                },
+                            },
+                            {
+                                "data": "codigo",
+                                render: function (data) {
+                                    return "<a class='btn btn-default'" +
+                                            "style='cursor:pointer;overflow: visible;'" +
+                                            "onclick='EditarEvento(" + data + ")'" +
+                                            "data-toggle='modal'" +
+                                            "data-content=''>" +
+                                            "Editar</a>"
+
+                                },
+                            },
+                        ],
+
+                        columnDefs: [
+                            {
+                                className: 'text-center',
+                                targets: [4,5,6,7],
+                            },
+                            
+                            { width: "20%",
+                             targets: [3] },
+                           { width: "10%",
+                             targets: [1] },
+                          { width: "4%",
+                             targets: [4,5,6,7] },
+                           { width: "1%",
+                             targets: [0] },
+
+
+                        ]
+                    });
+
+                    var detailRows = [];
+
+                    $('#Eventos tbody').off('click', 'tr td.details-control');
+                    $('#Eventos tbody').on('click', 'tr td.details-control', function () {
+                        var tr = $(this).closest('tr');
+                        var row = dt.row(tr);
+
+                        if (row.child.isShown()) {
+                            row.child.hide();
+                            tr.removeClass('shown');
+                        } else {
+                            // Open this row
+                            d = row.data();
+                            row.child(format(d)).show();
+                            tr.addClass('shown');
+                        }
+                    });
+
+                    dt.on('draw', function () {
+                        if (childRows) {
+
+                            childRows.every(function (rowIdx, tableLoop, rowLoop) {
+                                d = this.data();
+                                this.child($(format(d))).show();
+                                this.nodes().to$().addClass('shown');
+                            });
+                            childRows = null;
+                        }
+                    });
+
+                }
+
+                
+                //Nueva noticia
+                function nuevoevento() {
+                    var tipo = 1;
+                    $('#modalEvento').modal('show');
+                    $('#tipo').val(tipo);
+                }
+                
+                //--------------------------GUARDAR EVENTO---------------------------
+                
+                  function GuardarEvento() {
+
+                        var formData = new FormData($("#evento")[0]);
+                          formData.append('detalle', CKEDITOR.instances.detalle.getData());
+                         
+                        var resultado = "";
+                        $.ajax({
+                            url: "{{ base_url() }}/admin/evento/registrar",
+                            async: false,
+                            type: 'POST',
+                            data: formData,
+                            contentType: false,
+                            enctype: 'multipart/form-data',
+                            processData: false,
+                            dataType: 'json',
+                            success: function (datos) {
+                                resultado = datos.response;
+                                mensaje = datos.message;
+                            }
+                        });
+                        return [resultado, mensaje];
+                    }
+
+                $(".guardarevento").on("click", function (event) {
+
+                    event.preventDefault();
+                    var categoria = $('#categoria').val();
+                    var nombre = $('#nombre').val();
+                    var descripcion = $('#descripcion').val();
+                    var fecha = $('#fecha').val();
+                    var hora = $('#hora').val();
+                    var detalle = CKEDITOR.instances.detalle.getData();
+                    var foto = $('#foto').val();
+
+                    if (categoria == "") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: 'Debe seleccionar el tipo de origen.',
+                        })
+                    } else {
+                           if (nombre == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar el nombre del evento.',
+                            })
+                       }  else {
+                        if (descripcion == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar la descripción del evento.',
+                            })
+                       }  else {
+                           if (fecha == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar la fecha del evento.',
+                            })
+                        } else {
+                           if (hora == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar la hora del evento.',
+                            })
+                        } else  {
+                           if (detalle == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar el detalle del evento.',
+                            })
+                        } else {
+                            if (foto == "") {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: '¡Advertencia!',
+                                    text: 'Debe seleccionar la foto del evento.',
+                                })
+                            } else {
+                                Swal.fire({
+                                    title: '¿Está seguro?',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Sí, guardar!'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        var resp = GuardarEvento();
+                                        //resp = JSON.parse(resp);
+                                        if (resp[0] == "success") {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: '¡Éxito!',
+                                                text: resp[1],
+                                            }).then((result) => {
+                                                if (result.value) {
+                                                    $('#modalEvento').modal('hide');
+                                                     CKEDITOR.instances.detalle.setData('');
+                                                     $("#evento")[0].reset();
+                                                     var drEvent = $('#foto').dropify();
+                                                    drEvent = drEvent.data('dropify');
+                                                    drEvent.resetPreview();
+                                                    drEvent.clearElement();
+                                                    ListaNoticias();
+                                                }
+                                            });
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: '¡Error!',
+                                                text: resp[1],
+                                            })
+                                        }
+                                    }
+                                })
+                               }
+                                 }
+                                  }
+                                   }
+                            }
+                        }
+                    }
+                });
+                
+                //Actualizar Noticia
+                
+                  function ActualizaEvento() {
+
+                        var formData = new FormData($("#eventoedit")[0]);
+                          formData.append('detalleeditar', CKEDITOR.instances.detalleeditar.getData());
+                        var resultado = "";
+                  
+                        $.ajax({
+                            url: "{{ base_url() }}/admin/evento/actualizar",
+                            async: false,
+                            type: 'POST',
+                            data: formData,
+                            contentType: false,
+                            enctype: 'multipart/form-data',
+                            processData: false,
+                            dataType: 'json',
+                            success: function (datos) {
+                                resultado = datos.response;
+                                mensaje = datos.message;
+                            }
+                        });
+                        return [resultado, mensaje];
+                    }
+
+                $(".actualizarevento").on("click", function (event) {
+
+                    event.preventDefault();
+                    var codigo = $('#codigo').val();
+                    var categoria = $('#categoriaeditar').val();
+                    var nombre = $('#nombreeditar').val();
+                    var descripcion = $('#descripcioneditar').val();
+                    var fecha = $('#fechaeditar').val();
+                    var hora = $('#horaeditar').val();
+                    var detalle = CKEDITOR.instances.detalleeditar.getData();
+                    var foto = $('#fotooriginal').val();
+                    var fotoeditar = $('#fotoeditar').val();
+                    var estado = $('#estadoedi').val();
+
+                    if (categoria == "") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: 'Debe seleccionar el tipo de origen.',
+                        })
+                    } else {
+                        if (nombre == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar el nombre del evento.',
+                            })
+                       }  else {
+                         if (descripcion == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar la descripción del evento.',
+                            })
+                       }  else {
+                         if (fecha == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar la fecha del evento.',
+                            })
+                       }  else {
+                        if (hora == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar la hora del evento.',
+                            })
+                       }  else {
+                           if (detalle == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar el detalle de la noticia.',
+                            })
+                        } else {
+                                Swal.fire({
+                                    title: '¿Está seguro?',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Sí, guardar!'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        var resp = ActualizaEvento();
+                                        //resp = JSON.parse(resp);
+                                        if (resp[0] == "success") {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: '¡Éxito!',
+                                                text: resp[1],
+                                            }).then((result) => {
+                                                if (result.value) {
+                                                    $('#modalEditarEvento').modal('hide');
+                                                    CKEDITOR.instances.detalleeditar.setData('');
+                                                     $("#eventoedit")[0].reset();
+                                                     var drEvent = $('#fotoeditar').dropify();
+                                                        drEvent = drEvent.data('dropify');
+                                                        drEvent.resetPreview();
+                                                        drEvent.clearElement();
+                                                    ListaNoticias();
+                                                }
+                                            });
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: '¡Error!',
+                                                text: resp[1],
+                                            })
+                                        }
+                                    }
+                                })
+                                }
+                            }
+                             }
+                              }
+                        }
+                    }
+                });
+                
+            </script>
+            
+            
+        {% endblock content %}

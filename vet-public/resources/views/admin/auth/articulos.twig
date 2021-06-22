@@ -1,0 +1,577 @@
+{% extends 'admin/templates/app.twig' %}
+{% block content %}
+
+    <style>
+        td.details-control {
+            background: url('{{ base_url() }}/images/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+        tr.shown  td.details-control {
+            background: url('{{ base_url() }}/images/details_close.png') no-repeat center center;
+        }
+    </style>
+
+    <body class="hold-transition skin-blue sidebar-mini ">
+        <div class="pace  pace-inactive">
+            <div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
+                <div class="pace-progress-inner"></div>
+            </div>
+            <div class="pace-activity"></div>
+        </div>
+        <div class="wrapper">
+            
+         <header class="main-header">
+                 {% include 'admin/templates/head.twig' %}
+        </header>
+
+            <aside class="main-sidebar">
+                {% include 'admin/templates/menu.twig' %}
+            </aside>
+
+            <div class="content-wrapper">
+                <section class="content-header">
+                    <h1 id="tipodease">
+                        Artículos
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="#"><i class="fa fa-book"></i> [Lista de artículos]</a></li>
+                    </ol>
+                </section>
+                <section class="content">
+                    <div class="row">
+
+                        <div class="col-xs-12">
+                            <div class="box">
+
+                                <div class="box-body">
+                                    <div class="margin">
+                                        <div class="btn-group">
+                                            <button onclick="nuevanoticia()" type="button" class="btn btn-block btn-primary btn-flat">Agregar</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-body">
+                                    <table id="Noticias"  class="table table-bordered table-hover" width="100%">
+                                        <thead>
+                                            <tr class="heading-table">
+                                                <th class="col-md-1"></th>
+                                                <th class="col-md-1">Edición</th>
+                                                <th class="col-md-1">Sección</th>
+                                                <th class="col-md-1">Nº de artículo</th>
+                                                <th class="col-md-1">Título</th>
+                                                <th class="col-md-1">Estado</th>
+                                                <th class="col-md-1"></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                </section>
+            </div>
+
+
+
+            <div class="modal fade" id="modalNoticia" tabindex="-1" role="dialog" aria-labelledby="modalNoticia">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header modalert">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title modtitle">[ Artículo ]</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <form name="noticia" id="noticia" method="post" enctype="multipart/form-data">
+
+                                            <input type="hidden"  name="accion" id="accion" value="">
+                                            <input type="hidden"  name="codigo" id="codigo" value="">
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Edición</label>
+                                                       <select class="form-control form-select" id="edicion" name="edicion" onchange="BuscarEdicion(this.value);">
+                                                        <option value="">Seleccione una edición</option>
+                                                        {% for lista in EdicionController.listaediciones %}
+                                                          <option value="{{ lista.codigo }}">{{ lista.titulo }}</option>
+                                                        {% endfor %}
+                                                      </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Sección</label>
+                                                     <select class="form-control" id="seccion" name="seccion">
+                                                    <option value="">Seleccionar una clase</option>
+                                                  </select>
+                                                </div>
+                                            </div>
+                                                      
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label>Número</label>
+                                                    <input type="text" name="numero" id="numero" class="form-control" value="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-8">
+                                                <div class="form-group">
+                                                    <label>Titular</label>
+                                                    <input type="text" name="titulo" id="titulo" class="form-control" value="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-2">
+                                                <div class="form-group">
+                                                    <label>Estado</label>
+                                                    <select id="estado" name="estado" value="" class="form-control">
+                                                        <option value="1">Activado</option>
+                                                        <option value="2">Desactivado</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                             
+                                             <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Detalle</label>
+                                                    <textarea cols="40" id="detalle" name="detalle" rows="5" data-sample-short></textarea> 
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6" id="seccionarchivo">
+                                                <div class="form-group">
+                                                    <label>Archivo original</label>
+                                               <object data="" name="archivooriginal" id="archivooriginal" type="application/pdf" width="100%" height="100%">
+                                                <p>Ver archivo<a target="_blank" id="linkoriginal" name="linkoriginal" href="">to the PDF!</a></p>
+                                              </object>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Archivo</label>
+                                                    <input type="file" name="archivo" id="archivo" class="dropify-es">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6" id="seccionfoto">
+                                                <div class="form-group">
+                                                    <label>Foto original</label>
+                                                    <img src="" class="img-responsive pad" id="fotooriginal" name="fotooriginal">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Foto</label>
+                                                    <input type="file" name="foto" id="foto"  class="dropify-es">
+                                                </div>
+                                            </div>
+
+                                            {{ csrf.field | raw }}
+
+                                        </form>
+                                    </div>
+                                    <div  class="msg"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                            <button type="button" href="#" class="btn btn-success grabarentrada">Guardar </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <script type="text/javascript">
+                
+                    function BuscarEdicion(edicion) {
+                        $('#seccion option').remove();
+                        return $.ajax({
+                            type:"get",
+                              url: '{{ base_url() }}/admin/secciones/habilitados',
+                            data: {
+                                codigo : edicion,
+                            },
+                            success: function(data){
+                               
+                                $.each(data,function(i,item){
+                                    $("#seccion").append(""+
+                                        "<option value='"+item.codigo+"'>"+
+                                        item.numero+" - "+
+                                        item.nombre);
+                                });
+                            },
+                            error: function(){
+                            }
+                        });
+                    };
+
+                function EditarNoticia(codigo) {
+                    $("#seccionfoto").css("display", "block");
+                   $("#seccionarchivo").css("display", "block");
+                    var codigo = codigo;
+                    $('#modalNoticia').modal('show');
+                    $('#codigo').val(codigo);
+                    $('#accion').val('editar');
+                    return $.ajax({
+                        type: "get",
+                        url: '{{ base_url() }}/admin/articulos/editar',
+                        data: {
+                            codigo: codigo
+                        },
+                        success: function (data) {
+                            $.each(data, function (i, item) {
+                                $('#edicion').val(item.codigoedicion);
+                                BuscarEdicion(item.codigoedicion);
+                                $('#numero').val(item.numeroarticulo);
+                                $('#titulo').val(item.tituloarticulo);
+                                CKEDITOR.instances.detalle.setData(item.detallearticulo);
+                                $('#fotooriginal').attr('src', '{{base_url()}}/' + item.foto);
+                                $('#archivooriginal').attr('data', '{{base_url()}}/' + item.archivo);
+                                $('#linkoriginal').attr('href', '{{base_url()}}/' + item.archivo);
+                                $('#estado').val(item.estadoarticulo);
+                                $('#seccion').val(item.codigoseccion);
+                            });
+                        },
+                        error: function () {
+                        }
+                    });
+
+                }
+
+                CKEDITOR.replace('detalle', {
+                    height: 300,
+                    baseFloatZIndex: 10005
+                });
+                
+                $(document).ready(function () {
+                
+
+                    ListaNoticias();
+
+                    $(".cogepx").on("click", function () {
+                        var valor = $(this).data('codigo');
+                        $('.foto').val(valor);
+                    });
+
+                    // Translated
+                    $('.dropify-es').dropify({
+                        messages: {
+                            default: 'Arrastra y suelta un archivo aquí o haz clic',
+                            replace: 'Arrastre y suelte un archivo o haga clic para reemplazar',
+                            remove: 'Suprimir',
+                            error: 'Lo sentimos, el archivo es demasiado grande'
+                        }
+                    });
+
+                    // Used events
+                    var drEvent = $('#input-file-events').dropify();
+
+                    drEvent.on('dropify.beforeClear', function (event, element) {
+                        return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
+                    });
+
+                    drEvent.on('dropify.afterClear', function (event, element) {
+                        alert('File deleted');
+                    });
+
+                    drEvent.on('dropify.errors', function (event, element) {
+                        console.log('Has Errors');
+                    });
+
+                    var drDestroy = $('#input-file-to-destroy').dropify();
+                    drDestroy = drDestroy.data('dropify')
+                    $('#toggleDropify').on('click', function (e) {
+                        e.preventDefault();
+                        if (drDestroy.isDropified()) {
+                            drDestroy.destroy();
+                        } else {
+                            drDestroy.init();
+                        }
+                    })
+
+                })
+
+                function format(d) {
+
+                    if (d.titulo) {
+                        return '<div class="col-md-8"><div class="col-md-12"><p style="float: left;"><strong>OBSERVACIONES: </strong> ' + d.titulo + '</p><br></div>';
+                    } else {
+                        return '<div class="col-md-8"><div class="col-md-12"><p style="float: left;"><strong>OBSERVACIONES: </strong> No se registraron observaciones.</p><br></div>';
+                    }
+
+                }
+                var childRows = null;
+
+                function ListaNoticias() {
+                    responsive: true
+                    var dt = $('#Noticias').DataTable({
+                        destroy: true,
+                     
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ registros por página",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Viendo página _PAGE_ de _PAGES_",
+                            "infoEmpty": "No se encontraron registros",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "search": "Buscar:",
+                            "paginate": {
+                                "first": "Primero",
+                                "last": "Último",
+                                "next": "Siguiente",
+                                "previous": "Anterior"
+                            },
+                        },
+
+                        "ajax": {
+                            "type": "get",
+                            "url": "{{ base_url() }}/admin/articulos/lista",
+                            "data": {
+                            
+                            }
+                        },
+
+                        "columns": [
+                            {
+                                "class": "details-control",
+                                "orderable": false,
+                                "data": null,
+                                "defaultContent": ""
+                            },
+                            {"data": "tituloedicion"},
+                            {"data": "tituloseccion"},
+                            {"data": "numeroarticulo"},
+                            {"data": "tituloarticulo"},
+                            {
+                                "data": "estadoarticulo",
+                                render: function (data) {
+                                    if (data == "1") {
+                                        return "<span class='label label-success'>Publicado</span>";
+                                    } else if (data == "2") {
+                                        return "<span class='label label-warning'>Desactivado</span>";
+                                    } else {
+                                        return "<span class='label label-danger'>Eliminado</span>";
+                                    }
+                                },
+                            },
+                            {
+                                "data": "codigoarticulo",
+                                render: function (data) {
+                                    return "<a class='btn btn-default'" +
+                                            "style='cursor:pointer;overflow: visible;'" +
+                                            "onclick='EditarNoticia(" + data + ")'" +
+                                            "data-toggle='modal'" +
+                                            "data-content=''>" +
+                                            "Editar</a>"
+
+                                },
+                            },
+                        ],
+
+                        columnDefs: [
+                            {
+                                className: 'text-center',
+                                targets: [0,3,5,6],
+                            },
+
+                            {width: "1%",
+                                targets: [0,3]},
+
+                            {width: "15%",
+                                targets: [4]},
+
+                            {width: "25%",
+                                targets: [1,2,4]},
+
+                         
+                        ]
+                    });
+
+                    var detailRows = [];
+
+                    $('#Noticias tbody').off('click', 'tr td.details-control');
+                    $('#Noticias tbody').on('click', 'tr td.details-control', function () {
+                        var tr = $(this).closest('tr');
+                        var row = dt.row(tr);
+
+                        if (row.child.isShown()) {
+                            row.child.hide();
+                            tr.removeClass('shown');
+                        } else {
+                            // Open this row
+                            d = row.data();
+                            row.child(format(d)).show();
+                            tr.addClass('shown');
+                        }
+                    });
+
+                    dt.on('draw', function () {
+                        if (childRows) {
+
+                            childRows.every(function (rowIdx, tableLoop, rowLoop) {
+                                d = this.data();
+                                this.child($(format(d))).show();
+                                this.nodes().to$().addClass('shown');
+                            });
+                            childRows = null;
+                        }
+                    });
+
+                }
+
+                //Nueva noticia
+                function nuevanoticia() {
+                    $('#codigo').val("");
+                    $('#modalNoticia').modal('show');
+                    $("#noticia")[0].reset();
+                    $("#seccionfoto").css("display", "none");
+                    $("#seccionarchivo").css("display", "none");
+                    $('#accion').val('nuevo');
+                    $('#seccion option').remove();
+                }
+
+
+                function GuardarEdicion() {
+                    var formData = new FormData($("#noticia")[0]);
+                    formData.append('detalle', CKEDITOR.instances.detalle.getData());
+                    var resultado = "";
+                    $.ajax({
+                        url: "{{ base_url() }}/admin/articulos/registrar",
+                        async: false,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        enctype: 'multipart/form-data',
+                        processData: false,
+                        dataType: 'json',
+                        success: function (datos) {
+                            resultado = datos.response;
+                            mensaje = datos.message;
+                        }
+                    });
+                    return [resultado, mensaje];
+                }
+
+
+                $(".grabarentrada").on("click", function (event) {
+
+                    event.preventDefault();
+                    var accion = $('#accion').val();
+                    var seccion = $('#seccion').val();
+                    var numero = $('#numero').val();
+                    var titulo = $('#titulo').val();
+                    var detalle = CKEDITOR.instances.detalle.getData();
+                    var archivo = $('#archivo').val();
+                    var foto = $('#foto').val();
+
+                    if (seccion == "") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: 'Debe seleccionar una sección.',
+                        })
+                    } else {
+                        if (numero == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe un número de artículo.',
+                            })
+                        } else {
+                            if (titulo == "") {
+                                    Swal.fire({
+                                    icon: 'warning',
+                                    title: '¡Advertencia!',
+                                    text: 'Debe ingresar el título del artículo.',
+                                })
+                            } else {
+                                if (detalle == "") {
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: '¡Advertencia!',
+                                        text: 'Debe ingresar el detalle.',
+                                    })
+                                } else {
+                     
+                                        if (archivo == "" && accion == "nuevo") {
+                                            Swal.fire({
+                                                icon: 'warning',
+                                                title: '¡Advertencia!',
+                                                text: 'Debe seleccionar un archivo.',
+                                            })
+                                        } else {
+                                            if (foto == "" && accion == "nuevo") {
+                                                Swal.fire({
+                                                    icon: 'warning',
+                                                    title: '¡Advertencia!',
+                                                    text: 'Debe seleccionar una foto.',
+                                                })
+                                            } else {
+                                                Swal.fire({
+                                                    title: 'Está seguro?',
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#3085d6',
+                                                    cancelButtonColor: '#d33',
+                                                    confirmButtonText: 'Sí, guardar!'
+                                                }).then((result) => {
+                                                    if (result.value) {
+                                                        var resp = GuardarEdicion();
+                                                        //resp = JSON.parse(resp);
+                                                        if (resp[0] == "success") {
+                                                            Swal.fire({
+                                                                icon: 'success',
+                                                                title: '¡Éxito!',
+                                                                text: resp[1],
+                                                            }).then((result) => {
+                                                                if (result.value) {
+                                                                    $('#modalNoticia').modal('hide');
+                                                                    var drEvent = $('#foto').dropify();
+                                                                    drEvent = drEvent.data('dropify');
+                                                                    drEvent.resetPreview();
+                                                                    drEvent.clearElement();
+                                                                    
+                                                                      var drEventArchivo = $('#archivo').dropify();
+                                                                    drEventArchivo = drEventArchivo.data('dropify');
+                                                                    drEventArchivo.resetPreview();
+                                                                    drEventArchivo.clearElement();
+
+                                                                    ListaNoticias();
+                                                                }
+                                                            });
+                                                        } else {
+                                                            Swal.fire({
+                                                                icon: 'error',
+                                                                title: '¡Error!',
+                                                                text: resp[1],
+                                                            })
+                                                        }
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    
+                                }
+                            }
+                        }
+                    }
+                });
+            </script>
+        {% endblock content %}

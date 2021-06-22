@@ -1,0 +1,315 @@
+{% extends 'admin/templates/app.twig' %}
+{% block content %}
+
+
+
+    <body class="hold-transition skin-blue sidebar-mini ">
+        <div class="pace  pace-inactive">
+            <div class="pace-progress" data-progress-text="100%" data-progress="99">
+                <div class="pace-progress-inner"></div>
+            </div>
+            <div class="pace-activity"></div>
+        </div>
+        <div class="wrapper">
+
+            <header class="main-header">
+                {% include 'admin/templates/head.twig' %}
+            </header>
+
+            <aside class="main-sidebar">
+                {% include 'admin/templates/menu.twig' %}
+            </aside>
+
+            <div class="content-wrapper">
+                <section class="content-header">
+                    <h1 id="tipodease">
+                        Horarios
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="#"><i class="fa fa-book"></i> [Lista de Horarios]</a></li>
+                    </ol>
+                </section>
+                <section class="content">
+                    <div class="row">
+
+                        <div class="col-xs-12">
+                            <div class="box">
+
+                                <div class="box-body">
+                                    <div class="margin">
+                                        <div class="btn-group">
+                                            <button onclick="nuevanoticia()" type="button" class="btn btn-block btn-primary btn-flat">Agregar</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="box">
+                                <div class="box-body">
+                                    <table id="Noticias"  class="table table-bordered table-hover" width="100%">
+                                        <thead>
+                                            <tr class="heading-table">
+                                                <th>Nombre</th>
+                                                <th>Hora</th>
+                                                <th>Estado</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                </section>
+            </div>
+
+
+
+            <div class="modal fade" id="modalVideo" tabindex="-1" role="dialog" aria-labelledby="modalVideo">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header modalert">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
+                            <h4 class="modal-title modtitle">[ Horario ]</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <form name="noticia" id="noticia" method="post" enctype="multipart/form-data">
+
+                                            <input type="hidden"  name="accion" id="accion" value="">
+                                            <input type="hidden"  name="codigo" id="codigo" value="">
+
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Nombre</label>
+                                                    <input type="text" name="nombre" id="nombre" class="form-control" value="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Hora</label>
+                                                    <input type="text" name="hora" id="hora" class="form-control" value="">                                            
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Estado</label>
+                                                    <select id="estado" name="estado" value="" class="form-control">
+                                                        <option selected value="1">Activar</option>
+                                                        <option value="2">Desactivar</option>
+                                                        <option value="3">Eliminar</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            {{ csrf.field | raw }}
+
+                                        </form>
+                                    </div>
+                                    <div  class="msg"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                            <button type="button" href="#" class="btn btn-success grabar">Guardar </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <script type="text/javascript">
+
+                function EditarNoticia(codigo) {
+                    $("#seccionestado").css("display", "block");
+                    var codigo = codigo;
+                    $('#modalVideo').modal('show');
+                    $('#codigo').val(codigo);
+                    $('#accion').val('editar');
+                    return $.ajax({
+                        type: "get",
+                        url: '{{ base_url() }}/admin/horarios/editar',
+                        data: {
+                            codigo: codigo
+                        },
+                        success: function (data) {
+                            $.each(data, function (i, item) {
+                                $('#nombre').val(item.nombre);
+                                $('#hora').val(item.hora);
+                                $('#estado').val(item.estado);
+                            });
+                        },
+                        error: function () {
+                        }
+                    });
+
+                }
+
+
+                $(document).ready(function () {
+                    ListaNoticias();
+                })
+
+
+                var childRows = null;
+
+                function ListaNoticias() {
+                    responsive: true
+                    var dt = $('#Noticias').DataTable({
+                        destroy: true,
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ registros por página",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Viendo página _PAGE_ de _PAGES_",
+                            "infoEmpty": "No se encontraron responsables",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "search": "Buscar:",
+                            "paginate": {
+                                "first": "Primero",
+                                "last": "Último",
+                                "next": "Siguiente",
+                                "previous": "Anterior"
+                            },
+                        },
+
+                        "ajax": {
+                            "type": "get",
+                            "url": "{{ base_url() }}/admin/horarios/listar",
+                        },
+
+                        "columns": [
+                            {"data": "nombre"},
+                            {"data": "hora"},
+                            {
+                                "data": "estado",
+                                render: function (data) {
+                                    if (data == "1") {
+                                        return "<span class='label label-success'>Activado</span>";
+                                    } else if (data == "2") {
+                                        return "<span class='label label-warning'>Desactivado</span>";
+                                    } else {
+                                        return "<span class='label label-danger'>Eliminado</span>";
+                                    }
+                                },
+                            },
+                            {
+                                "data": "id_horario",
+                                render: function (data) {
+                                    return "<a class='btn btn-default'" +
+                                            "style='cursor:pointer;overflow: visible;'" +
+                                            "onclick='EditarNoticia(" + data + ")'" +
+                                            "data-toggle='modal'" +
+                                            "data-content=''>" +
+                                            "Editar</a>"
+
+                                },
+                            },
+                        ],
+                    });
+
+                }
+
+                //Nueva noticia
+                function nuevanoticia() {
+                    var tipo = 1;
+                    $('#modalVideo').modal('show');
+                    $("#noticia")[0].reset();
+                    $('#accion').val('nuevo');
+                    $('#codigo').val('');
+                }
+
+
+                function GuardarVideo() {
+                    var formData = new FormData($("#noticia")[0]);
+                    var resultado = "";
+                    $.ajax({
+                        url: "{{ base_url() }}/admin/horarios/registrar",
+                        async: false,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        enctype: 'multipart/form-data',
+                        processData: false,
+                        dataType: 'json',
+                        success: function (datos) {
+                            resultado = datos.response;
+                            mensaje = datos.message;
+                        }
+                    });
+                    return [resultado, mensaje];
+                }
+
+
+                $(".grabar").on("click", function (event) {
+
+                    event.preventDefault();
+
+                    var accion = $('#accion').val();
+                    var nombre = $('#nombre').val();
+                    var hora = $('#hora').val();
+
+                    if (nombre == "") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: 'Debe imgresar un titular',
+                        })
+                    } else {
+                        if (hora == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe seleccionar la fuente.',
+                            })
+                        } else {
+
+                            Swal.fire({
+                                title: 'Está seguro?',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Sí, guardar!'
+                            }).then((result) => {
+                                if (result.value) {
+                                    var resp = GuardarVideo();
+                                    //resp = JSON.parse(resp);
+                                    if (resp[0] == "success") {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: '¡Éxito!',
+                                            text: resp[1],
+                                        }).then((result) => {
+                                            if (result.value) {
+                                                $('#modalVideo').modal('hide');
+                                                ListaNoticias();
+                                            }
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: '¡Error!',
+                                            text: resp[1],
+                                        })
+                                    }
+                                }
+                            })
+
+                        }
+                    }
+                });
+            </script>
+        {% endblock content %}

@@ -1,0 +1,73 @@
+{% block content %}
+ 
+    <section class="sidebar">
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img src="{{ base_url() }}/dist/img/logini.jpg" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+                <p>{{ AdminController.admin.dni }}</p>
+                <p><a href="" target="_blank">Ir a la web</a></p>
+            </div>
+        </div>
+        <li class="treeview">
+            <ul class="sidebar-menu" id="side-menu">
+            </ul>
+        </li>
+    </section>
+    <script>
+        crearMenuOk();
+        function crearMenuOk() {
+            $.ajax({
+                type: "get",
+                url: '{{ base_url() }}/admin/listamenu',
+                data: {},
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    var c = JSON.parse(data);
+                    $.each(c.data,function(i,item){
+                        $('#side-menu').append(
+                            '<li id="li'+item.idcategory+'" class="treeview active">'+
+                            '<a href="#" data-content="raiz">'+
+                            '<i class="fa fa-files-o"></i>'+
+                            '<span>'+item.nombre+'</span>'+
+                            '<span class="label label-primary pull-right" id="tmp'+item.idcategory+'"></span>'+
+                            '</a>');
+                        $.ajax({
+                            url: '{{ base_url() }}/admin/listaitem',
+                            type:'get',
+                            data: {
+                                codigo : item.idcategory,
+                            },
+                            beforeSend: function(e){
+                                $('#load').addClass('load');
+                            },
+                            success: function(data){
+                                var b = JSON.parse(data);
+                                var cont = 0;
+                                $('#li'+item.idcategory).append('<ul class="treeview-menu" id="ul'+item.idcategory+'">');
+                                $.each(b.data,function(v,value){
+                                    $('#ul'+item.idcategory).append('<li><a href="{{ base_url() }}/admin/'+value.tag+'"><i class="fa fa-circle-o"></i> '+value.nombre+'</a></li>');
+                                    cont++;
+                                });
+                                setTimeout(function(){
+                                    $('#li'+item.idcategory).append('</ul>');
+                                    $('#tmp'+item.idcategory).text(cont);
+                                    $('#side-menu').append('</li>');
+                                    $('#div_Menu').append('</ul>');
+                                    $('#load').removeClass('load');
+                                }, 1500);
+                            },
+                            error: function(){
+                                $('#load').removeClass('load');
+                            }
+                        });
+                    });
+                },
+                error: function () {
+                }
+            });
+        }
+    </script>
+{% endblock content %}

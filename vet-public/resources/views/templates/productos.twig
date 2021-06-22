@@ -1,0 +1,146 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+  {% include 'templates/partials/navegacion.twig' %}
+
+  <br>
+  <br>
+  <div class="container">
+    <div class="row">
+      {# Sección Izquierda - Pedido y tabla #}
+      <div class="col-md-8">
+
+        <div class="row">
+          <div class="col-xs-8 col-md-8">
+            <p>PEDIDO</p>
+            <p>0001-2020</p>
+            <input type="text" class="form-control" id="">
+          </div>
+
+          <div class="col-xs-4 col-md-4">
+            <button type="button" class="btn btn-success">Reserva</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-responsive bg-w-form  ">
+                <table id="" class="table table-bordered responsive">
+                    <thead>
+                        <tr class="heading-table">
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Sub Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                    </tbody>
+                </table>
+            </div>
+            <form class="form-inline col-xs-offset-8 col-md-offset-8">
+              <div class="form-group">
+                <label for="exampleInputName2">Total</label>
+                <input type="text" class="form-control" id="">
+              </div>
+            </form>
+
+            <br>
+            <br>
+
+            <div class=" col-xs-offset-10 col-md-offset-10">
+              <button type="button" class="btn btn-primary btn-lg">Finalizar</button>
+            </div>
+
+            <br>
+            <br>
+
+          </div>
+        </div>
+
+      </div>
+      
+      {# Sección Derecha - Listado de Productos#}
+      <div class="col-md-4">
+        {% for productos in ProductosController.listaproductos %}
+          <div class="col-12">
+            <div class="panel panel-default">
+
+              <div class="panel-heading ">
+                <div class="card p-2 py-3 text-center">
+                  <h5 class="">{{ productos.nombre }}</h5>  
+                </div>
+              </div>
+
+              <div class="panel-body">
+                <center>
+                  <img src='{{productos.foto1}}' class="zoomInDown animated" width:"220px" height="220px">
+                </center>
+              </div>
+
+              <div class="panel-footer">
+                <h5 class="text-center ">S/. {{ productos.precio }}</h5>  
+              </div>
+
+              <div class="panel-footer">
+                <a href="" class="btn btn-success btn-block">
+                  <span class="glyphicon glyphicon-shopping-cart"></span> Añadir al carrito
+                </a>
+              </div>
+
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+
+{# 
+  <div id="navbar" class="navbar-collapse collapse">
+    <ul class="nav navbar-nav pull-right">
+      <li>
+        <a href="carrito.php" class="btn">CARRITO <span class="badge"></span></a>
+      </li> 
+    </ul>
+  </div>
+
+
+  <div class="container" id="main">
+    <div class="row">
+      {% for productos in ProductosController.listaproductos %}
+        <div class="col-md-4">
+          <div class="panel panel-default">
+
+            <div class="panel-heading">
+              <div class="card p-2 py-3 text-center">
+                <h5 class="">{{ productos.nombre }}</h5>  
+              </div>
+            </div>
+
+            <div class="panel-body">
+              <img src='{{productos.foto1}}' class="zoomInDown    animated" width:"280px" height="280px">
+            </div>
+
+            <div class="panel-footer">
+              <h5 class="text-center ">S/. {{ productos.precio }}</h5>  
+            </div>
+
+            <div class="panel-footer">
+              <a href="carrito.php?id=<?php print $item['id'] ?>" class="btn btn-success btn-block">
+                <span class="glyphicon glyphicon-shopping-cart"></span> Añadir al carrito
+              </a>
+            </div>
+
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+         #}
+  {% include 'templates/partials/footer.twig' %}
+{% endblock content %}
+

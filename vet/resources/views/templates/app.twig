@@ -1,0 +1,97 @@
+<html lang="es">
+
+    <head>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>GPS SOCIAL PERÚ</title>
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400&display=swap" rel="stylesheet">
+
+        <!-- Template CSS -->
+        <link rel="stylesheet" href="{{ base_url() }}/css/style-starter.css?v=1.2">
+        <link rel="shortcut icon" type="image/png" href="{{ base_url() }}/images/favicon.png"/>
+
+    </head>
+
+    <body>
+
+
+        {% include 'templates/partials/navegacion.twig' %}
+
+        {% block content %} {% endblock %}
+
+        {% include 'templates/partials/footer.twig' %}
+
+        <script>
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function () {
+                scrollFunction()
+            };
+            function scrollFunction() {
+                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                    document.getElementById("movetop").style.display = "block";
+                } else {
+                    document.getElementById("movetop").style.display = "none";
+                }
+            }
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+        </script>
+        <!-- //move top -->
+
+        <!-- javascript -->
+        <script src="{{ base_url() }}/js/jquery-3.3.1.min.js"></script>
+
+        <!-- libhtbox -->
+        <script src="{{ base_url() }}/js/lightbox-plus-jquery.min.js"></script>
+
+        <!-- particles -->
+        <script src='{{ base_url() }}/js/particles.min.js'></script>
+        <script src="{{ base_url() }}/js/script.js"></script>
+        <!-- //particles -->
+
+        <!-- owl carousel -->
+        <script src="{{ base_url() }}/js/owl.carousel.js"></script>
+        <script>
+                  $(document).ready(function () {
+                      var owl = $('.owl-carousel');
+                      owl.owlCarousel({
+                          margin: 10,
+                          nav: true,
+                          loop: false,
+                          responsive: {
+                              0: {
+                                  items: 1
+                              },
+                              767: {
+                                  items: 2
+                              },
+                              1000: {
+                                  items: 3
+                              }
+                          }
+                      })
+                  })
+        </script>
+
+        <!-- disable body scroll which navbar is in active -->
+        <script>
+            $(function () {
+                $('.navbar-toggler').click(function () {
+                    $('body').toggleClass('noscroll');
+                })
+            });
+        </script>
+        <!-- disable body scroll which navbar is in active -->
+
+        <!-- bootstrap -->
+        <script src="{{ base_url() }}/js/bootstrap.min.js"></script>
+
+
+    </body> 
+
+</html>

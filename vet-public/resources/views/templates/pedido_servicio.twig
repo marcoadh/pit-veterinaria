@@ -1,0 +1,270 @@
+<style>
+   .load {
+   position: fixed;
+   text-align: center;
+   left: 0px;
+   top: 0px;
+   width: 100%;
+   height: 100%;
+   z-index: 9999;
+   background: url('{{base_url()}}/images/fancybox_loading.gif') 50% 50% no-repeat rgb(0,0,1);
+   opacity: .8;
+   }
+</style>
+<div id="load"></div>
+<div class="container">
+   <div class="row">
+      <div class="col-md-9  section-padding">
+         <div class="course-syllabus-title underline">Pedido: {{ pedido.numero_pedido }}</div>
+         <div class="col-xs-8 col-md-8">
+            <div class="form-group">
+               <label>Tipo de pedido:</label>
+               <p>Servicios</p>
+            </div>
+            <div class="form-group">
+               <label>Fecha de pedido:</label>
+               <p>{{ pedido.fecha_emision }}</p>
+            </div>
+            <div class="form-group">
+               <label>Mascota:</label>
+               <p>{{ pedido.nombre }}</p>
+            </div>
+            <div class="form-group">
+               <label>Fecha de reserva:</label>
+               <input type="date" class="form-control" id="" value="890">
+            </div>
+         </div>
+         <div class="col-md-12">
+            <div class="bg-w-form section-padding">
+               <table class="table table-bordered" id="detalle">
+                  <thead>
+                     <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Sub Total</th>
+                     </tr>
+                  </thead>
+                  <tfoot>
+                     <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Total</th>
+                        <th>Sub Total</th>
+                     </tr>
+                  </tfoot>
+               </table>
+               <input type="hidden" id="total" class="form-control"  value="" />
+            </div>
+         </div>
+         <div class="col-md-12">
+            <button type="button" onclick="Pagar()" class="btn btn-lg btn-block btn-primary">Pagar</button>
+         </div>
+      </div>
+      {# Sección Derecha - Listado de Productos#}
+      <div class="col-md-3">
+         {% for servicios in ServiciosController.listaservicios %}
+         <div class="col-12">
+            <div class="panel panel-default">
+               <div class="panel-heading ">
+                  <div class="card p-2 py-3 text-center">
+                     <h5 class="">{{ servicios.nombre }}</h5>
+                  </div>
+               </div>
+               <div class="panel-body">
+                  <center>
+                     <img src='https://www.3pls.cl/wp-content/uploads/2020/12/Proceso-de-etiquetado-de-un-producto-400x250.png' width="100%" class="zoomInDown animated" height="100px">
+                  </center>
+               </div>
+               <div class="panel-footer">
+                  <h5 class="text-center ">S/. {{ servicios.precio }}</h5>
+               </div>
+               <div class="panel-footer">
+                  <a class="btn btn-success btn-block" onclick="AgregarProducto({{ servicios.id_servicio }})">
+                  <span class="glyphicon glyphicon-shopping-cart">Agregar <i class="fa fa-plus"></i> </span>
+                  </a>
+               </div>
+            </div>
+         </div>
+         {% endfor %}
+                    
+      </div>
+   </div>
+</div>
+{% include 'templates/partials/footer.twig' %}
+<script type="text/javascript">
+   function PagarPedido() {
+     var formData = new FormData($("#FormMascota")[0]);
+     var resultado = "";
+     $.ajax({
+     url: "{{ base_url() }}/pedido/pagar",
+         async: false,
+         type: 'GET',
+         data: formData,
+         contentType: false,
+         enctype: 'multipart/form-data',
+         processData: false,
+         dataType: 'json',
+         success: function (datos) {
+             resultado = datos.response;
+             mensaje = datos.message;
+         }
+     });
+     return [resultado, mensaje];
+   }
+   
+   function Pagar() {
+   Swal.fire({
+         title: '¿Desea pagar el pedido?',
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#3085d6',
+         cancelButtonColor: '#d33',
+         confirmButtonText: 'Pagar'
+     }).then((result) => {
+         if (result.value) {
+             var resp = PagarPedido();
+             if (resp[0] == "success") {
+                 Swal.fire({
+                     icon: 'success',
+                     title: '¡Éxito!',
+                     text: resp[1],
+                 }).then((result) => {
+                     if (result.value) {
+                         window.location.href = "historial";
+                     }
+                 });
+             } else {
+                 Swal.fire({
+                     icon: 'error',
+                     title: '¡Error!',
+                     text: resp[1],
+                 })
+             }
+         }
+     })
+   }
+   
+   function AgregarProducto(codigo) {
+   var codigo = codigo;
+   $('#codigo').val(codigo);
+   return $.ajax({
+      type: "get",
+      url: '{{ base_url() }}/detalle/registrar',
+      data: {
+          codigo: codigo
+      },
+      beforeSend: function(e) {
+          $('#load').addClass('load');
+      },
+      success: function (data) {
+          Listadetalle();
+          $('#load').removeClass('load');
+      },
+      error: function () {
+          $('#load').removeClass('load');
+      }
+   });
+   
+   }
+   
+   function ReducirC(codigo) {
+   var codigo = codigo;
+   return $.ajax({
+      type: "get",
+      url: '{{ base_url() }}/detalle/reducir',
+      data: {
+          codigo: codigo
+      },
+      beforeSend: function(e) {
+          $('#load').addClass('load');
+      },
+      success: function (data) {
+          Listadetalle();
+          $('#load').removeClass('load');
+      },
+      error: function () {
+          $('#load').removeClass('load');
+      }
+   });
+   }
+   
+</script>
+<script type="text/javascript">
+   Listadetalle();
+   
+   function Listadetalle() {
+       return $.ajax({
+           type: "get",
+           url: '{{ base_url() }}/detalle/listarservicio',
+           success: function (data) {
+   
+               $.each(data, function (i, it) {
+                   it.rowTotal = it.cantidad * it.precio;
+               });
+   
+               var dtapi = $('#detalle').DataTable({
+                   "ordering": false,
+                   "bPaginate": false,
+                   "searching": false,
+                   "bInfo" : false,
+                   destroy: true,
+                   data: data,
+                   "deferRender": false,
+                   "footerCallback": function (tfoot, data, start, end, display) {
+                       var api = this.api();
+   
+                       var p = api.column(3).data().reduce(function (a, b) {
+                           return a + b;
+                       }, 0)
+   
+                       var cantidad = api.column(1).data().toArray();
+                       var precio = api.column(2).data().toArray();
+   
+                       var total = 0;
+   
+                       for (i = 0; i < cantidad.length; i++) {
+                           total += cantidad[i] * precio[i];
+                       }
+   
+                       $(api.column(3).footer()).html(p);
+                       $("#total").val(total);
+                   },
+                   "order": [1],
+                   "columns": [
+                       {
+                           data: "nombre"
+                       },
+                       {data: "cantidad",
+                           render: function (data, type, row) {
+                               return   row.cantidad + "&nbsp;&nbsp;&nbsp;<a class='btn btn-default btn-xs'" +
+                                       "onclick='AgregarProducto(" + row.id_producto_servicio + ")'>" +
+                                       "<i class='fa fa-plus'></i></a>&nbsp;&nbsp;&nbsp;<a class='btn btn-default btn-xs'" +
+                                       "onclick='ReducirC(" + row.id_producto_servicio + ")'>" +
+                                       "<i class='fa fa-minus'></i></a>"
+                           }
+                       },
+                       {
+                           data: "precio",
+                       },
+                       {
+                           data: "rowTotal"
+                       }
+   
+                   ],
+                   columnDefs: [
+                       {
+                           className: 'text-center',
+                           targets: [1,2,3],
+                       },
+                   ]
+               });
+   
+           },
+           error: function () {
+           }
+       });
+   
+   }
+   
+</script>

@@ -1,0 +1,1303 @@
+{% extends 'admin/templates/app.twig' %}
+{% block content %}
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            width: 100%;
+            height: 80%;
+            border: solid 2px #cccccc;
+            border-radius: 5px;
+        }
+        #map2 {
+            width: 100%;
+            height: 100%;
+            border: solid 2px #cccccc;
+            border-radius: 5px;
+        }
+        #coords{width: 500px;}
+
+        td.details-control {
+            background: url('{{ base_url() }}/images/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+        tr.shown  td.details-control {
+            background: url('{{ base_url() }}/images/details_close.png') no-repeat center center;
+        }
+    </style>
+
+    <body class="hold-transition skin-blue sidebar-mini ">
+        <div class="pace  pace-inactive">
+            <div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
+                <div class="pace-progress-inner"></div>
+            </div>
+            <div class="pace-activity"></div>
+        </div>
+        <div class="wrapper">
+
+            <header class="main-header">
+                {% include 'admin/templates/head.twig' %}
+            </header>
+
+            <aside class="main-sidebar">
+                {% include 'admin/templates/menu.twig' %}
+            </aside>
+
+            <div class="content-wrapper">
+                <section class="content-header">
+                    <h1 id="tipodease">
+                        Ollas comunes
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="#"><i class="fa fa-book"></i> [Lista de Ollas Comunes]</a></li>
+                    </ol>
+                </section>
+                <section class="content">
+                    <div class="row">
+
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-body">
+                                    <div class="margin">
+                                        <div class="btn-group">
+                                            <a href="{{ base_url() }}/admin/export"  style="font-style: italic;"  class="btn btn-primary btn-flat">Exportar Ollas Comunes</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-body">
+                                    <table id="Noticias"  class="table table-bordered table-hover" width="100%">
+                                        <thead>
+                                            <tr class="heading-table">
+                                                <th>Nombre</th>
+                                                <th>Distrito</th>
+                                                <th>Zona</th>
+                                                <th>Ubicación</th>
+                                                <th>Nombre de contacto</th>
+                                                <th>Cargo de contacto</th>
+                                                <th>Celular de contacto</th>
+                                                <th>Fecha de registro</th>
+                                                <th>Fecha de actualización</th>
+                                                <th>Estado</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+
+
+            <div class="modal fade" id="modalNoticia" tabindex="-1" role="dialog" aria-labelledby="modalNoticia">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header modalert">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title modtitle">[ EDITAR OLLA COMÚN ]</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <form class="bg-w-form contact-form" method="post" autccomplete="off"
+                                              id="FormActualizarOlla">
+                                            <div class="row">
+
+                                                <input value="" id="id" name="id" type="hidden">
+
+                                                <div class="row ">
+                                                    <div class="col-md-12 sidebar">
+                                                        
+                                                        <div class="col-md-12">
+                                                          <div class="callout callout-info">
+                                                           <h4>DATOS GENERALES</h4>
+                                                          </div>
+                                                        </div>
+                                                            
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label">Distrito <span
+                                                                    class="highlight">*</span></label>
+                                                            <select class="form-control form-select obligate"
+                                                                    id="distrito" value=""
+                                                                    name="distrito"
+                                                                    data-content="Usted debe seleccionar el distrito.">
+                                                                <option value=""> Seleccione un distrito</option>
+                                                                <option value="1251"> CERCADO DE LIMA</option>
+                                                                <option value="1252"> ANCON</option>
+                                                                <option value="1253"> ATE</option>
+                                                                <option value="1254"> BARRANCO</option>
+                                                                <option value="1255"> BREÑA</option>
+                                                                <option value="1256"> CARABAYLLO</option>
+                                                                <option value="1257"> CHACLACAYO</option>
+                                                                <option value="1258"> CHORRILLOS</option>
+                                                                <option value="1259"> CIENEGUILLA</option>
+                                                                <option value="1260"> COMAS</option>
+                                                                <option value="1261"> EL AGUSTINO</option>
+                                                                <option value="1262"> INDEPENDENCIA</option>
+                                                                <option value="1263"> JESUS MARIA</option>
+                                                                <option value="1264"> LA MOLINA</option>
+                                                                <option value="1265"> LA VICTORIA</option>
+                                                                <option value="1266"> LINCE</option>
+                                                                <option value="1267"> LOS OLIVOS</option>
+                                                                <option value="1268"> LURIGANCHO</option>
+                                                                <option value="1269"> LURIN</option>
+                                                                <option value="1270"> MAGDALENA DEL MAR</option>
+                                                                <option value="1271"> MAGDALENA VIEJA</option>
+                                                                <option value="1272"> MIRAFLORES</option>
+                                                                <option value="1273"> PACHACAMAC</option>
+                                                                <option value="1274"> PUCUSANA</option>
+                                                                <option value="1275"> PUENTE PIEDRA</option>
+                                                                <option value="1276"> PUNTA HERMOSA</option>
+                                                                <option value="1277"> PUNTA NEGRA</option>
+                                                                <option value="1278"> RIMAC</option>
+                                                                <option value="1279"> SAN BARTOLO</option>
+                                                                <option value="1280"> SAN BORJA</option>
+                                                                <option value="1281"> SAN ISIDRO</option>
+                                                                <option value="1282"> SAN JUAN DE LURIGANCHO</option>
+                                                                <option value="1283"> SAN JUAN DE MIRAFLORES</option>
+                                                                <option value="1284"> SAN LUIS</option>
+                                                                <option value="1285"> SAN MARTIN DE PORRES</option>
+                                                                <option value="1286"> SAN MIGUEL</option>
+                                                                <option value="1287"> SANTA ANITA</option>
+                                                                <option value="1288"> SANTA MARIA DEL MAR</option>
+                                                                <option value="1289"> SANTA ROSA</option>
+                                                                <option value="1290"> SANTIAGO DE SURCO</option>
+                                                                <option value="1291"> SURQUILLO</option>
+                                                                <option value="1292"> VILLA EL SALVADOR</option>
+                                                                <option value="1293"> VILLA MARIA DEL TRIUNFO</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label">Zona/Eje <span
+                                                                    class="highlight">*</span></label>
+                                                            <input type="text" placeholder="Ingrese la Zona/Eje"
+                                                                   id="zona" name="zona"
+                                                                   class="form-control form-input obligate"
+                                                                   data-content="Usted debe ingresar la Zona/Eje."
+                                                                   value="">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label">AAHH / AA.FF. /
+                                                                Pueblo Joven perteneciente <span
+                                                                    class="highlight">*</span></label>
+                                                            <input type="text"
+                                                                   placeholder="Ingrese el AAHH / AA.FF. / Pueblo Joven perteneciente"
+                                                                   id="aahh" name="aahh"
+                                                                   class="form-control form-input obligate"
+                                                                   data-content="Usted debe ingresar el AAHH / AA.FF. / Pueblo Joven perteneciente."
+                                                                   value="">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label">¿Dónde está ubicada
+                                                                la olla común ?<span
+                                                                    class="highlight">*</span></label>
+                                                            <input type="text"
+                                                                   placeholder="Ingrese la ubicación la olla común"
+                                                                   id="ubicacion" name="ubicacion"
+                                                                   class="form-control form-input obligate"
+                                                                   data-content="Usted debe ingresar la ubicación la olla común."
+                                                                   value="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 sidebar">
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label">Nombre de Olla Común<span
+                                                                    class="highlight">*</span></label>
+                                                            <input type="text"
+                                                                   placeholder="Ingrese el nombre de la olla común"
+                                                                   id="nombre_olla"
+                                                                   name="nombre_olla"
+                                                                   data-content="Ingrese el nombre de la olla común"
+                                                                   class="form-control form-input obligate" value="">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label">¿Cuentan con padrones? <span
+                                                                    class="highlight">*</span></label>
+                                                            <select class="form-control form-select obligate"
+                                                                    id="padrones" value=""
+                                                                    name="padrones"
+                                                                    data-content="Usted debe seleccionar una opción.">
+                                                                <option value=""> :: Seleccione una opción ::</option>
+                                                                <option value="Si"> Si</option>
+                                                                <option value="No"> No</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿Cuentan con Comedor Popular / Vaso de Leche?</label>
+                                                            <select class="form-control form-select" id="comedorpopular" value=""
+                                                                    name="comedorpopular"
+                                                                    data-content="¿Cuentan con Comedor Popular / Vaso de Leche?">
+                                                                <option value="">:: Seleccione un opción ::</option>
+                                                                <option value="Vaso de leche">Vaso de leche</option>
+                                                                <option value="Comedor Popular">Comedor Popular</option>
+                                                                <option value="Ambos ">Ambos</option>
+                                                                <option value="Ninguno">Ninguno</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿Cuentan con comité Anti-Covid o articulan con el MINSA?</label>
+                                                            <select class="form-control form-select" id="comite" value=""
+                                                                    name="comite"
+                                                                    data-content="¿Cuentan con comité Anti-Covid o articulan con el MINSA?">
+                                                                <option value="">:: Seleccione un opción ::</option>
+                                                                <option value="Si">Si</option>
+                                                                <option value="No">No</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">Nombre de contacto principal <span class="highlight">*</span></label>
+                                                            <input type="text"
+                                                                   placeholder="Ingrese el nombre del contacto principal"
+                                                                   id="nombre_contacto" name="nombre_contacto"
+                                                                   class="form-control form-input obligate"
+                                                                   data-content="Usted debe ingresar el nombre del contacto."
+                                                                   value="">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label">Cargo de contacto principal<span class="highlight">*</span></label>
+                                                            <input type="text"
+                                                                   placeholder="Ingrese el cargo del contacto principal"
+                                                                   id="cargo_contacto"
+                                                                   name="cargo_contacto"
+                                                                   data-content="Ingrese el cargo del contacto"
+                                                                   class="form-control form-input obligate" value="">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label">Celular de contacto principal<span class="highlight">*</span></label>
+                                                            <input type="text"
+                                                                   placeholder="Ingrese el celular del contacto principal"
+                                                                   id="celular_contacto" name="celular_contacto"
+                                                                   class="form-control form-input obligate"
+                                                                   value=""
+                                                                   maxlength="9"
+                                                                   onkeypress="return validarnu(event)"
+                                                                   data-content="Usted debe ingresar el celular del contacto.">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">Nombre de contacto secundario</label>
+                                                            <input type="text"
+                                                                   placeholder="Ingrese el nombre del contacto secundario"
+                                                                   id="nombre_contacto_secundario" name="nombre_contacto_secundario"
+                                                                   class="form-control form-input obligate"
+                                                                   data-content="Usted debe ingresar el nombre del contacto."
+                                                                   value="">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label">Cargo de contacto secundario</label>
+                                                            <input type="text"
+                                                                   placeholder="Ingrese el cargo del contacto secundario"
+                                                                   id="cargo_contacto_secundario"
+                                                                   name="cargo_contacto_secundario"
+                                                                   data-content="Ingrese el cargo del contacto"
+                                                                   class="form-control form-input obligate" value="">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label">Celular de contacto secundario</label>
+                                                            <input type="text"
+                                                                   placeholder="Ingrese el celular del contacto secundario "
+                                                                   id="celular_contacto_secundario" name="celular_contacto_secundario"
+                                                                   class="form-control form-input obligate"
+                                                                   value=""
+                                                                   maxlength="9"
+                                                                   onkeypress="return validarnu(event)"
+                                                                   data-content="Usted debe ingresar el celular del contacto.">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 sidebar">
+  
+                                                        <div class="col-md-12">
+                                                          <div class="callout callout-info">
+                                                           <h4>DATOS DE INFRAESTRUCTURA Y EQUIPAMIENTO</h4>
+                                                          </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label">Acceso a agua<span
+                                                                    class="highlight">*</span></label>
+                                                            <select class="form-control form-select" id="agua" value=""
+                                                                    name="agua"
+                                                                    data-content="Usted debe seleccionar el acceso al agua.">
+                                                                <option value="">:: Seleccione una opción ::</option>
+                                                                <option value="Pilón">Pilón</option>
+                                                                <option value="Cisterna">Cisterna</option>
+                                                                <option value="Conexión a red pública">Conexión a red
+                                                                    pública
+                                                                </option>
+                                                                <option value="Otro">Otro</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label">Acceso a luz <span
+                                                                    class="highlight">*</span></label>
+                                                            <select class="form-control form-select" id="luz" value=""
+                                                                    name="luz"
+                                                                    data-content="Usted debe seleccionar el acceso a luz.">
+                                                                <option value="">:: Seleccione una opción ::</option>
+                                                                <option value="Provisional">Provisional</option>
+                                                                <option value="Conexión pública">Conexión pública</option>
+                                                                <option value="Otro">Otro</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿Cuenta con la
+                                                                presencia de la Municipalidad distrital ?</label>
+                                                            <select class="form-control form-select" id="presencia_muni"
+                                                                    value=""
+                                                                    name="presencia_muni"
+                                                                    data-content="Usted debe seleccionar el distrito.">
+                                                                <option value="">:: Seleccione una opción ::</option>
+                                                                <option value="Si"> Si</option>
+                                                                <option value="No"> No</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label">Tipo de espacio usado para la olla común</label>
+                                                            <select class="form-control form-select" id="tipo_espacio"
+                                                                    value=""
+                                                                    name="tipo_espacio"
+                                                                    data-content="Tipo de espacio usado para la olla común">
+                                                                <option value="">:: Seleccione una opción ::</option>
+                                                                <option value="Casa del vecino/a">Casa del vecino/a</option>
+                                                                <option value="Aire Libre">Aire Libre</option>
+                                                                <option value="Local Comunitario">Local Comunitario</option>
+                                                                <option value="Otros">Otros</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label">Estado del espacio usado para la olla común</label>
+                                                            <select class="form-control form-select" id="estado_espacio"
+                                                                    value=""
+                                                                    name="estado_espacio"
+                                                                    data-content="Estado del espacio usado para la olla común">
+                                                                <option value="">:: Seleccione una opción ::</option>
+                                                                <option value="Bueno">Bueno</option>
+                                                                <option value="Regular">Regular</option>
+                                                                <option value="Malo">Malo</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label">Tipo de combustible usado para la olla común</label>
+                                                            <select class="form-control form-select" id="combustible"
+                                                                    value=""
+                                                                    name="combustible"
+                                                                    data-content="Tipo de combustible usado para la olla común">
+                                                                <option value="">:: Seleccione una opción ::</option>
+                                                                <option value="Gas">Gas</option>
+                                                                <option value="Leña">Leña</option>
+                                                                <option value="Gas y leña">Gas y leña</option>
+                                                                <option value="Otros">Otros</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">En el espacio de la olla común cuentan con: ¿Techo en buen estado?</label>
+                                                            <select class="form-control form-select obligate"
+                                                                    id="techo" value=""
+                                                                    name="techo"
+                                                                    data-content="Usted debe seleccionar una opción.">
+                                                                <option value=""> :: Seleccione una opción ::</option>
+                                                                <option value="Si"> Si</option>
+                                                                <option value="No"> No</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">En el espacio de la olla común cuentan con: ¿Punto de lavado?</label>
+                                                            <select class="form-control form-select obligate"
+                                                                    id="lavado" value="" name="lavado" data-content="Usted debe seleccionar una opción.">
+                                                                <option value=""> :: Seleccione una opción ::</option>
+                                                                <option value="Si"> Si</option>
+                                                                <option value="No"> No</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿Reciben o cuentan con KITS de Higiene?</label>
+                                                            <select class="form-control form-select obligate"
+                                                                    id="higiene" value="" name="higiene" data-content="Usted debe seleccionar una opción.">
+                                                                <option value=""> :: Seleccione una opción ::</option>
+                                                                <option value="Si"> Si</option>
+                                                                <option value="No"> No</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿Cuenta con los
+                                                                equipos e instrumentos necesarios para implementar la
+                                                                olla?</label>
+                                                            <select class="form-control form-select obligate"
+                                                                    id="instrumentos" value="" name="instrumentos" data-content="Usted debe seleccionar una opción.">
+                                                                <option value=""> :: Seleccione una opción ::</option>
+                                                                <option value="Si"> Si</option>
+                                                                <option value="No"> No</option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-md-12 sidebar">
+                                               
+                                                        <div class="col-md-12">
+                                                          <div class="callout callout-info">
+                                                           <h4>DATOS DE ACCESO ALIMENTARIO</h4>
+                                                          </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿Cómo obtiene
+                                                                insumos para la olla común?</label>
+                                                            <select class="form-control form-select" id="insumos"
+                                                                    value="" name="insumos">
+                                                                <option value="">:: Seleccione una opción ::</option>
+                                                                <option value="Autogestión">Autogestión</option>
+                                                                <option value="Autogestión y empresas">Autogestión y empresas</option>
+                                                                <option value="Empresas">Empresas</option>
+                                                                <option value="Iglesia">Iglesia</option> 
+                                                                <option value="Iglesia y empresas">Iglesia y empresas</option>
+                                                                <option value="Iglesia y ONGs">Iglesia y ONGs</option> 
+                                                                <option value="Iglesia y autogestión">Iglesia y autogestión</option> 
+                                                                <option value="Iglesia, ONGs y autogestión">Iglesia, ONGs y autogestión</option> 
+                                                                <option value="Iglesia y otros">Iglesia y otros</option> 
+                                                                <option value="ONGs">ONGs</option>
+                                                                <option value="Otros">Otros</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿Cuál es el nombre
+                                                                de la organización que los ayuda?</label>
+                                                            <input type="text" placeholder="" id="org_ayuda"
+                                                                   name="org_ayuda"
+                                                                   class="form-control form-input" value="">
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿Cuántos días a la
+                                                                semana atiende la olla común?</label>
+                                                            <select class="form-control form-select obligate" id="dias_atencion"
+                                                                    data-content="Cuántos días a la semana atiende la olla común?"
+                                                                    value="" name="dias_atencion">
+                                                                <option value="">:: Seleccione una opción ::</option>
+                                                                <option value="1">1</option>
+                                                                <option value="2">2</option>
+                                                                <option value="3">3</option>
+                                                                <option value="4">4</option> 
+                                                                <option value="5">5</option>
+                                                                <option value="6">6</option> 
+                                                                <option value="7">7</option> 
+                                                            </select>
+
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿Cuántas comidas al
+                                                                día prepara la olla común?</label>
+                                                            <select class="form-control form-select obligate" id="comidas_dia"
+                                                                    data-content="¿Cuántas comidas al día prepara la olla común?"
+                                                                    value="" name="comidas_dia">
+                                                                <option value="">:: Seleccione una opción ::</option>
+                                                                <option value="Desayuno">Desayuno</option>
+                                                                <option value="Desayuno y almuerzo">Desayuno y almuerzo</option>
+                                                                <option value="Desayuno, almuerzo y lonche">Desayuno, almuerzo y lonche</option>
+                                                                <option value="Desayuno, almuerzo y cena">Desayuno, almuerzo y cena</option> 
+                                                                <option value="Desayuno y cena">Desayuno y cena</option>
+                                                                <option value="Almuerzo">Almuerzo</option> 
+                                                                <option value="Almuerzo y lonche">Almuerzo y lonche</option> 
+                                                                <option value="Cena">Cena</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">Número de raciones que distribuye</label>
+                                                            <input type="text" placeholder="" id="raciones"
+                                                                   name="raciones"
+                                                                   maxlength="9"
+                                                                   onkeypress="return validarnu(event)"
+                                                                   class="form-control form-input" value="">
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">Precio por
+                                                                ración</label>
+                                                            <input type="text" placeholder="" id="precio_racion"
+                                                                   name="precio_racion"
+                                                                   class="form-control form-input" value="">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿Cuántas raciones
+                                                                del total son pagadas?</label>
+                                                            <input type="text" placeholder="" id="raciones_pagadas"
+                                                                   name="raciones_pagadas"
+                                                                   maxlength="9"
+                                                                   onkeypress="return validarnu(event)"
+                                                                   class="form-control form-input" value="">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">Zonas a las cuales
+                                                                beneficia la olla común</label>
+                                                            <input type="text" placeholder="" id="zonas_beneficiadas"
+                                                                   name="zonas_beneficiadas"
+                                                                   class="form-control form-input" value="">
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">Número de familias
+                                                                beneficiadas</label>
+                                                            <input type="number" placeholder=""
+                                                                   id="familias_beneficiadas"
+                                                                   name="familias_beneficiadas"
+                                                                   maxlength="9"
+                                                                   onkeypress="return validarnu(event)"
+                                                                   class="form-control form-input" value="">
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">Número de niños
+                                                                beneficiados (Menores de 5 años)</label>
+                                                            <input type="number" placeholder="" id="ninos_beneficiadas"
+                                                                   name="ninos_beneficiadas"
+                                                                   maxlength="9"
+                                                                   onkeypress="return validarnu(event)"
+                                                                   class="form-control form-input" value="">
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">Número de adultos
+                                                                mayores beneficiados (Mayores de 60 años)</label>
+                                                            <input type="number" placeholder=""
+                                                                   maxlength="9"
+                                                                   onkeypress="return validarnu(event)"
+                                                                   id="adultos_beneficiadas" name="adultos_beneficiadas"
+                                                                   class="form-control form-input" value="">
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">Número de personas
+                                                                discapacitadas beneficiadas</label>
+                                                            <input type="number" placeholder="" id="disca_beneficiadas"
+                                                                   name="disca_beneficiadas"
+                                                                   maxlength="9"
+                                                                   onkeypress="return validarnu(event)"
+                                                                   class="form-control form-input" value="">
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">Número de mujeres
+                                                                embarazadas beneficiadas</label>
+                                                            <input type="number" placeholder="" id="emba_beneficiadas"
+                                                                   name="emba_beneficiadas"
+                                                                   maxlength="9"
+                                                                   onkeypress="return validarnu(event)"
+                                                                   class="form-control form-input" value="">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">Número de personas
+                                                                con enfermedades crónicas beneficiadas</label>
+                                                            <input type="number" placeholder=""
+                                                                   id="enfercro_beneficiadas"
+                                                                   name="enfercro_beneficiadas"
+                                                                   maxlength="9"
+                                                                   onkeypress="return validarnu(event)"
+                                                                   class="form-control form-input" value="">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">Número total de
+                                                                personas beneficiadas</label>
+                                                            <input type="number" placeholder="" id="total_beneficiadas"
+                                                                   name="total_beneficiadas"
+                                                                   maxlength="9"
+                                                                   onkeypress="return validarnu(event)"
+                                                                   class="form-control form-input" value="">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">Agrega alguna
+                                                                observación</label>
+                                                            <input type="text" placeholder="" id="observaciones"
+                                                                   name="observaciones"
+                                                                   class="form-control form-input" value="">
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">Población Migrante extranjera</label>
+                                                            <select class="form-control form-select obligate"
+                                                                    id="extranjera" value=""
+                                                                    name="extranjera"
+                                                                    data-content="Usted debe seleccionar una opción.">
+                                                                <option value=""> :: Seleccione una opción ::</option>
+                                                                <option value="Si">Si</option>
+                                                                <option value="No">No</option>
+                                                            </select>
+                                                        </div>
+
+  
+                                                    </div>
+                                                    <div class="col-md-12 sidebar">
+                                                        
+                                                         <div class="col-md-12">
+                                                          <div class="callout callout-info">
+                                                           <h4>Huertos urbanos	</h4>
+                                                          </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿Tienen interés en tener un huerto en la comunidad? </label>
+                                                            <select class="form-control form-select" id="huerto" value=""
+                                                                    name="huerto"
+                                                                    data-content="¿Tienen interés en tener un huerto en la comunidad? ">
+                                                                <option value="">:: Seleccione un opción ::</option>
+                                                                <option value="Si">Si</option>
+                                                                <option value="No">No</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿En la comunidad cuentan con espacio comunitario para la implementación?</label>
+                                                            <select class="form-control form-select" id="espacio_huerto" value=""
+                                                                    name="espacio_huerto"
+                                                                    data-content="¿En la comunidad cuentan con espacio comunitario para la implementación?">
+                                                                <option value="">:: Seleccione un opción ::</option>
+                                                                <option value="Si">Si</option>
+                                                                <option value="No">No</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿La comunidad cuenta con personas que podrían asumir el liderazgo de un proyecto de este tipo? </label>
+                                                            <select class="form-control form-select" id="liderazgo" value=""
+                                                                    name="liderazgo"
+                                                                    data-content="¿La comunidad cuenta con personas que podrían asumir el liderazgo de un proyecto de este tipo? ">
+                                                                <option value="">:: Seleccione un opción ::</option>
+                                                                <option value="Si">Si</option>
+                                                                <option value="No">No</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 sidebar">
+
+                                                         <div class="col-md-12">
+                                                          <div class="callout callout-info">
+                                                           <h4>Capacitaciones</h4>
+                                                          </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿Han recibido capacitaciones sobre la inocuidad para la preparación de los alimentos? </label>
+                                                            <select class="form-control form-select" id="inocuidad" value=""
+                                                                    name="inocuidad"
+                                                                    data-content="¿Han recibido capacitaciones sobre la inocuidad para la preparación de los alimentos? ">
+                                                                <option value="">:: Seleccione un opción ::</option>
+                                                                <option value="Si">Si</option>
+                                                                <option value="No">No</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿Han recibido capacitaciones sobre protocolos sanitarios? </label>
+                                                            <select class="form-control form-select" id="protocolos" value=""
+                                                                    name="protocolos"
+                                                                    data-content="¿Han recibido capacitaciones sobre protocolos sanitarios? ">
+                                                                <option value="">:: Seleccione un opción ::</option>
+                                                                <option value="Si">Si</option>
+                                                                <option value="No">No</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="control-label form-label ">¿Han recibido otro tipo de capacitaciones? </label>
+                                                            <select class="form-control form-select" id="otro_cap" value=""
+                                                                    name="otro_cap"
+                                                                    data-content="¿Han recibido otro tipo de capacitaciones? ">
+                                                                <option value="">:: Seleccione un opción ::</option>
+                                                                <option value="Si">Si</option>
+                                                                <option value="No">No</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-12 sidebar">
+                                                       <div class="col-md-12">
+                                                          <div class="callout callout-info">
+                                                           <h4>GEOLOCALIZACIÓN</h4>
+                                                          </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-md-8" style="height: 400px;">
+                                                            <label class="control-label form-label">GEOLOCALIZACIÓN <span
+                                                                    class="highlight">*</span>
+                                                            </label>
+                                                            <div id="map2"></div>
+                                                        </div>
+                                                        
+                                                        <div class="col-md-4 form-group">
+                                                            <label class="control-label form-label">ESTADO<span
+                                                                    class="highlight">*</span>
+                                                            </label>
+                                                            <select class="form-control form-select obligate" id="estado"
+                                                                    name="estado"
+                                                                    data-content="Usted debe seleccionar el estado.">
+                                                                <option value="1">Nuevo</option>
+                                                                <option value="2">Activado</option>
+                                                                <option value="3">Desactivado</option>
+                                                                <option value="4">Eliminado</option>
+                                                            </select>
+                                                        </div>
+
+                                                    
+
+                                                        <div class="col-md-4 form-group">
+                                                            <label class="control-label form-label">LOGO DE ORGANIZACIÓN JUVENIL <span
+                                                                    class="highlight">*</span></label>
+                                                            <img src="" class="img-responsive pad" id="foto" name="foto">
+                                                        </div>
+
+                                                        <input id="longitud_editar" class="obligate" name="longitud_editar" type="hidden"
+                                                               data-content="Usted debe ubicar el comedor en el mapa."/>
+                                                        <input id="latitud_editar" class="obligate" name="latitud_editar" type="hidden"
+                                                               data-content="Usted debe ubicar el comedor en el mapa."/>
+
+                                                        
+                                                    </div>
+
+                                                </div>
+
+                                         
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="msg"></div>
+                                            </div>
+
+
+                                            {{ csrf.field | raw }}
+
+                                        </form>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                            <button type="button" id="ActualizarOlla" class="btn btn-success">Actualizar</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script type="text/javascript">
+
+            function editMapa(coords) {
+
+                var src = "http://ruoslima.com/public/mapas/limites.kmz";
+
+                //--------------------------------------------------------------
+                var map2 = new google.maps.Map(document.getElementById('map2'),
+                        {
+                            zoom: 13,
+                            center: new google.maps.LatLng(coords.lat2, coords.lng2),
+                            styles: [{
+                                    elementType: 'labels.icon',
+                                    stylers: [{visibility: 'off'}]
+                                }]
+                        });
+
+                var kmlLayer = new google.maps.KmlLayer(src, {
+                    suppressInfoWindows: true,
+                    preserveViewport: true,
+                    map: map2
+                });
+
+                marker2 = new google.maps.Marker({
+                    map: map2,
+                    draggable: true,
+                    animation: google.maps.Animation.DROP,
+                    position: new google.maps.LatLng(coords.lat2, coords.lng2),
+                });
+                //--------------------------------------------------------------
+
+                marker2.addListener('click', toggleBounce);
+
+                marker2.addListener('dragend', function (event) {
+                    $('#longitud_editar').val(this.getPosition().lng());
+                    $('#latitud_editar').val(this.getPosition().lat());
+                });
+
+            }
+
+            function toggleBounce() {
+                if (marker.getAnimation() !== null) {
+                    marker.setAnimation(null);
+                } else {
+                    marker.setAnimation(google.maps.Animation.BOUNCE);
+                }
+                if (marker2.getAnimation() !== null) {
+                    marker2.setAnimation(null);
+                } else {
+                    marker2.setAnimation(google.maps.Animation.BOUNCE);
+                }
+            }
+
+            function EditarNoticia(codigo) {
+                $("#seccionfoto").css("display", "block");
+                $("#seccionarchivo").css("display", "block");
+                var codigo = codigo;
+                $('#modalNoticia').modal('show');
+                $('#codigo').val(codigo);
+                $('#accion').val('editar');
+                return $.ajax({
+                    type: "get",
+                    url: '{{ base_url() }}/editar',
+                    data: {
+                        codigo: codigo
+                    },
+                    success: function (data) {
+                        $.each(data, function (i, item) {
+                            $('#id').val(item.id),
+                                    $('#correo').val(item.correo),
+                                    $('#distrito').val(item.distrito),
+                                    $('#zona').val(item.zona),
+                                    $('#aahh').val(item.aahh),
+                                    $('#ubicacion').val(item.ubicacion),
+                                    $('#agua').val(item.agua),
+                                    $('#luz').val(item.luz),
+                                    $('#nombre_olla').val(item.nombre_olla),
+                                    $('#nombre_contacto').val(item.nombre_contacto),
+                                    $('#cargo_contacto').val(item.cargo_contacto),
+                                    $('#celular_contacto').val(item.celular_contacto),
+                                    $('#presencia_muni').val(item.presencia_muni),
+                                    $('#insumos').val(item.insumos),
+                                    $('#org_ayuda').val(item.org_ayuda),
+                                    $('#instrumentos').val(item.instrumentos),
+                                    $('#dias_atencion').val(item.dias_atencion),
+                                    $('#comidas_dia').val(item.comidas_dia),
+                                    $('#raciones').val(item.raciones),
+                                    $('#precio_racion').val(item.precio_racion),
+                                    $('#raciones_pagadas').val(item.raciones_pagadas),
+                                    $('#zonas_beneficiadas').val(item.zonas_beneficiadas),
+                                    $('#familias_beneficiadas').val(item.familias_beneficiadas),
+                                    $('#ninos_beneficiadas').val(item.ninos_beneficiadas),
+                                    $('#adultos_beneficiadas').val(item.adultos_beneficiadas),
+                                    $('#disca_beneficiadas').val(item.disca_beneficiadas),
+                                    $('#emba_beneficiadas').val(item.emba_beneficiadas),
+                                    $('#enfercro_beneficiadas').val(item.enfercro_beneficiadas),
+                                    $('#observaciones').val(item.observaciones),
+                                    $('#total_beneficiadas').val(item.total_beneficiadas),
+                                    $('#foto').attr('src', '{{base_url()}}/' + item.foto),
+                                    $('#latitud_editar').val(item.latitud),
+                                    $('#longitud_editar').val(item.longitud),
+                                    $('#estado').val(item.estado),
+                                    $('#padrones').val(item.padrones),
+                                    $('#comedorpopular').val(item.comedorpopular),
+                                    $('#comite').val(item.comite),
+                                    $('#nombre_contacto_secundario').val(item.nombre_contacto_secundario),
+                                    $('#cargo_contacto_secundario').val(item.cargo_contacto_secundario),
+                                    $('#celular_contacto_secundario').val(item.celular_contacto_secundario),
+                                    $('#tipo_espacio').val(item.tipo_espacio),
+                                    $('#estado_espacio').val(item.estado_espacio),
+                                    $('#combustible').val(item.combustible),
+                                    $('#techo').val(item.techo),
+                                    $('#lavado').val(item.lavado),
+                                    $('#higiene').val(item.higiene),
+                                    $('#huerto').val(item.huerto),
+                                    $('#espacio_huerto').val(item.espacio_huerto),
+                                    $('#liderazgo').val(item.liderazgo),
+                                    $('#inocuidad').val(item.inocuidad),
+                                    $('#protocolos').val(item.protocolos),
+                                    $('#extranjera').val(item.extranjera),
+                                    $('#otro_cap').val(item.otro_cap),
+                                    coords = {
+                                        lng2: item.longitud,
+                                        lat2: item.latitud,
+                                    };
+                            editMapa(coords);
+                        });
+                    },
+                    error: function () {
+                    }
+                });
+
+            }
+
+
+            $(document).ready(function () {
+
+                ListaNoticias();
+
+                $(".cogepx").on("click", function () {
+                    var valor = $(this).data('codigo');
+                    $('.foto').val(valor);
+                });
+
+                // Translated
+                $('.dropify-es').dropify({
+                    messages: {
+                        default: 'Arrastra y suelta un archivo aquí o haz clic',
+                        replace: 'Arrastre y suelte un archivo o haga clic para reemplazar',
+                        remove: 'Suprimir',
+                        error: 'Lo sentimos, el archivo es demasiado grande'
+                    }
+                });
+
+                // Used events
+                var drEvent = $('#input-file-events').dropify();
+
+                drEvent.on('dropify.beforeClear', function (event, element) {
+                    return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
+                });
+
+                drEvent.on('dropify.afterClear', function (event, element) {
+                    alert('File deleted');
+                });
+
+                drEvent.on('dropify.errors', function (event, element) {
+                    console.log('Has Errors');
+                });
+
+                var drDestroy = $('#input-file-to-destroy').dropify();
+                drDestroy = drDestroy.data('dropify')
+                $('#toggleDropify').on('click', function (e) {
+                    e.preventDefault();
+                    if (drDestroy.isDropified()) {
+                        drDestroy.destroy();
+                    } else {
+                        drDestroy.init();
+                    }
+                })
+
+            })
+
+
+            var childRows = null;
+
+            function ListaNoticias() {
+                responsive: true
+                $.fn.dataTable.moment('M/D/YYYY h:m:s A');
+                var dt = $('#Noticias').DataTable({
+                    destroy: true,
+                    "order": [],
+                    "language": {
+                        "lengthMenu": "Ver _MENU_ registros por página",
+                        "zeroRecords": "No se encontraron resultados",
+                        "info": "Viendo página _PAGE_ de _PAGES_",
+                        "infoEmpty": "No se encontraron registros",
+                        "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                        "search": "Buscar:",
+                        "paginate": {
+                            "first": "Primero",
+                            "last": "Último",
+                            "next": "Siguiente",
+                            "previous": "Anterior"
+                        },
+                    },
+
+                    "ajax": {
+                        "type": "get",
+                        "url": "{{ base_url() }}/admin/ollas/lista",
+                        "data": {}
+                    },
+
+                    "columns": [
+                        {"data": "nombre_olla"},
+                        {"data": "nomdis"},
+                        {"data": "zona"},
+                        {"data": "ubicacion"},
+                        {"data": "nombre_contacto"},
+                        {"data": "cargo_contacto"},
+                        {"data": "celular_contacto"},
+                        {
+                            data: "created_at",
+                            render: function (d) {
+                                return moment(d).format("DD:MM:YYYY HH:mm:ss");
+                            }
+                        },
+                        {
+                            data: "updated_at",
+                            render: function (d) {
+                                return moment(d).format("DD:MM:YYYY HH:mm:ss");
+                            }
+                        },
+                        {
+                            "data": "estado",
+                            render: function (data) {
+                                if (data == "1") {
+                                    return "<span class='label label-info'>Nuevo</span>";
+                                } else if (data == "2") {
+                                    return "<span class='label label-success'>Activado</span>";
+                                } else if (data == "3") {
+                                    return "<span class='label label-warning'>Desactivado</span>";
+                                } else {
+                                    return "<span class='label label-danger'>Eliminado</span>";
+                                }
+                            },
+                        },
+                        {
+                            "data": "id",
+                            render: function (data) {
+                                return "<a class='btn btn-default'" +
+                                        "style='cursor:pointer;overflow: visible;'" +
+                                        "onclick='EditarNoticia(" + data + ")'" +
+                                        "data-toggle='modal'" +
+                                        "data-content=''>" +
+                                        "Editar</a>"
+
+                            },
+                        },
+                    ],
+
+                    columnDefs: [
+                        {
+                            className: 'text-center',
+                            targets: [10],
+                        },
+
+                        {width: "15%",
+                            targets: [0, 3]},
+                        {width: "10%",
+                            targets: [1, 2, 4]},
+                        {width: "12%",
+                            targets: [7, 8]},
+                        {width: "8%",
+                            targets: [5, 6]},
+                    ]
+                });
+
+            }
+
+            //Nueva noticia
+            function nuevanoticia() {
+                var tipo = 1;
+                $('#modalNoticia').modal('show');
+                $("#noticia")[0].reset();
+                $("#seccionfoto").css("display", "none");
+                $("#seccionarchivo").css("display", "none");
+                $('#accion').val('nuevo');
+            }
+
+
+            $(".grabarentrada").on("click", function (event) {
+
+                event.preventDefault();
+
+                var accion = $('#accion').val();
+                var ano = $('#ano').val();
+                var mes = $('#mes').val();
+                var numero = $('#numero').val();
+                var titulo = $('#titulo').val();
+                var descripcion = $('#descripcion').val();
+                var archivo = $('#archivo').val();
+                var foto = $('#foto').val();
+
+                if (ano == "") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '¡Advertencia!',
+                        text: 'Debe imgresar un año de publicación.',
+                    })
+                } else {
+                    if (mes == "") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: 'Debe seleccionar el mes.',
+                        })
+                    } else {
+                        if (numero == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar el número de edición.',
+                            })
+                        } else {
+                            if (titulo == "") {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: '¡Advertencia!',
+                                    text: 'Debe ingresar el título de la edición.',
+                                })
+                            } else {
+                                if (descripcion == "") {
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: '¡Advertencia!',
+                                        text: 'Debe ingresar una descripción.',
+                                    })
+                                } else {
+                                    if (archivo == "" && accion == "nuevo") {
+                                        Swal.fire({
+                                            icon: 'warning',
+                                            title: '¡Advertencia!',
+                                            text: 'Debe seleccionar un archivo.',
+                                        })
+                                    } else {
+                                        if (foto == "" && accion == "nuevo") {
+                                            Swal.fire({
+                                                icon: 'warning',
+                                                title: '¡Advertencia!',
+                                                text: 'Debe seleccionar una foto.',
+                                            })
+                                        } else {
+                                            Swal.fire({
+                                                title: 'Está seguro?',
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#3085d6',
+                                                cancelButtonColor: '#d33',
+                                                confirmButtonText: 'Sí, guardar!'
+                                            }).then((result) => {
+                                                if (result.value) {
+                                                    var resp = GuardarEdicion();
+                                                    //resp = JSON.parse(resp);
+                                                    if (resp[0] == "success") {
+                                                        Swal.fire({
+                                                            icon: 'success',
+                                                            title: '¡Éxito!',
+                                                            text: resp[1],
+                                                        }).then((result) => {
+                                                            if (result.value) {
+                                                                $('#modalNoticia').modal('hide');
+                                                                var drEvent = $('#foto').dropify();
+                                                                drEvent = drEvent.data('dropify');
+                                                                drEvent.resetPreview();
+                                                                drEvent.clearElement();
+
+                                                                var drEventArchivo = $('#archivo').dropify();
+                                                                drEventArchivo = drEventArchivo.data('dropify');
+                                                                drEventArchivo.resetPreview();
+                                                                drEventArchivo.clearElement();
+
+                                                                ListaNoticias();
+                                                            }
+                                                        });
+                                                    } else {
+                                                        Swal.fire({
+                                                            icon: 'error',
+                                                            title: '¡Error!',
+                                                            text: resp[1],
+                                                        })
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+
+        </script>
+
+        <script>
+
+            !function (a) {
+                "use strict";
+
+                a(function () {
+                    var b = a(window),
+                            c = a(document.body),
+                            mensaje = '',
+                            tipo = '',
+                            codigo = '';
+
+
+                    a("#ActualizarOlla").on("click", function () {
+                        var b = a(this), dataString;
+                        var holder = '';
+                        var exito = true;
+                        $(".obligate").each(function () {
+                            if ($(this).val() == '') {
+                                $(this).focus();
+                                holder = $(this).attr("data-content");
+                                exito = false;
+                                $(".msg").html("").show();
+                                $(".msg").html("<div class='alert alert-danger'><i class='fa fa-exclamation-triangle'></i> " + holder + "</div>");
+                                setTimeout(function () {
+                                    $(".msg").fadeOut(1500);
+                                }, 1500);
+                                return false;
+                            }
+                        });
+                        if (!exito)
+                            return false;
+
+
+                        dataString = $('#FormActualizarOlla').serialize();
+                        $.ajax({
+                            type: "POST",
+                                 url: "{{ base_url() }}/actualizar",
+                            data: dataString,
+                            dataType: 'json',
+                            beforeSend: function () {
+                                //  b.button("loading");
+                            },
+                            success: function (data) {
+                                if (data.response == 'si') {
+                                    $(".msg").html("").show();
+                                    $(".msg").html(data.message);
+                                    b.button("reset");
+                                    setTimeout(function () {
+                                        $(".msg").fadeOut(1500);
+                                    }, 1500);
+                                } else {
+                                    var position = data.indexOf('?');
+                                    var number = data.substr(0, position).replace(/\s+/g, '');
+                                    if (number > 0) {
+                                        //b.button("reset");
+                                        $('#EditarOlla').modal('hide')
+                                        $('#myModalInformation').find(".modal-body").html("<center>" + data.substr(position + 1, data.length) + "</center>");
+                                        $('#myModalInformation').modal('show');
+                                        setTimeout(function () {
+                                            window.location.href = window.location;
+                                        }, 1500);
+                                    } else {
+                                        $(".msg").html("").show();
+                                        $(".msg").html(data.message);
+                                        setTimeout(function () {
+                                            $(".msg").fadeOut(1500);
+                                        }, 1000);
+                                        // b.button("reset");
+                                    }
+                                }
+
+
+                            },
+                            error: function () {
+                                console.log("It failed");
+                            }
+                        })
+                    });
+
+
+
+
+                })
+            }
+
+            (jQuery), function () {
+                "use strict";
+                $('#fono').keyup(function () {
+                    this.value = (this.value + '').replace(/[^0-9]/g, '');
+                });
+
+            }();
+
+
+        </script>
+    {% endblock content %}

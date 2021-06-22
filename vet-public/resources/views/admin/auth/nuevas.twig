@@ -1,0 +1,505 @@
+{% extends 'admin/templates/app.twig' %}
+{% block content %}
+
+    <style>
+        td.details-control {
+            background: url('{{ base_url() }}/images/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+        tr.shown  td.details-control {
+            background: url('{{ base_url() }}/images/details_close.png') no-repeat center center;
+        }
+    </style>
+
+    <body class="hold-transition skin-blue sidebar-mini ">
+        <div class="pace  pace-inactive">
+            <div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
+                <div class="pace-progress-inner"></div>
+            </div>
+            <div class="pace-activity"></div>
+        </div>
+        <div class="wrapper">
+            
+            <header class="main-header">
+                         {% include 'admin/templates/head.twig' %}
+            </header>
+
+            <aside class="main-sidebar">
+                {% include 'admin/templates/menu.twig' %}
+            </aside>
+
+            <div class="content-wrapper">
+                <section class="content-header">
+                    <h1 id="tipodease">
+                        Nuevas Organizaciones
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="#"><i class="fa fa-book"></i> [Lista de nuevas organizaciones]</a></li>
+                    </ol>
+                </section>
+                <section class="content">
+                    <div class="row">
+
+                        <div class="col-xs-12">
+                            <div class="box">
+
+                                <div class="box-body">
+                                    <div class="margin">
+                                        <div class="btn-group">
+                                            <button onclick="nuevanoticia()" type="button" class="btn btn-block btn-primary btn-flat">AGREGAR</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-body">
+                                    <table id="Noticias"  class="table table-bordered table-hover" width="100%">
+                                        <thead>
+                                            <tr class="heading-table">
+                                                <th></th>
+                                                <th>Nombre</th>
+                                                <th>Documento</th>
+                                                <th>Detalle</th>
+                                                 <th>Fecha</th>
+                                                <th>Estado</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                </section>
+            </div>
+
+
+
+            <div class="modal fade" id="modalNoticia" tabindex="-1" role="dialog" aria-labelledby="modalNoticia">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header modalert">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title modtitle">[ NUEVAS ORGANIZACIONES ]</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <form name="noticia" id="noticia" method="post" enctype="multipart/form-data">
+                                            
+                                            <input type="hidden"  name="accion" id="accion" value="">
+                                            <input type="hidden"  name="codigo" id="codigo" value="">
+                                            <input type="hidden"  name="categoria" id="categoria" value="nuevas">
+                                            
+                                            <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Nombre</label>
+                                                <input type="text" name="titulo" id="titulo" class="form-control" value="">
+                                            </div>
+                                            </div>
+                                            
+                                            <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label>Fecha</label>
+                                                <input type="date" name="principal" id="principal" class="form-control" value="">
+                                            </div>
+                                            </div>
+                                            
+                                            <div class="col-sm-3">  
+                                            <div class="form-group">
+                                                <label>Estado</label>
+                                                <select id="estado" name="estado" value="" class="form-control">
+                                                    <option value="1">Activar</option>
+                                                    <option value="2">Desactivar</option>
+                                                    <option value="3">Eliminar</option>
+                                                </select>
+                                            </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Detalle</label>
+                                                <textarea cols="40" id="detalle" name="detalle" rows="5" data-sample-short></textarea> 
+                                            </div>
+                                            </div>
+                                            
+                                             <div class="col-sm-6">
+                                             <div class="form-group">
+                                                <label>Detalle corto</label>
+                                                <textarea cols="40" id="detallecorto" name="detallecorto" rows="3" class="form-control"></textarea> 
+                                            </div>
+                                            </div>
+                                            
+                                            <div class="col-sm-6" id="seccionfoto">
+                                                 <div class="form-group">
+                                                     <label>Foto original</label>
+                                                    <object data="" name="fotooriginal" id="fotooriginal" type="application/pdf" width="100%" height="100%">
+                                                        <p>Ver archivo <a target="_blank" id="linkoriginal" name="linkoriginal" href="">to the PDF!</a></p>
+                                                    </object>
+                                                 </div>
+                                             </div>
+                                            
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Foto</label>
+                                                    <input type="file" name="foto" id="foto"  class="dropify-es">
+                                                </div>
+                                            </div>                                          
+                                            {{ csrf.field | raw }}
+                                        </form>
+                                    </div>
+                                    <div  class="msg"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                            <button type="button" href="#" class="btn btn-success grabarentrada">Guardar </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <script type="text/javascript">
+                
+                   function EditarNoticia(codigo) {
+                    $("#seccionfoto").css("display", "block");
+                    var codigo = codigo;
+                    $('#modalNoticia').modal('show');
+                    $('#codigo').val(codigo);
+                    $('#accion').val('editar');
+                        return $.ajax({
+                        type: "get",
+                        url: '{{ base_url() }}/admin/entrada/editar',
+                        data: {
+                            codigo: codigo
+                        },
+                        success: function (data) {
+                            $.each(data, function (i, item) {   
+                                $('#titulo').val(item.titulo);
+                                 $('#principal').val(item.principal);
+                                $('#categoria').val(item.categoria);
+                                $('#detallecorto').val(item.detallecorto);
+                                CKEDITOR.instances.detalle.setData(item.detalle);
+                                 $('#fotooriginal').attr('data', '{{base_url()}}/' + item.foto);
+                                $('#linkoriginal').attr('href', '{{base_url()}}/' + item.foto);
+                                $('#estado').val(item.estado);
+                              
+                            });
+                        },
+                        error: function () {
+                        }
+                    });
+                    
+                }
+
+                CKEDITOR.replace('detalle', {
+                    height: 300,
+                    baseFloatZIndex: 10005
+                });
+
+                $(document).ready(function () {
+                    
+                    ListaNoticias();
+                    
+                    $(".cogepx").on("click", function () {
+                        var valor = $(this).data('codigo');
+                        $("#Selecciones").modal('hide');
+                        $('.foto').val(valor);
+                    });
+
+                    // Translated
+                    $('.dropify-es').dropify({
+                        messages: {
+                            default: 'Arrastra y suelta un archivo aquí o haz clic',
+                            replace: 'Arrastre y suelte un archivo o haga clic para reemplazar',
+                            remove: 'Suprimir',
+                            error: 'Lo sentimos, el archivo es demasiado grande'
+                        }
+                    });
+
+                    // Used events
+                    var drEvent = $('#input-file-events').dropify();
+
+                    drEvent.on('dropify.beforeClear', function (event, element) {
+                        return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
+                    });
+
+                    drEvent.on('dropify.afterClear', function (event, element) {
+                        alert('File deleted');
+                    });
+
+                    drEvent.on('dropify.errors', function (event, element) {
+                        console.log('Has Errors');
+                    });
+
+                    var drDestroy = $('#input-file-to-destroy').dropify();
+                    drDestroy = drDestroy.data('dropify')
+                    $('#toggleDropify').on('click', function (e) {
+                        e.preventDefault();
+                        if (drDestroy.isDropified()) {
+                            drDestroy.destroy();
+                        } else {
+                            drDestroy.init();
+                        }
+                    })
+
+                })
+
+                function format(d) {
+
+                    if (d.titulo) {
+                        return '<div class="col-md-8"><div class="col-md-12"><p style="float: left;"><strong>OBSERVACIONES: </strong> ' + d.titulo + '</p><br></div>';
+                    } else {
+                        return '<div class="col-md-8"><div class="col-md-12"><p style="float: left;"><strong>OBSERVACIONES: </strong> No se registraron observaciones.</p><br></div>';
+                    }
+
+                }
+                var childRows = null;
+                
+                function ListaNoticias() {
+                    responsive: true
+                    var dt = $('#Noticias').DataTable({
+                        destroy: true,
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copy', 'csv', 'excel', 'pdf', 'print'
+                        ],
+                        "buttons": [
+                            'copy', 'csv', 'excel', 'pdf'
+                        ],
+
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ registros por página",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Viendo página _PAGE_ de _PAGES_",
+                            "infoEmpty": "No se encontraron registros",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "search": "Buscar:",
+                            "paginate": {
+                                "first": "Primero",
+                                "last": "Último",
+                                "next": "Siguiente",
+                                "previous": "Anterior"
+                            },
+                        },
+
+                        "ajax": {
+                            "type": "get",
+                            "url": "{{ base_url() }}/admin/entrada/listar",
+                            "data": {
+                                categoria: "nuevas"
+                            }
+                        },
+
+                        "columns": [
+                            {
+                                "class": "details-control",
+                                "orderable": false,
+                                "data": null,
+                                "defaultContent": ""
+                            },
+                            {"data": "titulo" },
+                            {"data": "foto",
+                                render: function (data) {
+                                    return "<a class='btn btn-default' download " +
+                                            "href='{{base_url()}}/" + data + "'>" +
+                                            "<i class='fa fa-download'></i></a>"
+                                    
+                                },
+                            },
+                            {"data": "detallecorto"},   
+                            {"data": "created_at" },
+                            {
+                                "data": "estado",
+                                render: function(data) {
+                                    if(data=="1") {
+                                        return "<span class='label label-success'>Activado</span>";
+                                    }  else if(data=="2") {
+                                        return "<span class='label label-warning'>Desactivado</span>";
+                                    }
+                                    else{
+                                        return "<span class='label label-danger'>Eliminado</span>";
+                                    }
+                                },
+                            },
+                            {
+                                "data": "codigo",
+                                render: function (data) {
+                                    return "<a class='btn btn-default'" +
+                                            "style='cursor:pointer;overflow: visible;'" +
+                                            "onclick='EditarNoticia(" + data + ")'" +
+                                            "data-toggle='modal'" +
+                                            "data-content=''>" +
+                                            "Editar</a>"
+                                    
+                                },
+                            },
+                        ],
+
+                        columnDefs: [
+                            {
+                                className: 'text-center',
+                                targets: [0,2,5,6],
+                            },
+                               
+                        ]
+                    });
+
+                    var detailRows = [];
+
+                    $('#Noticias tbody').off('click', 'tr td.details-control');
+                    $('#Noticias tbody').on('click', 'tr td.details-control', function () {
+                        var tr = $(this).closest('tr');
+                        var row = dt.row(tr);
+
+                        if (row.child.isShown()) {
+                            row.child.hide();
+                            tr.removeClass('shown');
+                        } else {
+                            // Open this row
+                            d = row.data();
+                            row.child(format(d)).show();
+                            tr.addClass('shown');
+                        }
+                    });
+
+                    dt.on('draw', function () {
+                        if (childRows) {
+
+                            childRows.every(function (rowIdx, tableLoop, rowLoop) {
+                                d = this.data();
+                                this.child($(format(d))).show();
+                                this.nodes().to$().addClass('shown');
+                            });
+                            childRows = null;
+                        }
+                    });
+
+                }
+  
+                //Nueva noticia
+                function nuevanoticia() {
+                    var tipo = 1;
+                     $('#codigo').val("");
+                    $('#modalNoticia').modal('show');
+                    $("#noticia")[0].reset();
+                    CKEDITOR.instances.detalle.setData();
+                    $("#seccionfoto").css("display", "none");
+                    $('#accion').val('nuevo');
+                }
+                
+                
+                  function GuardarReporte() {
+                        var formData = new FormData($("#noticia")[0]);
+                          formData.append('detalle', CKEDITOR.instances.detalle.getData());
+                        var resultado = "";
+                        $.ajax({
+                            url: "{{ base_url() }}/admin/entrada/registrar",
+                            async: false,
+                            type: 'POST',
+                            data: formData,
+                            contentType: false,
+                            enctype: 'multipart/form-data',
+                            processData: false,
+                            dataType: 'json',
+                            success: function (datos) {
+                                resultado = datos.response;
+                                mensaje = datos.message;
+                            }
+                        });
+                        return [resultado, mensaje];
+                    }
+                    
+
+                $(".grabarentrada").on("click", function (event) {
+
+                    event.preventDefault();
+                    
+                    var accion = $('#accion').val();
+                    var titulo = $('#titulo').val();
+                    var detallecorto = $('#detallecorto').val();
+                    var detalle = CKEDITOR.instances.detalle.getData();
+                    var foto = $('#foto').val();
+
+                    if (titulo == "") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: 'Debe imgresar un titular',
+                        })
+                    } else {
+                        if (detallecorto == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar el detalle corto.',
+                            })
+                       }  else {
+                           if (detalle == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar el detalle.',
+                            })
+                        } else {
+                            if (foto == "" && accion == "nuevo" ) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: '¡Advertencia!',
+                                    text: 'Debe seleccionar una foto.',
+                                })
+                            } else {
+                                Swal.fire({
+                                    title: 'Está seguro?',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Sí, guardar!'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        var resp = GuardarReporte();
+                                        //resp = JSON.parse(resp);
+                                        if (resp[0] == "success") {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: '¡Éxito!',
+                                                text: resp[1],
+                                            }).then((result) => {
+                                                if (result.value) {
+                                                    $('#modalNoticia').modal('hide');
+                                                     var drEvent = $('#foto').dropify();
+                                                    drEvent = drEvent.data('dropify');
+                                                    drEvent.resetPreview();
+                                                    drEvent.clearElement();
+                                                    ListaNoticias();
+                                                }
+                                            });
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: '¡Error!',
+                                                text: resp[1],
+                                            })
+                                        }
+                                    }
+                                })
+                               }
+                            }
+                        }
+                    }
+                });
+            </script>
+        {% endblock content %}

@@ -1,0 +1,43 @@
+<!--START ACTIVIDADES-->
+<div id="felicitaciones" class="popup" style="display: none;">
+  <div class="content-popup">
+    <div class="close"><a href="#" id="close" onclick="closeDialog('felicitaciones');">x</a></div>
+    <div>
+      <h2>¡Buenas noticias!</h2>
+      <p style="font-size: 15px;color: #0076a3;text-align: center;">Todos los documentos fueron subidos con éxito.</p>
+      <img src="../images/exito.gif" width="100%" style="width: 100%">
+      <div style="display: table;">
+        <div style="width:80%; padding-right: 5%; float: left;">
+        </div>
+        <div class="col-sm-12">
+          <p>
+            El siguiente paso es enviar tus documentos para su aprobación. Recuerda que después de realizar el envío
+            para su aprobación ya no podrás editar las mismas.
+          </p>
+        </div>
+        <center>
+          <div class="col-sm-12">
+            <div class="form-group row">
+              <div class="col-sm-12 bottom-padding">
+                <form action="{{ path_for('solicitudes.solicitudes') }}" method="post">
+                  <center>
+                    <button type="submit" class="btn btn-warning-dinamic registrar"><i class="fa fa-warning"></i> Enviar
+                      para aprobación
+                    </button>
+                  </center>
+                  {{ csrf.field | raw }}
+                </form>
+              </div>
+            </div>
+          </div>
+        </center>
+        <center>
+          <div class="col-sm-12 barraregistro mybarra">
+          </div>
+        </center>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="popup-overlay"></div>

@@ -1,0 +1,392 @@
+{% extends 'admin/templates/app.twig' %}
+{% block content %}
+
+
+
+    <body class="hold-transition skin-blue sidebar-mini ">
+        <div class="pace  pace-inactive">
+            <div class="pace-progress" data-progress-text="100%" data-progress="99">
+                <div class="pace-progress-inner"></div>
+            </div>
+            <div class="pace-activity"></div>
+        </div>
+        <div class="wrapper">
+
+            <header class="main-header">
+                {% include 'admin/templates/head.twig' %}
+            </header>
+
+            <aside class="main-sidebar">
+                {% include 'admin/templates/menu.twig' %}
+            </aside>
+
+            <div class="content-wrapper">
+                <section class="content-header">
+                    <h1 id="tipodease">
+                        Tareas
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="#"><i class="fa fa-book"></i> [Lista de Tareas]</a></li>
+                    </ol>
+                </section>
+                <section class="content">
+                    <div class="row">
+
+                        <div class="col-xs-12">
+                            <div class="box">
+
+                                <div class="box-body">
+                                    <div class="margin">
+                                        <div class="btn-group">
+                                            <button onclick="nuevanoticia()" type="button" class="btn btn-block btn-primary btn-flat">Agregar</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                        <div class="col-xs-8">
+                            <div class="box">
+                                <div class="box-body">
+                                    <table id="Noticias"  class="table table-bordered table-hover" width="100%">
+                                        <thead>
+                                            <tr class="heading-table">
+                                                <th>Grupo</th>
+                                                <th>Número</th>
+                                                <th>Descripción</th>
+                                                <th>Inicio</th>
+                                                <th>Fin</th>
+                                                <th>Estado</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                </section>
+            </div>
+
+
+
+            <div class="modal fade" id="modalVideo" tabindex="-1" role="dialog" aria-labelledby="modalVideo">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header modalert">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
+                            <h4 class="modal-title modtitle">[ Tarea  ]</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <form name="noticia" id="noticia" method="post" enctype="multipart/form-data">
+
+                                            <input type="hidden"  name="accion" id="accion" value="">
+                                            <input type="hidden"  name="codigo" id="codigo" value="">
+
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Grupo</label>
+                                                    <select id="grupo" name="grupo" value="" class="form-control">
+                                                        <option value="">Seleccione un grupo</option>
+                                                        {% for grupo in GruposController.listargruposactivos %}
+                                                        <option value="{{ grupo.id_grupo_wsp }}">{{ grupo.nombre }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Tema</label>
+                                                    <input type="text" name="tema" id="tema" class="form-control">
+                                                </div>
+                                            </div>
+                                                    
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Descripción</label>
+                                                    <textarea type="text" name="descripcion" id="descripcion" class="form-control" value="">
+                                                    </textarea>
+                                                </div>
+                                            </div>
+                                            
+                                              <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Fecha de inicio</label>
+                                                    <input type="date" name="inicio" id="inicio" class="form-control" value="">                                            
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Fecha máxima</label>
+                                                    <input type="date" name="fin" id="fin" class="form-control" value="">                                            
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Estado</label>
+                                                    <select id="estado" name="estado" value="" class="form-control">
+                                                        <option selected value="1">Activar</option>
+                                                        <option value="2">Desactivar</option>
+                                                        <option value="3">Eliminar</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            {{ csrf.field | raw }}
+
+                                        </form>
+                                    </div>
+                                    <div  class="msg"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                            <button type="button" href="#" class="btn btn-success grabar">Guardar </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <script type="text/javascript">
+                
+                   CKEDITOR.replace('descripcion', {
+                            height: 300,
+                            baseFloatZIndex: 10005
+                     });
+   
+                function EditarNoticia(codigo) {
+                    $("#seccionestado").css("display", "block");
+                    var codigo = codigo;
+                    $('#modalVideo').modal('show');
+                    $('#codigo').val(codigo);
+                    $('#accion').val('editar');
+                    return $.ajax({
+                        type: "get",
+                        url: '{{ base_url() }}/admin/tareas/editar',
+                        data: {
+                            codigo: codigo
+                        },
+                        success: function (data) {
+                            $.each(data, function (i, item) {
+                                $('#grupo').val(item.id_grupo);
+                                $('#tema').val(item.tema);
+                                CKEDITOR.instances.descripcion.setData(item.descripcion);
+                                $('#inicio').val(item.inicio);
+                                $('#fin').val(item.fin);
+                                $('#estado').val(item.estado);
+                            });
+                        },
+                        error: function () {
+                        }
+                    });
+
+                }
+
+
+                $(document).ready(function () {
+                    ListaNoticias();
+                })
+
+
+                var childRows = null;
+
+                function ListaNoticias() {
+                    responsive: true
+                    var dt = $('#Noticias').DataTable({
+                        destroy: true,
+                        ordering: false,
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ registros por página",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Viendo página _PAGE_ de _PAGES_",
+                            "infoEmpty": "No se encontraron responsables",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "search": "Buscar:",
+                            "paginate": {
+                                "first": "Primero",
+                                "last": "Último",
+                                "next": "Siguiente",
+                                "previous": "Anterior"
+                            },
+                        },
+
+                        "ajax": {
+                            "type": "get",
+                            "url": "{{ base_url() }}/admin/tareas/listar",
+                        },
+
+                        "columns": [
+                            {"data": "nombre"},
+                            {"data": "numero"},
+                            {"data": "tema"},
+                            {"data": "inicio"},
+                            {"data": "fin"},
+                            {
+                                "data": "estado",
+                                render: function (data) {
+                                    if (data == "1") {
+                                        return "<span class='label label-success'>Activado</span>";
+                                    } else if (data == "2") {
+                                        return "<span class='label label-warning'>Desactivado</span>";
+                                    } else {
+                                        return "<span class='label label-danger'>Eliminado</span>";
+                                    }
+                                },
+                            },
+                            {
+                                "data": "id_tarea",
+                                render: function (data) {
+                                    return "<a class='btn btn-default'" +
+                                            "style='cursor:pointer;overflow: visible;'" +
+                                            "onclick='EditarNoticia(" + data + ")'" +
+                                            "data-toggle='modal'" +
+                                            "data-content=''>" +
+                                            "Editar</a>"
+
+                                },
+                            },
+                        ],
+                    });
+
+                }
+
+                //Nueva noticia
+                function nuevanoticia() {
+                    var tipo = 1;
+                    $('#modalVideo').modal('show');
+                    $("#noticia")[0].reset();
+                    $('#accion').val('nuevo');
+                    $('#codigo').val('');
+                }
+
+
+                function GuardarVideo() {
+                    var formData = new FormData($("#noticia")[0]);
+                    formData.append('descripcion', CKEDITOR.instances.descripcion.getData());
+                    var resultado = "";
+                    $.ajax({
+                        url: "{{ base_url() }}/admin/tareas/registrar",
+                        async: false,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        enctype: 'multipart/form-data',
+                        processData: false,
+                        dataType: 'json',
+                        success: function (datos) {
+                            resultado = datos.response;
+                            mensaje = datos.message;
+                        }
+                    });
+                    return [resultado, mensaje];
+                }
+
+
+                $(".grabar").on("click", function (event) {
+
+                    event.preventDefault();
+
+                    var accion = $('#accion').val();
+                    var grupo = $('#grupo').val();
+                    var tema = $('#tema').val();
+                    var descripcion = CKEDITOR.instances.descripcion.getData();
+                    var inicio = $('#inicio').val();
+                    var fin = $('#fin').val();
+
+                    if (grupo == "") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: 'Debe seleccionar un grupo',
+                        })
+                    } else {
+                        if (tema == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar el tema.',
+                            })
+                        } else {
+                        if (descripcion == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar la descripción.',
+                            })
+                        } else {
+                        if (inicio == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar la fecha de inicio.',
+                            })
+                        } else {
+                            if (fin == "") {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: '¡Advertencia!',
+                                    text: 'Debe ingresar la fecha de fin.',
+                                })
+                            } else {
+                                   if (inicio > fin) {
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: '¡Advertencia!',
+                                        text: 'La fecha de inicio no puede ser mayor.',
+                                    })
+                                } else {
+
+                                Swal.fire({
+                                    title: 'Está seguro?',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Sí, guardar!'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        var resp = GuardarVideo();
+                                        //resp = JSON.parse(resp);
+                                        if (resp[0] == "success") {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: '¡Éxito!',
+                                                text: resp[1],
+                                            }).then((result) => {
+                                                if (result.value) {
+                                                    $('#modalVideo').modal('hide');
+                                                    ListaNoticias();
+                                                }
+                                            });
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: '¡Error!',
+                                                text: resp[1],
+                                            })
+                                        }
+                                    }
+                                })
+                                 }
+                             }
+                             }
+                            }
+                        }
+                    }
+                });
+            </script>
+        {% endblock content %}

@@ -1,0 +1,780 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+    {% include 'templates/partials/navegacion.twig' %}
+    <div id="wrapper-content">
+        <!-- PAGE WRAPPER-->
+        <div id="page-wrapper">
+            <!-- MAIN CONTENT-->
+            <div class="main-content">
+                <!-- CONTENT-->
+                <div class="content">
+                    <div class="section intro-edu">
+                        <div class="container">
+                            <div class="intro-edu-wrapper">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <img src="images/mascota.png" alt="" class="intro-image fadeInLeft    animated">
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="intro-title">¡Hola {{ AuthController.usuario.nombre }}!<br> Bienvenido a<b> Veterinaria “Mr. Vet”</b></div>
+                                        <div class="intro-content">
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel neque justo.
+                                                Nulla sit amet egestas mi. Donec erat nibh, sagittis vitae egestas a, auctor vitae elit. 
+                                                Morbi congue odio et feugiat tincidunt. Vestibulum nec feugiat sem. Donec cursus, 
+                                                elit posuere vestibulum tempor, lorem turpis ullamcorper ipsum, porttitor malesuada 
+                                                diam dolor sed dolor. </p>
+
+                                            <p>Aliquam quam mi, dignissim sed elit vitae, dictum ultricies velit. 
+                                                Sed justo odio, pulvinar ac est quis, convallis interdum arcu. Etiam consectetur nisl quis
+                                                ligula commodo interdum. Maecenas gravida tortor in arcu euismod cursus. Quisque
+                                                vitae iaculis justo, eget interdum odio. Ut non massa quam. Curabitur libero magna, 
+                                                vehicula eu ornare pharetra, tincidunt et augue. Sed vestibulum tellus in nunc vestibulum pulvinar.
+                                            </p>
+                                        </div>
+                                        <div class="group-button">
+                                            
+                                            <a class="btn btn-transition-2"
+                                               onclick="NuevaMascota()"
+                                               data-toggle="modal">
+                                                <i class="fa fa-pencil"></i>
+                                                <span> Registrar mascotas</span>
+                                            </a>
+             
+                                            {% if PedidoController.valpedido %}
+                                      
+                                            <a href="{{ path_for('pedido') }}" class="btn btn-transition"><span>Pedido en curso</span></a>
+                                      
+                                             {% else %}
+                                            <a  class="btn btn-transition"
+                                                onclick="NuevaPedido()" 
+                                                data-toggle="modal">
+                                                <i class="fa fa-shopping-cart"></i>
+                                                <span> Registrar pedido</span>
+                                            </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section section-padding courses-detail event-detail-section">
+                        <div class="container">
+                            <div class="courses-detail-wrapper">
+                                <div class="row">
+                                    <div class="col-md-9 layout-left">
+                                        <div class="course-syllabus-title underline">Mis mascotas</div>
+                                        <div class="course-des-content">
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel neque justo.
+                                                Nulla sit amet egestas mi. Donec erat nibh, sagittis vitae egestas a, auctor vitae elit. 
+                                                Morbi congue odio et feugiat tincidunt. Vestibulum nec feugiat sem. Donec cursus, 
+                                                elit posuere vestibulum tempor, lorem turpis ullamcorper ipsum, porttitor malesuada 
+                                                diam dolor sed dolor.  
+                                            </p>
+                                        </div>
+                                        <div class="table-responsive bg-w-form  ">
+                                            <table id="ListOrganizaciones" class="table table-bordered responsive">
+                                                <thead>
+                                                    <tr class="heading-table">
+                                                        <th>Nombre</th>
+                                                        <th>Tipo</th>
+                                                        <th>Fecha de nacimiento</th>
+                                                        <th>Descripción</th>
+                                                        <th>Editar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for mascotas in MascotasController.listamascotas %}
+                                                        <tr>
+                                                            <td>{{ mascotas.nombre }}</td>
+                                                            <td>{{ mascotas.tipo }}</td>
+                                                            <td>{{ mascotas.edad }}</td>
+                                                            <td>{{ mascotas.descripcion }}</td>
+                                                            <td>
+                                                                <a class="btn btn-default"
+                                                                   onclick="EditarMascota({{ mascotas.id_mascota }})"
+                                                                   data-toggle="modal">
+                                                                    <i class="fa fa-pencil"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                                <thead>
+                                                    <tr class="heading-table">
+                                                        <th>Nombre</th>
+                                                        <th>Tipo</th>
+                                                        <th>Fecha de nacimiento</th>
+                                                        <th>Descripción</th>
+                                                        <th>Editar</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                                
+                </div>
+            </div>
+        </div>
+                                                
+        <!-- BUTTON BACK TO TOP-->
+        <div id="back-top"><a href="#top" class="hide"><i class="fa fa-angle-double-up"></i></a></div>
+        
+    </div>
+
+    <!--INICIO MODAL INICIATIVA-->
+    <div class="modal fade" id="AgregarMascotas" tabindex="-1" role="dialog" aria-labelledby="AgregarMascotas">
+        <div class="modal-dialog modal-info fade in" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title"><strong>Formulario de mascotas</strong></h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" autccomplete="off" class="contact-form" id="FormMascota" name="FormMascota">
+                        <div class="row">
+
+                            <input type="hidden"  name="accion" id="accion" value="">           
+                            <input value="" id="codigo" name="codigo" type="hidden">
+
+                            <div class="col-md-12">
+                                <label>Nombre</label>
+                                <input type="text" name="nombre" id="nombre" class="form-control">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label>Tipo de mascota</label>
+                                <select id="id_tipomascota" name="id_tipomascota" class="form-control">
+                                    <option value="">::Seleccione el tipo::</option>
+                                    {% for lista in  TipoMascotaController.tipomascota%}
+                                        <option value="{{ lista.id_tipomascota }}">{{ lista.descripcion }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label>Fecha de nacimiento</label>
+                                <input type="date" name="edad" id="edad" class="form-control">
+                            </div>
+
+                            <div class="col-md-12">
+                                <label>Descripción<span class="highlight">*</span></label>
+                                <textarea class="form-control form-input" id="descripcion" name="descripcion"></textarea>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label>Estado</label>
+                                <select id="estado" name="estado" class="form-control">
+                                    <option value="">::Seleccione::</option>
+                                    <option selected value="1">Habilitar</option>
+                                    <option value="2">Eliminar</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-6" id="seccionfoto">
+                                <div class="form-group">
+                                    <label>Foto original</label>
+                                    <img src="" class="img-responsive pad" id="fotooriginal" name="fotooriginal">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label>Adjuntar foto</label>
+                                <input type="file" name="foto" id="foto"  class="dropify-es">
+                            </div>
+
+                        </div>
+
+                        {{ csrf.field | raw }}
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" href="#" class="btn btn-success registrarmascota">Guardar </button> 
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!--INICIO MODAL PEDIDO-->
+    <div class="modal fade" id="AgregarPedido" tabindex="-1" role="dialog" aria-labelledby="AgregarPedido">
+        <div class="modal-dialog modal-info fade in" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title"><strong>PEDIDO NUEVO</strong></h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" autccomplete="off" class="contact-form" id="FormPedido" name="FormPedido">
+                       
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Tipo de pedido</label>
+                                <select id="code_pedido" name="code_pedido" class="form-control">
+                                    <option value="">::Seleccione el tipo de pedido::</option>
+                                    <option value="1">Productos</option>
+                                    <option value="2">Servicios</option>  
+
+                                </select>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label>Mascota</label>
+                                <select id="code_mascota" name="code_mascota" class="form-control">
+                                    <option value="">::Seleccione su mascota::</option>
+                                    {% for lista in  MascotasController.listamascotas%}
+                                        <option value="{{ lista.id_mascota }}">{{ lista.nombre }}</option>
+                                    {% endfor %}               
+                                </select>
+                            </div>
+                        </div>
+
+                        {{ csrf.field | raw }}
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" href="#" class="btn btn-success registrarpedido">Guardar </button> 
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'templates/partials/footer.twig' %}
+    <script>
+
+        function NuevaMascota() {
+            $("#FormMascota")[0].reset();
+            $("#seccionfoto").css("display", "none");
+            $('#accion').val('nuevo');
+            $('#AgregarMascotas').modal('show');
+        }
+        
+        function NuevaPedido() {
+            $("#FormPedido")[0].reset();
+            $('#AgregarPedido').modal('show');
+        }
+        
+        function EditarMascota(codigo) {
+            $("#seccionfoto").css("display", "block");
+            var codigo = codigo;
+            $('#AgregarMascotas').modal('show');
+            $('#codigo').val(codigo);
+            $('#accion').val('editar');
+            return $.ajax({
+                type: "get",
+            url: '{{ base_url() }}/mascota/editar',
+                data: {
+                    codigo: codigo
+                },
+                success: function (data) {
+                    $.each(data, function (i, item) {
+                        $('#nombre').val(item.nombre);
+                        $('#edad').val(item.edad);
+                        $('#fotooriginal').attr('src', '{{base_url()}}/' + item.foto);
+                        $('#estado').val(item.estado);
+                        $('#descripcion').val(item.descripcion);
+                        $('#id_tipomascota').val(item.id_tipomascota);
+                    });
+                },
+                error: function () {
+                }
+            });
+
+        }
+
+        function GuardarMascota() {
+            var formData = new FormData($("#FormMascota")[0]);
+            var resultado = "";
+            $.ajax({
+            url: "{{ base_url() }}/mascota/registrar",
+                async: false,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                processData: false,
+                dataType: 'json',
+                success: function (datos) {
+                    resultado = datos.response;
+                    mensaje = datos.message;
+                }
+            });
+            return [resultado, mensaje];
+        }
+        
+         function GuardarPedido() {
+            var formData = new FormData($("#FormPedido")[0]);
+            var resultado = "";
+            $.ajax({
+            url: "{{ base_url() }}/pedido/registrar",
+                async: false,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                processData: false,
+                dataType: 'json',
+                success: function (datos) {
+                    resultado = datos.response;
+                    mensaje = datos.message;
+                }
+            });
+            return [resultado, mensaje];
+        }
+
+
+        $(".registrarmascota").on("click", function (event) {
+
+            event.preventDefault();
+           
+            var nombre = $('#nombre').val();
+            var tipo = $('#id_tipomascota').val();
+            var edad = $('#edad').val();
+            var descripcion = $('#descripcion').val();
+            var estado = $('#estado').val();
+            var foto = $('#foto').val();
+            
+            if (nombre == "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '¡Advertencia!',
+                    text: 'Debe ingresar el nombre de la mascota.',
+                })
+            } else {
+                if (tipo == "") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '¡Advertencia!',
+                        text: 'Debe seleccionar el tipo de mascota.',
+                    })
+                } else {
+                   if (edad == "") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: 'Debe ingresar la fecha de nacimiento de la mascota.',
+                        })
+                    } else {
+                         if (descripcion == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar la descrición de la mascota.',
+                            })
+                        } else {
+                             if (estado == "") {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: '¡Advertencia!',
+                                    text: 'Debe seleccionar el estado.',
+                                })
+                            } else {
+                                if (foto == "" && accion == "nuevo") {
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: '¡Advertencia!',
+                                        text: 'Debe agregar una foto.',
+                                    })
+                                } else {
+                                    Swal.fire({
+                                        title: '¿Está seguro?',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: '¡Sí, guardar!'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            var resp = GuardarMascota();
+                                            if (resp[0] == "success") {
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: '¡Éxito!',
+                                                    text: resp[1],
+                                                }).then((result) => {
+                                                    if (result.value) {
+                                                        $('#AgregarMascotas').modal('hide');
+                                                        location.reload();
+                                                    }
+                                                });
+                                            } else {
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: '¡Error!',
+                                                    text: resp[1],
+                                                })
+                                            }
+                                        }
+                                    })
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+          $(".registrarpedido").on("click", function (event) {
+
+            event.preventDefault();
+
+            var mascota = $('#code_mascota').val();
+            var pedido = $('#code_pedido').val();
+
+            if (mascota == "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '¡Advertencia!',
+                    text: 'Debe seleccionar a una mascota.',
+                })
+            } else {
+                if (pedido == "") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '¡Advertencia!',
+                        text: 'Debe seleccionar el tipo de pedido.',
+                    })
+                } else {
+                    Swal.fire({
+                        title: '¿Está seguro?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '¡Sí, guardar!'
+                    }).then((result) => {
+                        if (result.value) {
+                            var resp = GuardarPedido();
+                            if (resp[0] == "success") {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Éxito!',
+                                    text: resp[1],
+                                }).then((result) => {
+                                    if (result.value) {
+                                        $('#AgregarPedido').modal('hide');
+                                        window.location.href = "pedido";
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '¡Error!',
+                                    text: resp[1],
+                                })
+                            }
+                        }
+                    })
+                }   
+            }
+        });
+
+
+
+        $(document).ready(function () {
+
+            // Translated
+            $('.dropify-es').dropify({
+                messages: {
+                    default: 'Arrastra y suelta un archivo aquí o haz clic',
+                    replace: 'Arrastre y suelte un archivo o haga clic para reemplazar',
+                    remove: 'Suprimir',
+                    error: 'Lo sentimos, el archivo es demasiado grande'
+                }
+            });
+
+            // Used events
+            var drEvent = $('#input-file-events').dropify();
+
+            drEvent.on('dropify.beforeClear', function (event, element) {
+                return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
+            });
+
+            drEvent.on('dropify.afterClear', function (event, element) {
+                alert('File deleted');
+            });
+
+            drEvent.on('dropify.errors', function (event, element) {
+                console.log('Has Errors');
+            });
+
+            var drDestroy = $('#input-file-to-destroy').dropify();
+            drDestroy = drDestroy.data('dropify')
+            $('#toggleDropify').on('click', function (e) {
+                e.preventDefault();
+                if (drDestroy.isDropified()) {
+                    drDestroy.destroy();
+                } else {
+                    drDestroy.init();
+                }
+            })
+
+        });
+
+
+
+        function GuardarIniciativa(id_iniciativa) {
+            col = $(this);
+            var id = "#" + id_iniciativa;
+            $(id).html('<img src="dist/img/loader.gif"  style="margin-left:-3px;"/>');
+            dataString = "id_iniciativa=" + id_iniciativa;
+            var resultado = "";
+            var mensaje = "";
+            $.ajax({
+                url: "{{ base_url() }}/detalleiniciativa/registrar",
+                async: false,
+                type: "get",
+                data: dataString,
+                dataType: 'json',
+                success: function (datos) {
+                    resultado = datos.response;
+                    mensaje = datos.message;
+                }
+            });
+            return [resultado, mensaje];
+        }
+
+        function GuardarHorario(id_grupo_wsp) {
+            col = $(this);
+            var id = "#" + id_grupo_wsp;
+            $(id).html('<img src="dist/img/loader.gif"  style="margin-left:-3px;"/>');
+            dataString = "id_grupo_wsp=" + id_grupo_wsp;
+            var resultado = "";
+            var mensaje = "";
+            $.ajax({
+                url: "{{ base_url() }}/detallegrupo/registrar",
+                async: false,
+                type: "get",
+                data: dataString,
+                dataType: 'json',
+                success: function (datos) {
+                    resultado = datos.response;
+                    mensaje = datos.message;
+                }
+            });
+            return [resultado, mensaje];
+        }
+
+        function GuardarAsistencia(id_sesion) {
+            col = $(this);
+            dataString = "id_sesion=" + id_sesion;
+            var resultado = "";
+            var mensaje = "";
+            $.ajax({
+                url: "{{ base_url() }}/asistencia/registrar",
+                async: false,
+                type: "get",
+                data: dataString,
+                dataType: 'json',
+                success: function (datos) {
+                    resultado = datos.response;
+                    mensaje = datos.message;
+                }
+            });
+            return [resultado, mensaje];
+        }
+
+        function AgregarIniciativa(id_iniciativa) {
+            var id = "#" + id_iniciativa;
+            event.preventDefault();
+            Swal.fire({
+                title: '¿Está seguro?',
+                icon: 'warning',
+                text: 'Solo puede escoger tres iniciativas.',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, guardar!'
+            }).then((result) => {
+                if (result.value) {
+                    var resp = GuardarIniciativa(id_iniciativa);
+                    if (resp[0] == "success") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: resp[1],
+                        }).then((result) => {
+                            if (result.value) {
+                                $(id).html('<i class="fa fa-check"></i>');
+                                $(id).addClass("btn-success");
+                                $("#listini").html("");
+                                IniciativasSeleccionadas();
+                            }
+                        });
+                    } else if (resp[0] == "lleno") {
+                        Swal.fire({
+                            icon: 'Atención',
+                            title: '¡Error!',
+                            text: resp[1],
+                        })
+                        $(id).html('<i class="fa fa-hand-o-up"></i>');
+                    } else if (resp[0] == "limite") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Atención!',
+                            text: resp[1],
+                        })
+                        $(id).html('<i class="fa fa-hand-o-up"></i>');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '¡Error!',
+                            text: resp[1],
+                        })
+                        $(id).html('<i class="fa fa-hand-o-up"></i>');
+                    }
+                }
+            })
+        }
+        ;
+
+        function AgregarGrupo(id_grupo_wsp) {
+            var id = "#" + id_grupo_wsp;
+            event.preventDefault();
+            Swal.fire({
+                title: '¿Está seguro?',
+                icon: 'warning',
+                text: 'Solo tienes una oportunidad para escoger tu horario.',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, guardar!'
+            }).then((result) => {
+                if (result.value) {
+                    var resp = GuardarHorario(id_grupo_wsp);
+                    if (resp[0] == "success") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: resp[1],
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });
+                    } else if (resp[0] == "existe") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Atención!',
+                            text: resp[1],
+                        })
+                        $(id).html('<i class="fa fa-hand-o-up"></i>');
+                    } else if (resp[0] == "limite") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Atención!',
+                            text: resp[1],
+                        })
+                        $(id).html('<i class="fa fa-hand-o-up"></i>');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '¡Error!',
+                            text: resp[1],
+                        })
+                        $(id).html('<i class="fa fa-hand-o-up"></i>');
+                    }
+                }
+            })
+        }
+        ;
+
+        function RegistrarAsistencia(id_sesion) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Atención',
+                icon: 'warning',
+                text: 'Solo se permitirá marcar su asistencia, si usted está dentro del horario de sesión.',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Sí, marcar!'
+            }).then((result) => {
+                if (result.value) {
+                    var resp = GuardarAsistencia(id_sesion);
+                    if (resp[0] == "success") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: resp[1],
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });
+                    } else if (resp[0] == "fuera") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Atención!',
+                            text: resp[1],
+                        })
+                    } else if (resp[0] == "asistio") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: resp[1],
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '¡Error!',
+                            text: resp[1],
+                        })
+                        $(id).html('<i class="fa fa-hand-o-up"></i>');
+                    }
+                }
+            })
+        } ;
+
+        function IniciativasSeleccionadas() {
+            $.ajax({
+                type: "get",
+                url: '{{ base_url() }}/detalleiniciativa/listaporvoluntario',
+                data: {},
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    var c = JSON.parse(data);
+                    $.each(c.data, function (i, item) {
+                        $('#' + item.id_iniciativa).addClass("btn-success");
+                        $("#listini").append("<li><a href='#' class='tag-item'>" + item.nombre + "</a></li>");
+                    });
+                },
+                error: function () {
+                }
+            });
+        }
+
+
+        function TareasEnviadas() {
+            $.ajax({
+                type: "get",
+                url: '{{ base_url() }}/tareas/desarrolladas',
+                data: {},
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    var c = JSON.parse(data);
+                    $.each(c.data, function (i, item) {
+                        $('#' + item.id_tarea).addClass("btn-success");
+                        $("#listareas").append("<li><a href='#' class='tag-item'>[" + item.numero + "] " + item.tema + "</a> <i class='fa fa-check'></i></li>");
+                    });
+                },
+                error: function () {
+                }
+            });
+        }
+
+
+    </script>         
+{% endblock content %}

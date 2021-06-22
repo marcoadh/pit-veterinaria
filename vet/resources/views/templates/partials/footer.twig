@@ -1,0 +1,86 @@
+<!-- site footer -->
+<footer id="site-footer">
+    <div class="top-footer">
+        <div class="container my-md-5 my-4">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="footer-logo mb-3">
+                        <a href="index.html">
+                            GPS SOCIAL PERÚ
+                        </a>
+                    </div>
+                    <div>
+                        <p class="">Somos la empresa líder que gestiona programas sociales alineados a 
+                            cumplir las metas de los objetivos de desarrollo sostenible.</p>
+                    </div>
+                </div>
+                <!-- Quick Links -->
+                <div class="col-lg-3 col-md-4 mt-lg-0 mt-5">
+                    <h4 class="footer-title">Enlaces</h4>
+                    <div class="row">
+                        <div class="col-md-6 col-6">
+                            <ul class="footer-list">
+                                <li><a href="{{ path_for('home') }}"> Inicio</a></li>
+                                <li><a href="{{ path_for('nosotros') }}"> Nosotros</a></li>
+                                <li><a href="{{ path_for('servicios') }}"> Servicios</a></li>
+                                <li><a href="{{ path_for('productos') }}"> Productos</a></li>
+
+                            </ul>
+                        </div>
+                        <div class="col-sm-6 col-6">
+                            <ul class="footer-list">
+                                <li><a href="{{ path_for('noticias') }}"> Noticias</a></li>
+                                <li><a href="{{ path_for('encuestas') }}"> Encuestas</a></li>
+                                <li><a href="{{ path_for('contacto') }}"> Contacto</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Newsletter -->
+                <div class="col-lg-5 col-md-8 mt-lg-0 mt-5">
+                    <h4 class="footer-title">Boletón informativo</h4>
+                    <p class="mb-4">Al suscribirse a nuestra lista de correo, siempre estará actualizado con nuestras últimas noticias.
+                    </p>
+                    <form class="newsletter-form" method="post" id="FormSuscripcion" name="FormSuscripcion">
+                        <div class="form-group">
+                            <input type="email" name="correo" id="correo" value=""
+                                   data-content="Usted debe ingresar su correo electrónico" 
+                                   placeholder="Correo electrónico*" 
+                                   class="input-rounded obligate2 valcorreo2">
+                            {{ csrf.field | raw }}
+                            <div class="suscripcion">
+                                <a style="color: white" class="btn btn-primary btn-style">Suscribirse</a>
+                            </div>
+                        </div>
+                    </form>
+                            
+                    <div>
+                        <div class="mt-3 msg2">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bottom-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 text-lg-left text-center mb-lg-0 mb-3">
+                    <p class="copyright">© 2021 GPS Social Perú. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-lg-4 align-center text-lg-right text-center">
+                    <a href="#facebook" class="social-item"><span class="fa fa-facebook-f"></span></a>
+                    <a href="#twitter" class="social-item"><span class="fa fa-twitter"></span></a>
+                    <a href="#linkedin" class="social-item"><span class="fa fa-linkedin"></span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- //site footer -->
+
+<!-- move top -->
+<button onclick="topFunction()" id="movetop" class="bg-primary" title="Go to top">
+    <span class="fa fa-angle-up"></span>
+</button>

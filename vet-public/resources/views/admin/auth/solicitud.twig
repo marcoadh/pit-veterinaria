@@ -1,0 +1,1251 @@
+{% extends 'admin/templates/app.twig' %}
+{% block content %}
+<style>
+    ul.timeline {
+        list-style-type: none;
+        position: relative;
+    }
+    ul.timeline:before {
+        content: ' ';
+        background: #d4d9df;
+        display: inline-block;
+        position: absolute;
+        left: 29px;
+        width: 2px;
+        height: 100%;
+        z-index: 400;
+    }
+    ul.timeline > li {
+        margin: 20px 0;
+        padding-left: 50px;
+    }
+    ul.timeline > li:before {
+        content: ' ';
+        background: white;
+        display: inline-block;
+        position: absolute;
+        border-radius: 50%;
+        border: 3px solid #607D8B;
+        left: 20px;
+        width: 20px;
+        height: 20px;
+        z-index: 400;
+    }
+
+</style>
+
+
+    <body class="hold-transition skin-blue sidebar-mini ">
+    <div class="pace  pace-inactive">
+        <div class="pace-progress" data-progress-text="100%" data-progress="99"
+             style="transform: translate3d(100%, 0px, 0px);">
+            <div class="pace-progress-inner"></div>
+        </div>
+        <div class="pace-activity"></div>
+    </div>
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="../admin/dash" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b>R</b>S</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b style="font-style:oblique;">RUOS</b></span>
+            </a>
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <!-- User Account: style can be found in dropdown.less -->
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="{{ base_url() }}/dist/img/logini.jpg" class="user-image" alt="User Image">
+                                <span class="hidden-xs"><?php echo $_SESSION['ses_correouser'];?></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- User image -->
+                                <li class="user-header">
+                                    <img src="{{ base_url() }}/dist/img/logini.jpg" class="img-circle" alt="User Image">
+                                    <p>
+                                        {{ AdminController.admin.nombres }}
+                                        <small>{{ AdminController.admin.dni }}</small>
+                                        <small>Administrador</small>
+                                    </p>
+                                </li>
+                                <!-- Menu Footer-->
+                                <li class="user-footer" style="border: 1px solid #3C8DBC;">
+                                    <div class="pull-right">
+                                        <a href="#" class="btn btn-default btn-flat" id="changeses"
+                                           style="border: 1px solid #3C8DBC;">Cerrar sesión</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- Control Sidebar Toggle Button -->
+                        <li>
+                            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                        </li>
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <aside class="main-sidebar">
+            {% include 'admin/templates/menu.twig' %}
+        </aside>
+
+
+        <body class="hold-transition skin-blue sidebar-mini ">
+        <div class="pace  pace-inactive">
+            <div class="pace-progress" data-progress-text="100%" data-progress="99"
+                 style="transform: translate3d(100%, 0px, 0px);">
+                <div class="pace-progress-inner"></div>
+            </div>
+            <div class="pace-activity"></div>
+        </div>
+
+        <div class="wrapper">
+
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+                <!-- Content Header (Page header) -->
+
+                <section class="content-header">
+                    <h1>
+                        Solicitud
+                        <strong> {{ model.num_sol }}</strong> |
+                        <breadcrumb>{{ model.nombre_org }}</breadcrumb>
+                    </h1>
+
+                </section>
+
+
+                <!-- Main content -->
+                    <section class="content">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="box box-primary">
+
+                                <div class="box-header with-border">
+                                    <i class="fa fa-info-circle"></i>
+                                    <h3 class="box-title">Organización</h3>
+                                </div>
+
+                                <div class="box-body">
+
+                                    <form name="FormActualizarOrganizacion" id="FormActualizarOrganizacion" method="post">
+                                        <input type="hidden" value="{{ model.codigo }}" id="codigorg" name="codigorg">
+                                        <input type="hidden" value="{{ model.distrito }}" id="distrito_org" name="distrito_org">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Número</label>
+                                                <input type="text" value="{{ model.num_org }}" id="num_org"
+                                                       data-content="Debes ingresar un número de organización"
+                                                       name="num_org" class="form-control form-input obligate-org">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="form-group">
+                                                <label>Nombre</label>
+                                                <input type="text" value="{{ model.nombre_org }}" id="nom_org"
+                                                       data-content="Debes ingresar un nombre"
+                                                       name="nom_org" class="form-control form-input obligate-org">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="exampleInputPassword1">Tipo</label>
+                                                <select class="form-control form-select obligate-org" id="tipo" name="tipo">
+                                                    <option value="">Seleccionar el tipo de organización social</option>
+
+                                                    <option {% if model.tipo_org  == 1 %}selected{% endif %} value="1">
+                                                        Organizaciones vecinales
+                                                    </option>
+                                                    <option {% if model.tipo_org  == 2 %}selected{% endif %} value="2">
+                                                        Organizaciones sociales de base de apoyo alimentaria
+                                                    </option>
+                                                    <option {% if model.tipo_org  == 3 %}selected{% endif %} value="3">
+                                                        Organizaciones temáticas
+                                                    </option>
+                                                    <option {% if model.tipo_org  == 4 %}selected{% endif %} value="4">
+                                                        Organizaciones de poblaciones vulnerables
+                                                    </option>
+                                                    <option {% if model.tipo_org  == 5 %}selected{% endif %} value="5">
+                                                        Organizaciones económicas
+                                                    </option>
+                                                    <option {% if model.tipo_org  == 6 %}selected{% endif %} value="6">
+                                                        Organizaciones deportivas
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Nivel</label>
+                                                <select class="form-control form-select obligate-org" id="nivel"
+                                                        data-content="Debe seleccionar a que nivel pertenece"
+                                                        name="nivel">
+                                                    <option value="">Seleccionar el nivel</option>
+                                                    <option {% if model.nivel  == 1 %}selected{% endif %} value="1">
+                                                        Local
+                                                    </option>
+                                                    <option {% if model.nivel  == 2 %}selected{% endif %} value="2">
+                                                        Zonal
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Fecha de constitución</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </div>
+                                                    <input type="date" class="form-control obligate-org"
+                                                           value="{{ model.fecha_constitucion }}" id="fecha_cons"
+                                                           name="fecha_cons">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Número de miembros</label>
+                                                <input type="number" value="{{ model.num_miem }}" id="num_miem"
+                                                       name="num_miem" class="form-control form-input obligate-org">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Dirección</label>
+                                                <textarea type="text" class="form-control obligate-org" id="dir_org"
+                                                          name="dir_org"
+                                                          placeholder="Nombre de Organización">{{ model.domicilio_org }}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Fines</label>
+                                                <textarea type="text" class="form-control" id="fines"
+                                                          name="fines">{{ model.fines }}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div  class="msg"></div>
+                                        </div>
+                                        {{ csrf.field | raw }}
+
+                                    </form>
+
+
+
+                                </div>
+
+                                <div class="box-footer">
+                                    <button type="button" id="updateorg" class="btn bg-olive margin">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-6">
+                                <div class="box box-solid">
+                                    <div class="box-header with-border">
+                                        <i class="fa fa-user"></i>
+                                        <h3 class="box-title">Solicitante</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <table class="table table-bordered" cellpadding="5">
+                                            <tbody>
+                                            <tr><th>DNI:</th>
+                                                <td>
+                                                    {{ model.dni }}
+                                                </td>
+                                            </tr>
+                                            <tr><th><b>NOMBRES:</b></th>
+                                                <td>
+                                                    <dd>{{ model.nombres }}</dd>
+                                                </td>
+                                            </tr>
+                                            <tr><th><b>APELLIDOS:</b></th>
+                                                <td>
+                                                    {{ model.apellidopaterno }} {{ model.apellidomaterno }}
+                                                </td>
+                                            </tr>
+                                            <tr><th><b>CORREO:</b> </th>
+                                                <td>
+                                                    {{ model.correo }}
+                                                </td>
+                                            </tr>
+                                            <tr><th><b>TELÉFONO:</b> </th>
+                                                <td>{{ model.telefono }}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="box box-solid ">
+                                    <div class="box-header with-border">
+                                        <i class="fa fa-file-text"></i>
+
+                                        <h3 class="box-title">Solicitud</h3>
+                                    </div>
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+
+                                        <table class="table table-bordered" cellpadding="5">
+                                            <tbody>
+                                            <tr><th><b>ESTADO:</b></th>
+                                                <td>
+                                                    {% if model.flag == 1 %}
+                                                    <span class='label label-info'>INCOMPLETO</span>
+                                                    {% elseif model.flag == 2 %}
+                                                        <span class='label label-warning'>PENDIENTE</span>
+                                                    {% elseif model.flag == 3 %}
+                                                        <span class='label label-success'>APROBADO</span>
+                                                    {% else %}
+                                                        <span class='label label-danger'>ARCHIVADO</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr><th><b>NÚMERO:</b></th>
+                                                <td>
+                                                    {{ model.num_sol }}
+                                                </td>
+                                            </tr>
+                                            <tr><th><b>TIPO DE SOLICITUD:</b></th>
+                                                <td>
+                                                    {% if model.tipo_sol == 1 %}
+                                                        <span class='label label-info'>REGISTRO NUEVO</span>
+                                                    {% else %}
+                                                        <span class='label label-info'>ACTUALIZACIÓN</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr><th><b>FECHA DE INICIO DE ATENCIÓN:</b> </th>
+                                                <td>
+                                                    {{ model.fec_revision }}
+                                                </td>
+                                            </tr>
+                                            <tr><th><b>FECHA MÁXIMA DE ATENCIÓN:</b> </th>
+                                                <td>{{ model.fec_venci }}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="box box-solid">
+                                    <div class="box-header with-border">
+                                        <i class="fa  fa-calendar-check-o"></i>
+                                        <h3 class="box-title">Constatación</h3>
+                                        {% if cons %}
+                                        <a class="pull-right"
+                                           type="button"
+                                           data-toggle="modal"
+                                           data-target="#EliminarConstatacion"
+                                           data-operation="delete"
+                                           data-form="constatacion"
+                                           data-content="{{ cons.cod_constatacion }}">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="box-body">
+                                        <dl>
+                                            <dt>Estado de constatación</dt>
+                                            <dd>
+
+                                                {% if cons.estado == 1 %}
+                                                    <span class='label label-info'>ENVIADO</span>
+                                                {% elseif cons.estado == 2 %}
+                                                    <span class='label label-warning'>OBSERVADO</span>
+                                                {% elseif cons.estado == 3 %}
+                                                    <span class='label label-success'>CONSTATADO</span>
+                                                {% else %}
+                                                    <span class='label label-default'>SIN ENVIAR</span>
+                                                {% endif %}
+
+                                            </dd>
+                                            <dt>Fecha inicio de constatación</dt>
+                                            <dd>
+                                                {% if cons %}
+                                                    {{ cons.fecha_inicio }}
+                                                {% else %}
+                                                    ---
+                                                {% endif %}
+                                            </dd>
+
+                                            <dt>Fecha máxima de constatación</dt>
+                                            <dd>
+                                                {% if cons %}
+                                                    {{ cons.fecha_fin }}
+                                                {% else %}
+                                                    ---
+                                                {% endif %}
+                                        </dl>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="box box-solid ">
+                                    <div class="box-header with-border">
+                                        <i class="fa  fa-calendar-check-o"></i>
+                                        <h3 class="box-title">Resolución</h3>
+                                        {% if res %}
+                                        <a class="pull-right"
+                                           type="button"
+                                           data-toggle="modal"
+                                           data-target="#EliminarResolucion"
+                                           data-operation="delete"
+                                           data-form="resolucion"
+                                           data-content="{{ res.codigo }}">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                    <div class="box-body">
+                                        <table class="table table-bordered" cellpadding="5">
+                                            <tbody>
+                                            <tr><th><b>NÚMERO:</b></th>
+                                                <td>
+                                                    {% if res %}
+                                                        {{ res.num_res }}
+                                                    {% else %}
+                                                        ---
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr><th><b>FECHA DE REGISTRO:</b></th>
+                                                <td>
+                                                    {% if res %}
+                                                        {{ res.fecha_registro }}
+                                                    {% else %}
+                                                        ---
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr><th><b>ARCHIVO:</b></th>
+                                                <td>
+                                                    {% if res %}
+                                                        <a target="_blank" href="{{ base_url() }}/{{ res.ruta }}" class="btn btn-primary">Ver
+                                                            resolución</a>
+                                                    {% else %}
+                                                        ---
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+
+                                            </tbody>
+                                        </table>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <!-- title row -->
+                        <div class="box-header">
+                            <div class="col-xs-6">
+                                <h2 class="page-header">
+                                    <i class="fa fa-globe"></i> Documentos
+                                </h2>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="invoice-col pull-right">
+
+                                    {% if not res %}
+                                        <a class="btn btn-app pull-right"
+                                           data-toggle="modal"
+                                           data-target="#modalresolucion"
+                                           data-sol="{{ model.codsol }}">
+                                            <i class="fa fa-upload"></i> Subir Resolución
+                                        </a>
+                                    {% endif %}
+
+                                    {% if model.flag == 2 %}
+                                        <a class="btn btn-app pull-right btn-success" type="button" data-toggle="modal"
+                                           data-target="#modalaprobar"
+                                           data-whatever="aprobar"
+                                           data-content="{{ model.codsol }}"
+                                           data-numero="{{ model.num_sol }}">
+                                            <i class="fa fa-legal"></i> Aprobar solicitud
+                                        </a>
+                                    {% endif %}
+
+                                    <!--  BOTÓN CONSTATACIÓN-->
+                                    {% if not cons  %}
+                                    <a class="btn btn-app pull-right"
+                                       data-toggle="modal"
+                                       data-target="#modalconstatacion">
+                                       <i class="fa fa-check-square-o"></i> Enviar constatación
+                                    </a>
+                                    {% endif %}
+
+                                    <!--  BOTÓN CONSTATACIÓN-->
+
+                                    {% if model.flag == 2 %}
+                                    <a class="btn btn-app pull-right"
+                                       data-toggle="modal"
+                                       data-target="#modalrechazo">
+                                        <i class="fa fa-times"></i> Archivar solicitud
+                                    </a>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                            <!-- /.col -->
+                        </div>
+
+
+                        <!-- Table row -->
+                        <div class="box-body">
+                            <div class="col-xs-12 table-responsive">
+                                <table id="example" class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+
+                                        <th>DOCUMENTO</th>
+                                        <th class="center">ARCHIVO</th>
+                                        <th class="center">FECHA DE SUBIDA</th>
+                                        <th class="center">ESTADO</th>
+                                        <th class="center">HISTORIAL</th>
+                                        <th class="center">OPERACIONES</th>
+                                        <th class="center"> + COMENTARIO</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                    {% for list in doc %}
+                                    <tr>
+                                        <td>
+                                            {% if (list.tipdoc=='SOL_GPV') %}
+                                                SOLICITUD A LA GERENCIA DE PARTICIPACIÓN VECINAL
+                                            {% elseif (list.tipdoc=='ACT_ASAM') %}
+                                                ACTA DE ASAMBLEA GENERAL
+                                            {% elseif (list.tipdoc=='PAD_ACT') %}
+                                                PADRÓN O NÓMINA ACTUALIZADA DE LOS MIEMBROS DE LA ORGANIZACIÓN
+                                            {% elseif (list.tipdoc=='EST_ORG') %}
+                                                ESTATUTO DE LA ORGANIZACIÓN EN CASO HAYA MODIFICACIÓN PARCIAL O TOTAL
+                                            {% elseif (list.tipdoc=='CONV_INVI') %}
+                                                CONVOCATORIA O ESQUELA DE INVITACIÓN A LA ASAMBLEA GENERAL
+                                            {% elseif (list.tipdoc=='PLA_ACI') %}
+                                                PLANO O CROQUIS DEL RADIO DE ACCIÓN DE LA ORGANIZACIÓN *
+                                            {% elseif (list.tipdoc=='PLA_UBI') %}
+                                                PLANO O CROQUIS REFERENCIAL DE LA UBICACIÓN DEL LOCAL O DOMICILIO INSTITUCIONAL DE LA ORGANIZACIÓN
+                                            {% elseif (list.tipdoc=='NOM_MOS') %}
+                                                NÓMINA DE LOS MIEMBROS DE LA ORGANIZACIÓN SOCIAL
+                                            {% elseif (list.tipdoc=='ACT_ELE') %}
+                                                ACTA DE ELECCIÓN DEL ÓRGANO DIRECTIVO
+                                            {% elseif (list.tipdoc=='OTR_DOC') %}
+                                                OTRO ACERVO listNTAL
+                                            {% elseif (list.tipdoc=='NOM_MIEM') %}
+                                                NÓMINA DE LOS MIEMBROS DEL ÓRGANO DIRECTIVO
+                                            {% elseif (list.tipdoc=='EST_ACT') %}
+                                                ESTATUTO Y ACTA DE APROBACIÓN
+                                            {% elseif (list.tipdoc=='ACT_FUN') %}
+                                                ACTA DE FUNDACIÓN O DE CONSTITUCIÓN
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-sm btn-primary" href="{{ base_url() }}/{{ list.urldoc }}"
+                                               target="_blank"><i class="fa fa-eye"></i></a>
+                                        </td>
+                                        <td>
+                                            {{ list.freg }}
+                                        </td>
+                                        <td>
+                                            {% if list.flag == 1 %}
+                                                <span class="label label-info">EN EVALUACIÓN</span>
+                                            {% elseif list.flag == 2 %}
+                                                <span class="label label-danger">OBSERVADO</span>
+                                            {% else %}
+                                                <span class='label label-success'>APROVADO</span>
+                                            {% endif %}
+                                        </td>
+
+                                        <td>
+                                            <a class="btn btn-default "
+                                               style="cursor:pointer;overflow: visible;"
+                                               data-target="#VerHistorial"
+                                               id="datamodal"
+                                               data-toggle="modal"
+                                               data-codigo="{{ model.codsol }}"
+                                               data-tipo="{{ list.tipdoc }}"
+                                               data-nombre="{% if (list.tipdoc=='SOL_GPV') %}
+                                                                SOLICITUD A LA GERENCIA DE PARTICIPACIÓN VECINAL
+                                                            {% elseif (list.tipdoc=='ACT_ASAM') %}
+                                                                ACTA DE ASAMBLEA GENERAL
+                                                            {% elseif (list.tipdoc=='PAD_ACT') %}
+                                                                PADRÓN O NÓMINA ACTUALIZADA DE LOS MIEMBROS DE LA ORGANIZACIÓN
+                                                            {% elseif (list.tipdoc=='EST_ORG') %}
+                                                                ESTATUTO DE LA ORGANIZACIÓN EN CASO HAYA MODIFICACIÓN PARCIAL O TOTAL
+                                                            {% elseif (list.tipdoc=='CONV_INVI') %}
+                                                                CONVOCATORIA O ESQUELA DE INVITACIÓN A LA ASAMBLEA GENERAL
+                                                            {% elseif (list.tipdoc=='PLA_ACI') %}
+                                                                PLANO O CROQUIS DEL RADIO DE ACCIÓN DE LA ORGANIZACIÓN *
+                                                            {% elseif (list.tipdoc=='PLA_UBI') %}
+                                                                PLANO O CROQUIS REFERENCIAL DE LA UBICACIÓN DEL LOCAL O DOMICILIO INSTITUCIONAL DE LA ORGANIZACIÓN
+                                                            {% elseif (list.tipdoc=='NOM_MOS') %}
+                                                                NÓMINA DE LOS MIEMBROS DE LA ORGANIZACIÓN SOCIAL
+                                                            {% elseif (list.tipdoc=='ACT_ELE') %}
+                                                                ACTA DE ELECCIÓN DEL ÓRGANO DIRECTIVO
+                                                            {% elseif (list.tipdoc=='OTR_DOC') %}
+                                                                OTRO ACERVO listNTAL
+                                                            {% elseif (list.tipdoc=='NOM_MIEM') %}
+                                                                NÓMINA DE LOS MIEMBROS DEL ÓRGANO DIRECTIVO
+                                                            {% elseif (list.tipdoc=='EST_ACT') %}
+                                                                ESTATUTO Y ACTA DE APROBACIÓN
+                                                            {% elseif (list.tipdoc=='ACT_FUN') %}
+                                                                ACTA DE FUNDACIÓN O DE CONSTITUCIÓN
+                                                            {% endif %}">
+                                                <i class="fa fa-history"></i>
+                                            </a>
+                                        </td>
+                                        <td>
+
+                                            <button type="button" title="EN EVALUACIÓN"
+                                                    data-codigo="{{ list.codigo }}"
+                                                    data-estado="1"
+                                                    class="btn btn-sm btn-info cambiarestado">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                            <button type="button" title="OBSERVADO"
+                                                    data-codigo="{{ list.codigo }}"
+                                                    data-estado="2"
+                                                    class="btn btn-sm btn-danger cambiarestado">
+                                                <i class="fa fa-warning"></i>
+                                            </button>
+                                            <button type="button" title="APROBADO"
+                                                    data-codigo="{{ list.codigo }}"
+                                                    data-estado="3"
+                                                    class="btn btn-sm btn-success cambiarestado">
+                                                <i class="fa fa-check"></i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-default "
+                                               style="cursor:pointer;overflow: visible;"
+                                               data-target="#AgregarAdvertencia"
+                                               data-toggle="modal"
+                                               data-content="{{ list.codigo }}"
+                                               data-user="{{ admin.codigo}}"
+                                               data-tipo="{{ list.tipdoc }}"
+                                               data-title="{{ list.tipdoc }}"
+                                            ><i class="fa fa-comments"></i>
+                                            </a>
+                                        </td>
+                                    <tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                                <div class="box">
+                                    <div class="box-header">
+                                        <div class="col-xs-6">
+
+                                        <h2 class="page-header">
+                                            <i class="fa fa-group"></i>  Junta Directiva
+                                        </h2>
+                                        </div>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="col-xs-12 table-responsive">
+                                        <table id="MiembrosJuntaDirectiva"
+                                               class="table table-striped cell-border table-bordered responsive">
+                                            <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>DNI</th>
+                                                <th>CARGO</th>
+                                                <th>NOMBRE</th>
+                                                <th>APELLIDO PATERNO</th>
+                                                <th>APELLIDO MATERNO</th>
+                                                <th>FOTO</th>
+                                                <th>ELIMINAR</th>
+                                            </tr>
+                                            </thead>
+                                            <tfoot>
+                                            <tr>
+                                                <th></th>
+                                                <th>DNI</th>
+                                                <th>CARGO</th>
+                                                <th>NOMBRE</th>
+                                                <th>APELLIDO PATERNO</th>
+                                                <th>APELLIDO MATERNO</th>
+                                                <th>FOTO</th>
+                                                <th>ELIMINAR</th>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                        </div>
+                                    </div>
+                                </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="modal fade" id="AgregarAdvertencia" tabindex="-1" role="dialog" aria-labelledby="AgregarAdvertencia">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header mod">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:#fff;">&times;</span></button>
+                        <h4 class="modal-title modtitle" id="AgregarAdvertencia"><strong>cargando...</strong></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="box-body row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Documento en cuestión</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon" style="width: auto;"><i class="fa fa-bars"></i></span>
+
+                                        <input type="text" id="nombredocumento" disabled value="" class="form-control obligate nombredocumento"/>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="box box-primary direct-chat direct-chat-primary">
+                                    <div class="box-body">
+                                        <div class="direct-chat-messages" id="ventanachat">
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Mensaje: </label>
+
+                                    <form name="my_form" id="my_form" method="post">
+                                        <input type="hidden" name="codigodocumento" id="codigodocumento" value="">
+                                        <input type="hidden" name="tipo_user" id="tipo_user" value="2">
+                                        <input type="hidden" name="iduser" id="iduser" value="">
+                                        <input type="hidden" name="tipdoc" id="tipdoc" value="">
+                                        {{ csrf.field | raw }}
+
+                                        <textarea class="form-control obligatemsm" id="texto" rows="5" name="texto"
+                                                  data-content="Usted debe ingresar un mensaje"
+                                                  id="texto" placeholder="Escriba el mensaje"></textarea>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="msg"></div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="button" id="guardarmensaje" data-loading-text="Guardando..."  class="btn btn-success" autocomplete="off">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="VerHistorial" tabindex="-1" role="dialog" aria-labelledby="VerHistorial">
+            <div class="modal-dialog modal-default fade in" role="document">
+                <div class="modal-content">
+                    <div class="modal-header mod">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color:#fff;">&times;</span></button>
+                        <h4 class="modal-title modtitle" id="VerHistorial"><strong>cargando...</strong></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container mt-5 mb-5">
+                            <div class="row">
+                                <div class="col-md-6 offset-md-3">
+                                    <ul class="timeline">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div  class="msg"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="modal fade" id="modalinfo" tabindex="-1" role="dialog" aria-labelledby="modalinfo">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header modtitleinfo">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title modtitle" id="modalinfo"> [ INFORMACIÓN ] </h4>
+                </div>
+                <div class="modal-body">
+                    <center>Esperando mensaje...</center>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="modalaprobar" tabindex="-1" role="dialog" aria-labelledby="modalaprobar">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header modalert">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title modtitle" id="modalaprobar">[ CONFIRMACIÓN ] </h4>
+                </div>
+                <div class="modal-body">
+                    <h3> ¿Seguro que deseas aprobar la solicitud [{{ model.num_sol}}] ?</h3>
+                    <div class="box-body row">
+                                <form name="aprobar_form" id="aprobar_form" method="post">
+                                    <input type="hidden" name="codigo_sol" id="codigo_sol" value="{{ model.codsol}}">
+                                    <input type="hidden" name="estado" id="estado" value="3">
+                                    {{ csrf.field | raw }}
+                                </form>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa  fa-remove"></i>
+                        Cancelar
+                    </button>
+                    <button type="button" id="aprobar-solicitud" data-loading-text="Aprobando..."
+                            class="btn btn-success" autocomplete="off">Aprobar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="EliminarConstatacion" tabindex="-1" role="dialog"
+         aria-labelledby="EliminarConstatacion">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header modalert">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title modtitle" id="EliminarConstatacion">[ CONFIRMACIÓN ]</h4>
+                </div>
+                <div class="modal-body">
+                    <h3 style='color:#157D09;text-align:center;'> ¿Seguro que deseas aprobar la solicitud <i
+                                class='fa fa-trash'></i> ?</h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa  fa-remove"></i>
+                        Cancelar
+                    </button>
+                    <button type="button" id="eliminar-constatacion" data-loading-text="Eliminando..."
+                            class="btn btn-success" autocomplete="off">Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="modalconstatacion" tabindex="-1" role="dialog" aria-labelledby="modalconstatacion">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header modalert">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title modtitle" id="modalconstatacion"><strong>cargando...</strong></h4>
+                </div>
+                <div class="modal-body">
+                    Cargando contenido...espere un momento por favor.
+                    <div class="msg"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa  fa-remove"></i>
+                        Cancelar
+                    </button>
+                    <button type="button" id="subirconstatacion" class="btn btn-primary subirconstatacion pull-left">
+                        Subir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalrechazo" tabindex="-1" role="dialog" aria-labelledby="modalrechazo">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header modalert">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title modtitle" id="modalrechazo"><strong>[ARCHIVAR SOLICITUD]</strong></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Motivo: </label>
+                                <form name="eliminar_form" id="eliminar_form" method="post">
+                                    <input type="hidden" name="codigo" id="codigo" value="{{ model.codsol}}">
+                                    <input type="hidden" name="flag" id="flag" value="4">
+                                    <textarea class="form-control obligateeliminar" id="comentario" data-content="Debe ingresar un motivo." rows="4" name="comentario"  placeholder="Motivo del archivamiento"></textarea>
+                                    {{ csrf.field | raw }}
+                                </form>
+                            </div>
+                            <div  class="msg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa  fa-remove"></i>
+                        Cancelar
+                    </button>
+                    <button type="button" id="rechazarsolicitud" class="btn btn-primary rechazarsolicitud pull-left">
+                        Archivar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade in" id="modalresolucion" tabindex="-1" role="dialog" aria-labelledby="modalresolucion">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header mod">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"
+                                                                                                      style="color:#fff;">&times;</span>
+                    </button>
+                    <h4 class="modal-title modtitle" id="modalresolucion"><strong>SUBIR RESOLUCIÓN</strong></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+
+                        <div class="col-sm-12">
+                            <form name="resolucion" id="resolucion" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="solicitud" id="solicitud" value="{{ model.codsol}}" />
+                                <input type="hidden" name="admin" id="admin" value="{{ admin.codigo }}" />
+                                <div class="form-group">
+                                    <label>Número de resolución</label>
+                                    <input type="text" class="form-control obligate2" name="num_res" id="num_res" data-content="Ingrese el número de resolución"  value=""/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Fecha de registro</label>
+                                    <input type="date" class="form-control obligate2" name="fecha_registro" id="fecha_registro" data-content="Ingrese fecha de registro"  value=""/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Adjuntar resolución</label>
+                                    <input class="form-control obligate2" type="file" name="file" id="file" data-content="Debe seleccionar un documento" />
+                                </div>
+                                {{ csrf.field | raw }}
+                            </form>
+                        </div>
+
+                        <div class="col-sm-12 barra2 mybarra">
+                        </div>
+                        <div  class="col-sm-12 msgu2"></div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" id="subirresolucion" class="btn btn-primary subirresolucion pull-left">
+                        Subir
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="control-sidebar-bg"></div>
+
+        <script type="text/javascript">
+
+
+            !function(a){
+                "use strict";
+                a(function(){
+                    var b=a(window),
+                        c=a(document.body),
+                        content='',
+                        mycod='',
+                        operation='',
+                        form='',
+                        f='',
+                        mycodigo='';
+
+                        a("#ReSubir").on("show.bs.modal",function(b){
+                            var c=a(b.relatedTarget),
+                                idsol=c.data("cidsol"),
+                                tiposol=c.data("tiposol"),
+                                user=c.data("user"),
+                                tipodoc=c.data("tipodoc"),
+                                e=a(this);
+
+                            document.getElementById("idsol").value = idsol;
+                            document.getElementById("tiposol").value = tiposol;
+                            document.getElementById("user").value = user;
+                            document.getElementById("tipo_doc").value = tipodoc;
+
+
+                            e.find(".modal-title").text("SUBIR NUEVO DOCUMENTO");
+                        })
+
+
+                })}
+
+                (jQuery),function(){"use strict";
+                $('#fono').keyup(function (){
+                    this.value = (this.value + '').replace(/[^0-9]/g, '');
+                });
+
+            }();
+
+
+        </script>
+        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#juntadirectiva').DataTable({
+
+                "language": {
+                    "lengthMenu": "Ver _MENU_ registros por página",
+                    "zeroRecords": "No se encontraron resultados",
+                    "info": "Viendo página _PAGE_ de _PAGES_",
+                    "infoEmpty": "No existen resoluciones disponibles",
+                    "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "search": "Buscar:",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    },
+                },
+
+                "lengthMenu": [5, 10, 15],
+
+                "pageLength": 10,
+
+                "ordering": false,
+
+                columnDefs: [{
+                    targets: [0, 2, 3, 4]
+                },
+
+
+                ]
+
+
+            });
+
+
+        });
+
+
+        $(document).ready(function () {
+            var heights = $(".well").map(function () {
+                return $(this).height();
+            }).get();
+
+            maxHeight = Math.max.apply(null, heights);
+
+            $(".well").height(maxHeight);
+        });
+
+        ListarMiebros();
+
+
+        function ListarMiebros() {
+
+            var dt = $('#MiembrosJuntaDirectiva').DataTable({
+
+                destroy: true,
+
+                "buttons": [
+                    'copy', 'csv', 'excel', 'pdf'
+                ],
+
+                "language": {
+                    "lengthMenu": "Ver _MENU_ registros por página",
+                    "zeroRecords": "No se encontraron resultados",
+                    "info": "Viendo página _PAGE_ de _PAGES_",
+                    "infoEmpty": "No se encontraron responsables",
+                    "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "search": "Buscar:",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    },
+                },
+
+                "ajax": {
+                    "type": "get",
+                    "url": "{{ base_url() }}/juntadirectiva/listaruntadirectiva",
+                    "data": {cod_org: {{ model.codigo }} }
+                },
+
+                "columns": [
+                    {
+                        "class": "details-control",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": ""
+                    },
+                    {"data": "dni"},
+                    {"data": "puesto"},
+                    {"data": "nombre"},
+                    {"data": "apellido_pat"},
+                    {"data": "apellido_mat"},
+                    {
+                        "className": "center",
+                        "mData": "foto",
+                        "mRender": function (data, type, row) {
+                            return "<img style='width: 30px;border: solid 2px #9E9E9E;border-radius: 10px;' src='data:image/jpg;base64," + data + "'>";
+                        }
+                    },
+                    {
+                        "className": "center",
+                        "mData": "codigo",
+                        "mRender": function (data, type, row) {
+                            return "<a class='btn btn-default' onclick='EliminarMiembro(" + data + ")' class='editor_remove'><i class='fa fa-remove'></i></a>";
+                        }
+                    },
+                ],
+
+                columnDefs: [
+                    {
+                        className: 'text-center',
+                        targets: [0, 1, 2, 3, 4, 5, 6],
+                    }
+                ]
+            });
+
+
+            // Array to track the ids of the details displayed rows
+            var detailRows = [];
+
+            $('#MiembrosJuntaDirectiva tbody').off('click', 'tr td.details-control');
+            $('#MiembrosJuntaDirectiva tbody').on('click', 'tr td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = dt.row(tr);
+
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    // Open this row
+                    d = row.data();
+                    row.child(format(d)).show();
+                    tr.addClass('shown');
+                }
+            });
+
+
+            // On each draw, loop over the `detailRows` array and show any child rows
+            dt.on('draw', function () {
+
+                // If reloading table then show previously shown rows
+                if (childRows) {
+
+                    childRows.every(function (rowIdx, tableLoop, rowLoop) {
+                        d = this.data();
+                        this.child($(format(d))).show();
+                        this.nodes().to$().addClass('shown');
+                    });
+
+                    // Reset childRows so loop is not executed each draw
+                    childRows = null;
+                }
+            });
+
+
+        }
+
+
+        //CAMBIO DE ESTADO DE DOCUMENTOS
+        $('.cambiarestado').click(function(){
+            col=$(this);
+
+            $(this).html('<img src="../../dist/img/loader.gif"  style="margin-left:-3px;"/>');
+            codigo=$(this).attr('data-codigo');
+            estado=$(this).attr('data-estado');
+            dataString="codigo="+codigo+"&estado="+estado;
+            $.ajax({
+                type:"get",
+                url:"{{ base_url() }}/documento/cambiarestado",
+                data:dataString,
+                dataType: 'json',
+                success: function(datos){
+                    if(datos.response=='modificado'){
+                        if(estado==1){ mensaje = "aprovado";}
+                              location.reload();
+                        }else{
+                        alert("Ocurrió un error");
+                    }
+                },
+                error: function(){
+                    location.reload();
+                }
+
+            });
+        });
+
+    </script>
+
+
+    </body>
+
+    </html>
+{% endblock content %}

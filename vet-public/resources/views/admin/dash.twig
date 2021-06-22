@@ -1,0 +1,29 @@
+{% extends 'admin/templates/app.twig' %}
+
+{% block content %}
+
+<body class="hold-transition skin-blue sidebar-mini ">
+<div class="pace  pace-inactive">
+    <div class="pace-progress" data-progress-text="100%" data-progress="99"
+         style="transform: translate3d(100%, 0px, 0px);">
+        <div class="pace-progress-inner"></div>
+    </div>
+    <div class="pace-activity"></div>
+</div>
+<div class="wrapper">
+    <header class="main-header">
+             <header class="main-header">
+                 {% include 'admin/templates/head.twig' %}
+            </header>
+    </header>
+
+    <aside class="main-sidebar">
+        {% include 'admin/templates/menu.twig' %}
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content">   
+        </section>
+    </div>
+
+    {% endblock content %}

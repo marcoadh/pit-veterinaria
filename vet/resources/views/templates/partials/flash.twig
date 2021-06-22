@@ -1,0 +1,41 @@
+{% if flash.getMessage('info') %}
+
+  <div class="alert alert-success">
+
+    {{ flash.getMessage('info') | first }}
+
+  </div>
+
+{% endif %}
+
+
+{% if flash.getMessage('error') %}
+
+  <div class="col-md-12">
+    <div class="alert alert-warning" role="alert">
+      {{ flash.getMessage('error') | first }}
+    </div>
+  </div>
+
+{% endif %}
+
+{% if flash.getMessage('error-tipo-archivo') %}
+
+  <div class="alert alert-info">
+
+    {{ flash.getMessage('error-tipo-archivo') | first }}
+
+  </div>
+
+{% endif %}
+
+
+{% if flash.getMessage('error-junta-directiva') %}
+  <div class="col-md-12">
+    <div class="alert alert-warning" role="alert">
+      {{ flash.getMessage('error-junta-directiva') | first }}
+    </div>
+  </div>
+{% endif %}
+
+

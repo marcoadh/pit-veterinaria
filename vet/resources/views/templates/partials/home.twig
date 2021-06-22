@@ -1,0 +1,177 @@
+{% block content %}
+
+    <!-- banner section -->
+    <section id="home" class="banner">
+        <div id="banner-bg-effect" class="banner-effect"></div>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7 col-md-12 col-sm-12 order-lg-first mt-lg-0 mt-4">
+                    <h1 class="mb-4 title">
+                        <strong>Haciendo lo </strong>correcto<strong> en el momento adecuado.</strong>
+                    </h1>
+                    <p>El asesoramiento que brindamos y las capacitaciones sobre los 17 ODS OBJETIVOS DE 
+                        DESARROLLO SOSTENIBLE permite que cada una de las actividades y acciones que 
+                        una empresa privada o institución publica este alineada al cumplimiento y el aporte 
+                        a la Agenda 2030 de las Naciones Unidas.</p>
+                    <div class="mt-5">
+                        <a class="btn btn-primary btn-style mr-2" href="{{ path_for('nosotros') }}">Leer más </a>
+                        <a class="btn btn-outline btn-outline-style" href="{{ path_for('servicios') }}">Nuestros servicios </a>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-12 col-sm-12 order-first text-lg-left text-center">
+                    <div>
+                        <img src="{{ base_url() }}/images/ods.png" alt="" class="rounded-circle img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- //banner section -->
+
+    <!-- home page about -->
+    <section class="w3l-about">
+        <div class="container">
+            <div class="row about-content">
+                <div class="col-lg-8 info mb-lg-0 mb-sm-5 mb-4 align-center">
+                    <h3 class="title">Nosotros</h3>
+                    <h6>Somos la empresa líder que gestiona programas sociales alineados a cumplir las metas de los objetivos de desarrollo 
+                        sostenible.</h6>
+                </div>
+                <div class="col-lg-4">
+                    <img src="{{ base_url() }}/images/agenda2030.png" class="img-fluid img-shadow" alt="about">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- //home page about -->
+
+    <!-- home page service grids -->
+    <section id="services" class="bg-light">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 offset-lg-2 col-md-12 col-sm-12">
+                    <h4 class="section-title">Conoce nuestras soluciones para ti</h4>
+                    <p class="text-center">Diseñamos e implementamos procesos y soluciones para tu institución
+                        a través de los siguientes servicios:</p>
+                </div>
+            </div>
+            <div class="row mt-lg-5">
+                
+                 <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="box-wrap">
+                        <div class="icon">
+                            <span class="fa fa-briefcase"></span>
+                        </div>
+                        <h4><a href="#url">Asesoría, Consultoría Y Capacitación En El Ámbito de los ODS objetivos de desarrollo sostenible</a></h4>
+                        <p>Desarrollamos programas de responsabilidad social, programas sociales,
+                            proyectos socioambientales a tu medida, inhouse, y también realizamos 
+                            eventos abiertos para que tu institución se sume.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="box-wrap">
+                        <div class="icon">
+                            <span class="fa fa-briefcase"></span>
+                        </div>
+                        <h4><a href="#url">Diseño E Implementación De Programas Sociales De Deporte Y Educación</a></h4>
+                        <p>Contamos con gran experiencia en DEPORTE Y EDUCACION, sobre todo orientada a la
+                            innovación, emprendimiento y tecnología en el diseño e implementación de programas
+                            sociales orientada a cada público objetivo, sectores vulnerables e inclusión en beneficio 
+                            de personas con discapacidad.</p>
+                    </div>
+                </div>
+               
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="box-wrap">
+                        <div class="icon">
+                            <span class="fa fa-briefcase"></span>
+                        </div>
+                        <h4><a href="#url">Elaboración De Memorias Y Reportes De Sostenibilidad De Triple Impacto</a></h4>
+                        <p>Realizamos procesos de levantamiento de información y evidencias para la 
+                            elaboración de memorias y reportes de sostenibilidad de triple impacto.
+                            Contamos con una metodología adecuada para establecer la LINEA BASE
+                            y la medición de impacto de programas sociales.</p>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+    <!-- //home page service grids -->
+
+    <!-- stats section -->
+    <section id="stats" class="stats">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5 margin-md-60">
+                    <h2 class="left-title">Algunos de los hechos reales de nuestra empresa</h2>
+                    <p class="white">La trayectoria del Equipo consultor ha logrado indicadores de
+                        impacto en el éxito y reconocimientos de los programas sociales que han liderado.</p>
+                </div>
+                <div class="col-lg-7 mt-lg-0 mt-5">
+                    <div class="d-sm-flex justify-content-lg-around justify-content-between counter-main">
+                        <div class="counter">
+                            <div class="icon">
+                                <span class="fa fa-folder-open-o"></span>
+                            </div>
+                            <p class="value">23</p>
+                            <p class="title white">Proyectos</p>
+                        </div>
+                        <div class="counter">
+                            <div class="icon">
+                                <span class="fa fa-headphones"></span>
+                            </div>
+                            <p class="value">8</p>
+                            <p class="title white">Consultorías</p>
+                        </div>
+                        <div class="counter">
+                            <div class="icon">
+                                <span class="fa fa-users"></span>
+                            </div>
+                            <p class="value">48</p>
+                            <p class="title white">Capaciotaciones</p>
+                        </div>
+                        <div class="counter">
+                            <div class="icon">
+                                <span class="fa fa-trophy"></span>
+                            </div>
+                            <p class="value">3</p>
+                            <p class="title white">Premios</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- //stats section -->
+
+    <!-- homepage blog grids -->
+    <section id="blog">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 offset-lg-2 col-md-12 col-sm-12">
+                    <h4 class="section-title">Noticias</h4>
+                    <p class="text-center">Te presentamos lo último</p>
+                </div>
+            </div>
+            <div class="blog-grids row mt-5">
+                {% for lista in EntradaController.listarentradashome %}  
+                    <div class="col-lg-4 col-md-6 col-sm-12 blog-grid" id="zoomIn">
+                        <a href="{{base_url()}}/noticia/{{ lista.codigo }}">
+                            <figure><img src="{{ base_url() }}/{{ lista.foto }}" class="img-fluid" alt=""></figure>
+                        </a>
+                        <div class="blog-info">
+                            <h3><a href="{{base_url()}}/noticia/{{ lista.codigo }}">{{ lista.titulo }}</a></h3>
+                            <ul>
+                                <li><span class="fa fa-calendar mr-2"></span>{{ lista.date_spanish }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- //homepage blog grids -->
+{% endblock content %}

@@ -1,0 +1,198 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+{% include 'templates/partials/navegacion.twig' %}
+<div class="container">
+   <div class="row">
+      <div class="section section-padding courses-detail event-detail-section">
+         <div class="container">
+            <div class="courses-detail-wrapper">
+               <div class="row">
+                  <div class="col-md-9 layout-left">
+                     <div class="course-syllabus-title underline">Mis Pedidos</div>
+                     <div class="course-des-content">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel neque justo.
+                           Nulla sit amet egestas mi. Donec erat nibh, sagittis vitae egestas a, auctor vitae elit. 
+                           Morbi congue odio et feugiat tincidunt. Vestibulum nec feugiat sem. Donec cursus, 
+                           elit posuere vestibulum tempor, lorem turpis ullamcorper ipsum, porttitor malesuada 
+                           diam dolor sed dolor.  
+                        </p>
+                     </div>
+                     <br>
+                     <h4>Productos</h4>
+                     <div class="table-responsive">
+                        <table id="ListOrganizaciones" class="table table-bordered responsive">
+                           <thead>
+                              <tr class="heading-table">
+                                 <th>Pedido</th>
+                                 <th>Fecha de generación</th>
+                                 <th>Estado</th>
+                                 <th>Seguimiento</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {% for pedidos in PedidoController.listapedidos %}
+                              <tr>
+                                 <td>{{ pedidos.numero_pedido }}</td>
+                                 <td>{{ pedidos.fecha_emision }}</td>
+                                 <td>   
+                                    {% if pedidos.estado == 1 %}
+                                    <span class="label label-default">Gnerado </span>
+                                    {% elseif pedidos.estado ==  2 %}
+                                    <span class="label label-primary">Pagado </span>
+                                    {% elseif pedidos.estado ==  3 %}
+                                    Verificado
+                                    {% else %}
+                                    Atendido
+                                    {% endif %}
+                                 </td>
+                                 <td>
+                                    <a class="btn btn-default btn-xs"
+                                       onclick="VerTracking({{ pedidos.id_pedido }},'{{ pedidos.numero_pedido }}')"
+                                       data-toggle="modal">
+                                    <i class="fa fa-eye"></i>
+                                    </a>
+                                 </td>
+                              </tr>
+                              {% endfor %}
+                           </tbody>
+                           <thead>
+                              <tr class="heading-table">
+                                 <th>Pedido</th>
+                                 <th>Fecha de generación</th>
+                                 <th>Estado</th>
+                                 <th>Seguimiento</th>
+                              </tr>
+                           </thead>
+                        </table>
+                     </div>
+                           
+                    <h4>Servicios</h4>
+                     <div class="table-responsive">
+                        <table id="ListOrganizaciones" class="table table-bordered responsive">
+                           <thead>
+                              <tr class="heading-table">
+                                 <th>Pedido</th>
+                                 <th>Fecha de generación</th>
+                                 <th>Estado</th>
+                                 <th>Seguimiento</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {% for pedidos in PedidoController.listapedidosservicios %}
+                              <tr>
+                                 <td>{{ pedidos.numero_pedido }}</td>
+                                 <td>{{ pedidos.fecha_emision }}</td>
+                                 <td>   
+                                    {% if pedidos.estado == 1 %}
+                                    <span class="label label-default">Gnerado </span>
+                                    {% elseif pedidos.estado ==  2 %}
+                                    <span class="label label-primary">Pagado </span>
+                                    {% elseif pedidos.estado ==  3 %}
+                                    Verificado
+                                    {% else %}
+                                    Atendido
+                                    {% endif %}
+                                 </td>
+                                 <td>
+                                    <a class="btn btn-default btn-xs"
+                                       onclick="VerTracking({{ pedidos.id_pedido }},'{{ pedidos.numero_pedido }}')"
+                                       data-toggle="modal">
+                                    <i class="fa fa-eye"></i>
+                                    </a>
+                                 </td>
+                              </tr>
+                              {% endfor %}
+                           </tbody>
+                           <thead>
+                              <tr class="heading-table">
+                                 <th>Pedido</th>
+                                 <th>Fecha de generación</th>
+                                 <th>Estado</th>
+                                 <th>Seguimiento</th>
+                              </tr>
+                           </thead>
+                        </table>
+                     </div>
+                           
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!--INICIO MODAL INICIATIVA-->
+<div class="modal fade" id="VerHistorico" tabindex="-1" role="dialog" aria-labelledby="VerHistorico">
+   <div class="modal-dialog modal-info fade in" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span>
+            </button>
+            <h4 class="modal-title" id="numpedido"><strong></strong></h4>
+         </div>
+         <div class="modal-body">
+               <table id="DetalleHistorial" class="table table-bordered responsive">
+                  <thead>
+                     <tr class="heading-table">
+                        <th>Fecha</th>
+                        <th>Operación</th>
+                     </tr>
+                  </thead>
+               </table>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+         </div>
+      </div>
+   </div>
+</div>
+<script>
+   function VerTracking(codigo,numero) {
+       $("#seccionfoto").css("display", "block");
+       var codigo = codigo;
+       var numero = numero;
+       $( "#numpedido" ).html('Pedido: '+numero);
+       $('#VerHistorico').modal('show');
+       $('#codigo').val(codigo);
+       
+       var dt = $('#DetalleHistorial').DataTable({
+           
+          "destroy": true,
+           "ordering": false,
+              "bPaginate": false,
+              "searching": false,
+              "bInfo" : false,
+          "language": {
+              "lengthMenu": "Ver _MENU_ registros por página",
+              "zeroRecords": "No se encontraron resultados",
+              "info": "Viendo página _PAGE_ de _PAGES_",
+              "infoEmpty": "No se encontraron registros",
+              "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+              "search": "Buscar:",
+              "paginate": {
+                  "first": "Primero",
+                  "last": "Último",
+                  "next": "Siguiente",
+                  "previous": "Anterior"
+              },
+          },
+   
+          "ajax": {
+              "type": "get",
+              "url": "{{ base_url() }}/pedido/historial",
+              "data": {
+                  codigo: codigo
+              }
+          },
+   
+          "columns": [
+              {"data": "fecha_atencion"},
+              {"data": "observacion"},
+          ],
+   
+      });
+   
+   }
+</script>
+{% include 'templates/partials/footer.twig' %}
+{% endblock content %}

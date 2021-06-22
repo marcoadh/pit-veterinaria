@@ -1,0 +1,463 @@
+{% extends 'admin/templates/app.twig' %}
+{% block content %}
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            width: 100%;
+            height: 80%;
+            border: solid 2px #cccccc;
+            border-radius: 5px;
+        }
+        #map2 {
+            width: 100%;
+            height: 80%;
+            border: solid 2px #cccccc;
+            border-radius: 5px;
+        }
+        #coords{width: 500px;}
+
+        td.details-control {
+            background: url('{{ base_url() }}/images/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+        tr.shown  td.details-control {
+            background: url('{{ base_url() }}/images/details_close.png') no-repeat center center;
+        }
+    </style>
+
+    <body class="hold-transition skin-blue sidebar-mini ">
+        <div class="pace  pace-inactive">
+            <div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
+                <div class="pace-progress-inner"></div>
+            </div>
+            <div class="pace-activity"></div>
+        </div>
+        <div class="wrapper">
+            <header class="main-header">
+                <!-- Logo -->
+                <a href="../admin/dash" class="logo">
+                    <!-- mini logo for sidebar mini 50x50 pixels -->
+                    <span class="logo-mini"><b>B</b>L</span>
+                    <!-- logo for regular state and mobile devices -->
+                    <span class="logo-lg"><b style="font-style:oblique;">BENEFICENCIA</b></span>
+                </a>
+                <!-- Header Navbar: style can be found in header.less -->
+                <nav class="navbar navbar-static-top" role="navigation">
+                    <!-- Sidebar toggle button-->
+                    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+                            <!-- User Account: style can be found in dropdown.less -->
+                            <li class="dropdown user user-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <img src="{{ base_url() }}/dist/img/logini.jpg" class="user-image" alt="User Image">
+                                    <span class="hidden-xs"><?php echo $_SESSION['ses_correouser'];?></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <!-- User image -->
+                                    <li class="user-header">
+                                        <img src="{{ base_url() }}/dist/img/logini.jpg" class="img-circle" alt="User Image">
+                                        <p>
+                                            {{ AdminController.admin.nombres }}
+                                            <small>{{ AdminController.admin.dni }}</small>
+                                            <small>Administrador</small>
+                                        </p>
+                                    </li>
+                                    <!-- Menu Footer-->
+                                    <li class="user-footer" style="border: 1px solid #3C8DBC;">
+                                        <div class="pull-right">
+                                            <a href="#" class="btn btn-default btn-flat" id="changeses" style="border: 1px solid #3C8DBC;">Cerrar sesión</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- Control Sidebar Toggle Button -->
+                            <li>
+                                <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+
+            <aside class="main-sidebar">
+                {% include 'admin/templates/menu.twig' %}
+            </aside>
+
+            <div class="content-wrapper">
+                <section class="content-header">
+                    <h1 id="tipodease">
+                        VOLUNTARIOS
+                    </h1>
+             
+                </section>
+                <section class="content">
+                    <div class="row">
+
+                        <div class="col-xs-12">
+                            <div class="box">
+
+                                <div class="box-body">
+                                    
+                                        <div class="margin">
+                                             <div class="btn-group">
+                                               <button onclick="ListarDonaciones('')" type="button" class="btn btn-block btn-default btn-flat">Todos</button>
+                                           </div>
+                                           <div class="btn-group">
+                                               <button onclick="ListarDonaciones('Puericultorio Pérez Araníbar')" type="button" class="btn btn-block btn-violeta btn-flat">Puericultorio Pérez Araníbar</button>
+                                           </div>
+                                           <div class="btn-group">
+                                               <button onclick="ListarDonaciones('Hogar Canevaro')" type="button" class="btn btn-block btn-violeta  btn-flat">Hogar Canevaro</button>
+                                           </div>
+                                           <div class="btn-group">
+                                               <button onclick="ListarDonaciones('Hogar San Vicente de Paúl')"type="button" class="btn btn-block btn-violeta  btn-flat">Hogar San Vicente de Paúl</button>
+                                           </div>
+                                            
+                                            <div class="btn-group">
+                                               <button onclick="ListarDonaciones('Instituto Sevilla')"type="button" class="btn btn-block btn-violeta  btn-flat">Instituto Sevilla</button>
+                                           </div>
+                                            
+                                            <div class="btn-group">
+                                               <button onclick="ListarDonaciones('Centro Esperanza')" type="button" class="btn btn-block btn-violeta  btn-flat">Centros Esperanza</button>
+                                           </div>
+                                            
+                                            <div class="btn-group">
+                                               <button onclick="ListarDonaciones('Hogar de la Madre')" type="button" class="btn btn-block btn-violeta  btn-flat">Hogar de la Madre</button>
+                                           </div>
+                                            
+                                            <div class="btn-group">
+                                               <button onclick="ListarDonaciones('Casa de todos')"type="button" class="btn btn-block btn-violeta  btn-flat">Casa de todos</button>
+                                           </div>
+                                            
+                                            <div class="btn-group">
+                                               <button onclick="ListarDonaciones('Presbítero Matías Maestro')"type="button" class="btn btn-block btn-beige btn-flat">Presbítero Matías Maestro</button>
+                                           </div>
+                                            
+                                                  <div class="btn-group">
+                                               <button onclick="ListarDonaciones('Cementerio El Ángel')"type="button" class="btn btn-block btn-beige btn-flat">Cementerio El Ángel</button>
+                                           </div>
+                                            
+                                                  <div class="btn-group">
+                                               <button onclick="ListarDonaciones('Plaza de Acho')"type="button" class="btn btn-block btn-beige btn-flat">Plaza de Acho</button>
+                                           </div>
+                                            
+                                                  <div class="btn-group">
+                                               <button onclick="ListarDonaciones('Centro Cultural')"type="button" class="btn btn-block btn-pink btn-flat">Centro Cultural</button>
+                                           </div>
+                                       </div>
+
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-body">
+                                    <table id="Donaciones"  class="table table-bordered table-hover" width="100%">
+                                        <thead>
+                                            <tr class="heading-table">
+                                                <th class="col-md-1"></th>
+                                                <th class="col-md-1">Origen</th>
+                                                <th class="col-md-1">Nombres</th>
+                                                <th class="col-md-1">Apellidos</th>
+                                                <th class="col-md-1">DNI</th>
+                                                <th class="col-md-1">Correo</th>
+                                                <th class="col-md-1">Teléfono</th>
+                                                <th class="col-md-1">Dirección</th>
+                                                <th class="col-md-1">Tiempo de voluntario</th>
+                                                <th class="col-md-1">Estado</th>
+                                                <th class="col-md-1"></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                </section>
+            </div>
+
+
+
+
+                <div class="modal fade" id="modalAtencion" tabindex="-1" role="dialog" aria-labelledby="modalAtencion">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header modalert">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                <h4 class="modal-title modtitle">[ ATENDER DONACIÓN ]</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="box-body row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <form name="formulario" id="formulario" method="post">
+                                                <input type="hidden"  name="codigo" id="codigo" value="">
+                                                 <div class="form-group">
+                                                    <label>Acción</label>
+
+                                                    <select class="form-control obligate" name="estado" id="estado" data-content="Debe seleccionar una acción." >
+                                                    <option value="">Selecione una acción</option>
+                                                      <option value="2">Atender</option>
+                                                        <option value="3">Eliminar</option>
+                                                    </select>
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Observaciones</label>
+                                                    <textarea class="form-control obligate" data-content="Debe ingresar la observación."  name="observacion" id="observacion" placeholder="Ingrese las observacioens de la asesoria"></textarea>
+                                                </div>
+                                                {{ csrf.field | raw }}
+                                            </form>
+                                        </div>
+                                        <div  class="msg"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                                <button type="button" id="atender" class="btn btn-primary atenderasesoria pull-right"> Atender</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            <script type="text/javascript">
+
+                CKEDITOR.replace('detalle', {
+                    height: 300,
+                    baseFloatZIndex: 10005
+                });
+
+                $(document).ready(function () {
+                    
+                    ListarDonaciones();
+                    
+                    $(".cogepx").on("click", function () {
+                        var valor = $(this).data('codigo');
+                        $("#Selecciones").modal('hide');
+                        $('.foto').val(valor);
+                    });
+
+                    // Translated
+                    $('.dropify-es').dropify({
+                        messages: {
+                            default: 'Arrastra y suelta un archivo aquí o haz clic',
+                            replace: 'Arrastre y suelte un archivo o haga clic para reemplazar',
+                            remove: 'Suprimir',
+                            error: 'Lo sentimos, el archivo es demasiado grande'
+                        }
+                    });
+
+                    // Used events
+                    var drEvent = $('#input-file-events').dropify();
+
+                    drEvent.on('dropify.beforeClear', function (event, element) {
+                        return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
+                    });
+
+                    drEvent.on('dropify.afterClear', function (event, element) {
+                        alert('File deleted');
+                    });
+
+                    drEvent.on('dropify.errors', function (event, element) {
+                        console.log('Has Errors');
+                    });
+
+                    var drDestroy = $('#input-file-to-destroy').dropify();
+                    drDestroy = drDestroy.data('dropify')
+                    $('#toggleDropify').on('click', function (e) {
+                        e.preventDefault();
+                        if (drDestroy.isDropified()) {
+                            drDestroy.destroy();
+                        } else {
+                            drDestroy.init();
+                        }
+                    })
+
+                })
+
+                function format(d) {
+                     return '<p style="float: left;"><strong>Mensaje: </strong> ' + d.mensaje + '<br>'+
+                             '<strong>Observacion: </strong> ' + d.observacion + '</p><br>'+
+                                '';
+                }
+                var childRows = null;
+                
+                function ListarDonaciones(origen) {
+
+                    responsive: true
+                    var dt = $('#Donaciones').DataTable({
+                        destroy: true,
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copy', 'csv', 'excel', 'pdf', 'print'
+                        ],
+                        "buttons": [
+                            'copy', 'csv', 'excel', 'pdf'
+                        ],
+
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ registros por página",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Viendo página _PAGE_ de _PAGES_",
+                            "infoEmpty": "No se encontraron resultados",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "search": "Buscar:",
+                            "paginate": {
+                                "first": "Primero",
+                                "last": "Último",
+                                "next": "Siguiente",
+                                "previous": "Anterior"
+                            },
+                        },
+
+                        "ajax": {
+                            "type": "get",
+                            "url": "{{ base_url() }}/admin/listarvoluntariado",
+                            "data": {
+                                   origen : origen,
+                            }
+                        },
+
+                        "columns": [
+                            {
+                                "class": "details-control",
+                                "orderable": false,
+                                "data": null,
+                                "defaultContent": ""
+                            },
+                            {"data": "categoria" },
+                            {"data": "nombres" },
+                            {"data": "apellidos"},    
+                            {"data": "dni"},    
+                            {"data": "correo"},    
+                            {"data": "telefono"},    
+                            {"data": "direccion"},   
+                            {"data": "tiempovoluntario"}, 
+                            {
+                                "data": "estado",
+                                render: function(data) {
+                                    if(data=="1") {
+                                        return "<span class='label label-info'>Nuevo</span>";
+                                    }
+                                    else{
+                                        return "<span class='label label-success'>Atendido</span>";
+                                    }
+
+                                },
+                            },
+                            {
+                                "data": "codigo",
+                                render: function (data) {
+                                    return "<a class='btn btn-default'" +
+                                            "style='cursor:pointer;overflow: visible;'" +
+                                            "onclick='abrirdonacion(" + data + ")'" +
+                                            "data-toggle='modal'" +
+                                            "data-content=''>" +
+                                            "Atender</a>"
+
+                                },
+                            },
+                        ],
+
+                        columnDefs: [
+                                {
+                                className: 'text-center',
+                                targets: [1,2,3,4,5,6,7,8,9,10],
+                            },
+                            
+                           { width: "3%",
+                             targets: [0] },
+
+                           { width: "4%",
+                             targets: [9,10] },
+
+                        ]
+                    });
+
+                    var detailRows = [];
+
+                    $('#Donaciones tbody').off('click', 'tr td.details-control');
+                    $('#Donaciones tbody').on('click', 'tr td.details-control', function () {
+                        var tr = $(this).closest('tr');
+                        var row = dt.row(tr);
+
+                        if (row.child.isShown()) {
+                            row.child.hide();
+                            tr.removeClass('shown');
+                        } else {
+                            // Open this row
+                            d = row.data();
+                            row.child(format(d)).show();
+                            tr.addClass('shown');
+                        }
+                    });
+
+                    dt.on('draw', function () {
+                        if (childRows) {
+
+                            childRows.every(function (rowIdx, tableLoop, rowLoop) {
+                                d = this.data();
+                                this.child($(format(d))).show();
+                                this.nodes().to$().addClass('shown');
+                            });
+                            childRows = null;
+                        }
+                    });
+
+                }
+                function abrirdonacion(codigo) {
+                    var codigo = codigo;
+                    $('#modalAtencion').modal('show');
+                    $('#codigo').val(codigo);
+                    $(".msg").html("");
+                    $(".msg").fadeIn(1500);
+                }
+                
+                //Nueva noticia
+                function nuevanoticia() {
+                    var tipo = 1;
+                    $('#modalNoticia').modal('show');
+                    $('#tipo').val(tipo);
+                }
+                
+                  function GuardarReporte() {
+
+                        var formData = new FormData($("#noticia")[0]);
+                          formData.append('detalle', CKEDITOR.instances.detalle.getData());
+                        var resultado = "";
+                        $.ajax({
+                            url: "{{ base_url() }}/admin/registrarnoticia",
+                            async: false,
+                            type: 'POST',
+                            data: formData,
+                            contentType: false,
+                            enctype: 'multipart/form-data',
+                            processData: false,
+                            dataType: 'json',
+                            success: function (datos) {
+                                resultado = datos.response;
+                                mensaje = datos.message;
+                            }
+                        });
+                        return [resultado, mensaje];
+                    }
+            </script>
+            
+        {% endblock content %}

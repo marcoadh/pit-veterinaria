@@ -1,0 +1,27 @@
+<header>
+
+    <div class="header-main homepage-01">
+        <div class="container">
+            <div class="header-main-wrapper">
+                <div class="navbar-heade">
+                    <div class="logo pull-left"><a href="/" class="header-logo"><img src="{{ base_url() }}/images/logo.png" alt=""></a></div>
+                    <button type="button" data-toggle="collapse" data-target=".navigation" class="navbar-toggle edugate-navbar">
+                        <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+                </div>
+                <nav class="navigation collapse navbar-collapse pull-right">
+                    <ul class="nav-links nav navbar-nav">
+                        <li><a href="{{ path_for('home') }}" class="main-menu">Inicio </a></li>
+                            {% if AuthController.check %}
+                        <li><a href="{{ path_for('historial') }}" class="main-menu">Historial de pedidos</a></li>
+                        <li><a href="{{ path_for('auth.signout') }}" class="main-menu">Cerrar sesión</a></li>
+                        {% else %}
+                        <li><a href="{{ path_for('registro') }}" class="main-menu">Registrarse</a></li>
+                        <li><a href="{{ path_for('login') }}" class="main-menu">Iniciar sesión</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+                    
+</header>
