@@ -105,15 +105,18 @@
                                         <div class="col-md-4">
                                             <div class="card p-2 py-3 text-center">
                                                 <div class="img mb-2">
-                                                    <img src="http://localhost/pit-veterinaria/vet-public/public/{{mascotas.foto}}" width="150" class="fadeInDown animated">
+                                                    <img src="http://localhost/pit-veterinaria/vet-public/public/{{mascotas.foto}}" width="150" height="200" class="fadeInDown animated">
                                                 </div>
                                                 <h2 class="mb-0">{{mascotas.nombre}}</h2>
                                                 <h5 class="mb-0">{{mascotas.descripcion}}</h5>
                                                 <h5 class="mb-0">{{mascotas.edad}}</h5>
-                                                <a class="btn btn-success btn-lg"
-                                                onclick="EditarMascota({{ mascotas.id_mascota }})"
+                                                <a class="btn btn-success btn-lg" onclick="EditarMascota({{ mascotas.id_mascota }})"
                                                 data-toggle="modal">
                                                     <i class="fa fa-pencil"></i> Editar
+                                                </a>
+                                                <a class="btn btn-info btn-lg" onclick="VerHistorial()"
+                                                data-toggle="modal">
+                                                    <i class="fa fa-medkit" aria-hidden="true"></i> Historial Médico
                                                 </a>
                                             </div>
                                         </div>
@@ -258,6 +261,56 @@
             </div>
         </div>
     </div>
+    
+    <!--INICIO MODAL HISTORIAL-->
+    <div class="modal fade" id="VerHistorial" tabindex="-1" role="dialog" aria-labelledby="VerHistorial">
+        <div class="modal-dialog modal-info fade in" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span>
+                    </button>
+                    <h4 class="modal-title"><strong>HISTORIAL MÉDICO</strong></h4>
+                </div>
+
+                <div class="modal-body">
+                    <form method="post" autccomplete="off" class="contact-form" id="FormHistorial" name="FormHistorial">
+
+
+                        <div class="table-responsive bg-w-form  ">
+                            <table id="ListOrganizaciones" class="table table-bordered responsive">
+                                <thead>
+                                    <tr class="heading-table">
+                                        <th># Historial</th>
+                                        <th>Mascota</th>
+                                        <th>Veterinario</th>
+                                        <th>Incidencia</th>
+                                        <th>Fecha</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {{ csrf.field | raw }}
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" href="#" class="btn btn-success registrarpedido">Guardar </button> 
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {% include 'templates/partials/footer.twig' %}
     <script>
@@ -272,6 +325,11 @@
         function NuevaPedido() {
             $("#FormPedido")[0].reset();
             $('#AgregarPedido').modal('show');
+        }
+        
+        function VerHistorial() {
+            $("#FormHistorial")[0].reset();
+            $('#VerHistorial').modal('show');
         }
         
         function EditarMascota(codigo) {
