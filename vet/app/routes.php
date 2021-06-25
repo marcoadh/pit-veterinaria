@@ -45,6 +45,9 @@ $app->group('/admin', function () {
     $this->get('/servicios/listar', 'ServiciosController:Listar');
     $this->post('/servicios/registrar', 'ServiciosController:Registrar');
     $this->get('/servicios/editar', 'ServiciosController:getProducto');
+
+    $this->get('/clientes', 'AdminController:getClientes')->setName('admin.clientes');
+    $this->get('/clientes/listar', 'ClienteController:Listar');
     
     $this->get('/foto/listar', 'FotoController:Listar');
     $this->post('/foto/registrar', 'FotoController:Registrar');

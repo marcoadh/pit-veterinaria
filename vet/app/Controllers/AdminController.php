@@ -72,6 +72,11 @@ Class AdminController extends Controller
     {
         return $this->view->render($response, 'admin/auth/signin.twig');
     }
+    
+    public function getClientes($request, $response, $args)
+   {
+       return $this->view->render($response, 'admin/auth/clientes.twig');
+   }
 
     public function validar($login, $clave)
     {
