@@ -18,9 +18,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Respect\Validation\Validator as v;
 
 Class AdminController extends Controller
-{
-
-    
+{  
     public function admin()
     {
         $ses_codigo = isset($_SESSION['codigo']) ? $_SESSION['codigo'] : '';
