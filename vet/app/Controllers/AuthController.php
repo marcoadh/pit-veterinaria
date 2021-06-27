@@ -61,7 +61,7 @@ Class AuthController extends Controller
         if (password_verify($clave, $usuario->clave)) {
             $_SESSION['codigo'] = $usuario->codigo;
             $_SESSION['dni'] = $usuario->dni;
-			$_SESSION['tipo_user'] = $usuario->tipo_user;
+            $_SESSION['tipo_user'] = $usuario->tipo_user;
             $_SESSION['distrito'] = $usuario->distrito;
             return true;
         }

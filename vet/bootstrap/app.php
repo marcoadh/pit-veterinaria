@@ -74,6 +74,10 @@ $container['ProductoController'] = function ($container) {
     return new \App\Controllers\ProductoController($container);
 };
 
+$container['PedidoController'] = function ($container) {
+    return new \App\Controllers\PedidoController($container);
+};
+
 $container['FotoController'] = function ($container) {
     return new \App\Controllers\FotoController($container);
 };
@@ -86,6 +90,9 @@ $container['ServiciosController'] = function ($container) {
     return new \App\Controllers\ServiciosController($container);
 };
 
+$container['HistoriaController'] = function ($container) {
+    return new \App\Controllers\HistoriaController($container);
+};
 
 $container['csrf'] = function ($container) {
     // return new \Slim\Csrf\Guard;

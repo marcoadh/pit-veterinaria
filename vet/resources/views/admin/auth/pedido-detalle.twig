@@ -1,0 +1,572 @@
+{% extends 'admin/templates/app.twig' %}
+{% block content %}
+<style>
+   ul.timeline {
+   list-style-type: none;
+   position: relative;
+   }
+   ul.timeline:before {
+   content: ' ';
+   background: #d4d9df;
+   display: inline-block;
+   position: absolute;
+   left: 29px;
+   width: 2px;
+   height: 100%;
+   z-index: 400;
+   }
+   ul.timeline > li {
+   margin: 20px 0;
+   padding-left: 50px;
+   }
+   ul.timeline > li:before {
+   content: ' ';
+   background: white;
+   display: inline-block;
+   position: absolute;
+   border-radius: 50%;
+   border: 3px solid #607D8B;
+   left: 20px;
+   width: 20px;
+   height: 20px;
+   z-index: 400;
+   }
+   td.details-control {
+   background: url('{{base_url()}}/images/details_open.png') no-repeat center center;
+   cursor: pointer;
+   }
+   tr.shown td.details-control {
+   background: url('{{base_url()}}//images/details_close.png') no-repeat center center;
+   }
+</style>
+<body class="hold-transition skin-blue sidebar-mini ">
+   <div class="pace  pace-inactive">
+      <div class="pace-progress" data-progress-text="100%" data-progress="99"
+         style="transform: translate3d(100%, 0px, 0px);">
+         <div class="pace-progress-inner"></div>
+      </div>
+      <div class="pace-activity"></div>
+   </div>
+   <div class="wrapper">
+      <header class="main-header">
+         {% include 'admin/templates/head.twig' %}
+      </header>
+      <aside class="main-sidebar">
+         {% include 'admin/templates/menu.twig' %}
+      </aside>
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+         <!-- Content Header (Page header) -->
+         <section class="content-header">
+            <h1>
+               Pedido | <strong> {{ pedido.numero_pedido }}</strong>
+            </h1>
+         </section>
+         <!-- Main content -->
+         <section class="content">
+            <div class="row">
+                <div class="col-md-6">
+               <div class="col-md-12">
+                  <div class="box box-solid ">
+                     <div class="box-header with-border">
+                        <i class="fa fa-file-text"></i>
+                        <h3 class="box-title">Detalle</h3>
+                     </div>
+                     <!-- /.box-header -->
+                     <div class="box-body">
+                        <table class="table table-bordered responsive" id="detalle">
+                           <thead>
+                              <tr>
+                                 <th>Producto</th>
+                                 <th>Cantidad</th>
+                                 <th>Precio</th>
+                                 <th>Sub Total</th>
+                              </tr>
+                           </thead>
+                           <tfoot>
+                              <tr>
+                                 <th></th>
+                                 <th></th>
+                                 <th>Total</th>
+                                 <th>Sub Total</th>
+                              </tr>
+                           </tfoot>
+                        </table>
+                        <input type="hidden" id="total" class="form-control"  value="" />
+                     </div>
+                  </div>
+               </div>
+                
+               <div class="col-md-6">
+                  <div class="box box-solid">
+                     <div class="box-header with-border">
+                        <i class="fa fa-user"></i>
+                        <h3 class="box-title">Cliente</h3>
+                     </div>
+                     <div class="box-body">
+                        <table class="table table-bordered" cellpadding="5">
+                           <tbody>
+                              <tr>
+                                 <th>DNI:</th>
+                                 <td>
+                                    {{ cliente.dni }}
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <th><b>NOMBRES:</b></th>
+                                 <td>
+                                    <dd>{{ cliente.nombre }}</dd>
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <th><b>APELLIDOS:</b></th>
+                                 <td>
+                                    {{ cliente.apellido }}
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <th><b>CORREO:</b> </th>
+                                 <td>
+                                    {{ cliente.correo }}
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <th><b>TELÉFONO:</b> </th>
+                                 <td>{{ cliente.celular }}</td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+                              
+               <div class="col-md-6">
+                  <div class="box box-solid">
+                     <div class="box-header with-border">
+                        <i class="fa fa-paw"></i>
+                        <h3 class="box-title">Mascota</h3>
+                     </div>
+                     <div class="box-body">
+                        <table class="table table-bordered">
+                           <tbody>
+                              <tr>
+                                 <th>
+                                    <b>
+                                    Nombre:
+                                    </b>
+                                 </th>
+                                 <td>
+                                    {{ mascota.nombre }}
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <th>
+                                    <b>
+                                    Tipo:
+                                    </b>
+                                 </th>
+                                 <td>
+                                    {{ mascota.tipo }}
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <th>
+                                    <b>
+                                    Edad:
+                                    </b>
+                                 </th>
+                                 <td>
+                                    {{ tiempo }} (añós)
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <th>
+                                    <b>
+                                    Foto:
+                                    </b>
+                                 </th>
+                                 <td>
+                                    <img src="{{ base_url() }}/{{ mascota.foto }}">
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+          
+                              
+            <div class="col-md-12">
+                <div class="box">
+               <!-- title row -->
+               <div class="box-header">
+                  <h2 class="page-header">
+                     <i class="fa fa-globe"></i> Operaciones
+                  </h2>
+               </div>
+               <!-- Table row -->
+               <div class="box-body">
+                  <div class="invoice-col">
+                      
+                       {% if (pedido.tipo_pedido==2) %}
+                        <a class="btn btn-app"
+                           onclick="NuevaIncidencia()">
+                        <i class="fa fa-pencil"></i> Agregar Incidencia
+                        </a>
+                      {% endif %}
+                      
+                      {% if (pedido.estado<3) %}
+                        <a class="btn btn-app"
+                            onclick="AtencionPedido()">
+                         <i class="fa fa-check"></i> Atender Pedido
+                         </a>
+                    {% endif %}
+                     
+
+                  </div>
+               </div>
+            </div>
+               </div>
+                  
+                <div class="col-md-12">
+                  <div class="box box-solid">
+                     <div class="box-header with-border">
+                        <i class="fa fa-paw"></i>
+                        <h3 class="box-title">Historial Médico</h3>
+                     </div>
+                     <div class="box-body">
+                        <div class="col-xs-12 table-responsive">
+                           <table id="example" class="table table-bordered table-striped">
+                              <thead>
+                                 <tr>
+                                    <th>Fecha</th>
+                                    <th>Incidencia</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 {% for historia in historia %}
+                                 <tr>
+                                    <td>
+                                       {{ historia.fecha }}
+                                    </td>
+                                    <td>
+                                       {{ historia.incidencia }}
+                                    </td>
+                                 </tr>
+                                 {% endfor %}
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+                              
+                  </div>            
+            </div>
+
+         </section>
+      </div>
+   </div>
+                  
+    <div class="modal fade" id="modalInicidencia" tabindex="-1" role="dialog" aria-labelledby="modalInicidencia">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header modalert">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title modtitle">[ Incidencia ]</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <form name="fincidencia" id="fincidencia" method="post" enctype="multipart/form-data">
+                                    <input type="hidden"  name="mascota" id="mascota" value="{{ mascota.id_mascota }}">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label>Descripción</label>
+                                            <textarea cols="40" id="descripcion" name="descripcion" rows="3" class="form-control"></textarea> 
+                                        </div>
+                                    </div>
+                                    {{ csrf.field | raw }}
+                                </form>
+                            </div>
+                            <div  class="msg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                    <button type="button" href="#" class="btn btn-success grabarentrada">Guardar </button>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+    <div class="modal fade" id="modalatencionpedido" tabindex="-1" role="dialog" aria-labelledby="modalatencionpedido">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header modalert">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title modtitle">[ Finalizar Pedido ]</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <form name="fpedido" id="fpedido" method="post" enctype="multipart/form-data">
+                                    <input type="hidden"  name="pedido" id="pedido" value="{{ pedido.id_pedido }}">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label>Comentario</label>
+                                            <textarea cols="40" id="descripcionpedido" name="descripcionpedido" rows="3" class="form-control">Pedido atendido</textarea> 
+                                        </div>
+                                    </div>
+                                    {{ csrf.field | raw }}
+                                </form>
+                            </div>
+                            <div  class="msg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                    <button type="button" href="#" class="btn btn-success grabarpedido">Finalizar </button>
+                </div>
+            </div>
+        </div>
+    </div>
+                                
+   <div class="control-sidebar-bg"></div>
+   <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+   <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+   <script type="text/javascript">
+       
+        function NuevaIncidencia() {
+           var tipo = 1;
+           $('#modalInicidencia').modal('show');
+           $("#fincidencia")[0].reset();
+       }
+       
+        function AtencionPedido() {
+           $('#modalatencionpedido').modal('show');
+           $("#fincidencia")[0].reset();
+       }
+       
+      Listadetalle();
+      function Listadetalle() {
+      return $.ajax({
+      type: "get",
+              url: '{{ base_url() }}/admin/detalle/listar',
+              data: {
+              codigo :{{ pedido.id_pedido }}
+              },
+              success: function (data) {
+      
+              $.each(data, function (i, it) {
+              it.rowTotal = it.cantidad * it.precio;
+              });
+              var dtapi = $('#detalle').DataTable({
+              "ordering": false,
+                      "bPaginate": false,
+                      "searching": false,
+                      "bInfo" : false,
+                      destroy: true,
+                      data: data,
+                      "deferRender": false,
+                      "footerCallback": function (tfoot, data, start, end, display) {
+                      var api = this.api();
+                      var p = api.column(3).data().reduce(function (a, b) {
+                      return a + b;
+                      }, 0)
+      
+                              var cantidad = api.column(1).data().toArray();
+                      var precio = api.column(2).data().toArray();
+                      var total = 0;
+                      for (i = 0; i < cantidad.length; i++) {
+                      total += cantidad[i] * precio[i];
+                      }
+      
+                      $(api.column(3).footer()).html(p);
+                      $("#total").val(total);
+                      },
+                      "order": [1],
+                      "columns": [
+                      {
+                      data: "nombre"
+                      },
+                      {
+                      data: "cantidad"
+                      },
+                      {
+                      data: "precio",
+                      },
+                      {
+                      data: "rowTotal"
+                      }
+      
+                      ],
+                      columnDefs: [
+                      {
+                      className: 'text-center',
+                              targets: [1, 2, 3],
+                      },
+                      ]
+              });
+              },
+              error: function () {
+              }
+      });
+      }
+                
+                function GuardarIncidencia() {
+                    var formData = new FormData($("#fincidencia")[0]);
+                    var resultado = "";
+                    $.ajax({
+                        url: "{{ base_url() }}/admin/historia/registrar",
+                        async: false,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        enctype: 'multipart/form-data',
+                        processData: false,
+                        dataType: 'json',
+                        success: function (datos) {
+                            resultado = datos.response;
+                            mensaje = datos.message;
+                        }
+                    });
+                    return [resultado, mensaje];
+                }
+                
+                 $(".grabarentrada").on("click", function (event) {
+
+                    event.preventDefault();
+
+                    var mascota = $('#mascota').val();
+                    var detalle = $('#descripcion').val();
+
+
+                    if (mascota == "") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: 'Debes seleccionar una mascota',
+                        })
+                    } else {
+                         if (detalle == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar la descripción de la incidencia.',
+                            })
+                        } else {
+                            Swal.fire({
+                                title: 'Está seguro?',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Sí, guardar!'
+                            }).then((result) => {
+                                if (result.value) {
+                                    var resp = GuardarIncidencia();
+                                    if (resp[0] == "success") {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: '¡Éxito!',
+                                            text: resp[1],
+                                        }).then((result) => {
+                                            if (result.value) {
+                                                $('#modalInicidencia').modal('hide');
+                                                location.reload();
+                                            }
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: '¡Error!',
+                                            text: resp[1],
+                                        })
+                                    }
+                                }
+                            })             
+                        }
+                    }
+                });
+                
+                function GuardarPedido() {
+                    var formData = new FormData($("#fpedido")[0]);
+                    var resultado = "";
+                    $.ajax({
+                        url: "{{ base_url() }}/admin/pedido/actualizar",
+                        async: false,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        enctype: 'multipart/form-data',
+                        processData: false,
+                        dataType: 'json',
+                        success: function (datos) {
+                            resultado = datos.response;
+                            mensaje = datos.message;
+                        }
+                    });
+                    return [resultado, mensaje];
+                }
+                
+                $(".grabarpedido").on("click", function (event) {
+                    event.preventDefault();
+                    var pedido = $('#pedido').val();
+                    var detalle = $('#descripcionpedido').val();
+                    
+                    if (mascota == "") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: 'Debes seleccionar una mascota',
+                        })
+                    } else {
+                         if (detalle == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar la descripción de la incidencia.',
+                            })
+                        } else {
+                            Swal.fire({
+                                title: 'Está seguro?',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Sí, guardar!'
+                            }).then((result) => {
+                                if (result.value) {
+                                    var resp = GuardarPedido();
+                                    if (resp[0] == "success") {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: '¡Éxito!',
+                                            text: resp[1],
+                                        }).then((result) => {
+                                            if (result.value) {
+                                                $('#modalInicidencia').modal('hide');
+                                                location.reload();
+                                            }
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: '¡Error!',
+                                            text: resp[1],
+                                        })
+                                    }
+                                }
+                            })             
+                        }
+                    }
+                });
+   </script>
+</body>
+</html>
+{% endblock content %}
