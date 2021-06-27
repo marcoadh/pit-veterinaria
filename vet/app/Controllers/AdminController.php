@@ -32,35 +32,20 @@ Class AdminController extends Controller
     {
         return $this->view->render($response, 'admin/dash.twig');
     }
-
-    public function getArticulos($request, $response, $args)
-    {
-        return $this->view->render($response, 'admin/auth/articulos.twig');
-    }
-
-    public function getFormulario($request, $response, $args)
-    {
-        return $this->view->render($response, 'admin/auth/formulario.twig');
-    }
          
-      public function getsuscripciones($request, $response, $args)
-    {
-        return $this->view->render($response, 'admin/auth/suscripciones.twig');
-    }
-    
-    public function getActualidad($request, $response, $args)
-    {
-        return $this->view->render($response, 'admin/auth/actualidad.twig');
-    }
-    
      public function getServicios($request, $response, $args)
     {
         return $this->view->render($response, 'admin/auth/servicios.twig');
     }
     
-     public function getEncuesta($request, $response, $args)
+    public function getPedidosProductos($request, $response, $args)
     {
-        return $this->view->render($response, 'admin/auth/encuestas.twig');
+        return $this->view->render($response, 'admin/auth/pedidos-productos.twig');
+    }
+    
+       public function getPedidosServicios($request, $response, $args)
+    {
+        return $this->view->render($response, 'admin/auth/pedidos-servicios.twig');
     }
     
     public function getProductos($request, $response, $args)

@@ -1,0 +1,830 @@
+{% extends 'admin/templates/app.twig' %}
+{% block content %}
+
+    <body class="hold-transition skin-blue sidebar-mini ">
+        <div class="pace  pace-inactive">
+            <div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
+                <div class="pace-progress-inner"></div>
+            </div>
+            <div class="pace-activity"></div>
+        </div>
+        <div class="wrapper">
+            <header class="main-header">
+                {% include 'admin/templates/head.twig' %}
+            </header>
+
+            <aside class="main-sidebar">
+                {% include 'admin/templates/menu.twig' %}
+            </aside>
+
+            <div class="content-wrapper">
+                <section class="content-header">
+                    <h1 id="tipodease">
+                        Pedidos
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="#"><i class="fa fa-book"></i> [Lista de Pedidos]</a></li>
+                    </ol>
+                </section>
+                <section class="content">
+                    <div class="row">
+
+                        <div class="col-xs-12">
+                            <div class="box">
+
+                                <div class="box-body">
+                                    <div class="margin">
+                                        <div class="btn-group">
+                                            <button onclick="NuevoProducto()" type="button" class="btn btn-block btn-primary btn-flat">AGREGAR</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                        <div class="col-xs-8">
+                            <div class="box">
+                                <div class="box-body">
+                                    <table id="Pedidos"  class="table table-bordered table-hover" width="100%">
+                                        <thead>
+                                            <tr class="heading-table">
+                                                <th>Número</th>
+                                                <th>Tipo</th>
+                                                <th>DNI</th>
+                                                <th>Cliente</th>
+                                                <th>Total</th>
+                                                <th>Estado</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                </section>
+            </div>
+
+
+
+            <div class="modal fade" id="modalProducto" tabindex="-1" role="dialog" aria-labelledby="modalProducto">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header modalert">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title modtitle">[ Producto ]</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <form name="noticia" id="noticia" method="post" enctype="multipart/form-data">
+
+                                            <input type="hidden"  name="accion" id="accion" value="">
+                                            <input type="hidden"  name="codigo" id="codigo" value="">
+
+                                            <div class="col-sm-8">
+                                                <div class="form-group">
+                                                    <label>Producto</label>
+                                                    <input type="text" name="nombre" id="nombre" class="form-control" value="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Precio</label>
+                                                    <input type="text" name="precio" id="precio" class="form-control" value="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Unidad de medida</label>
+                                                    <select id="unimed" name="unimed" value="" class="form-control">
+                                                        <option value="">::Selecciones una opción::</option>
+                                                        <option value="Unidad(es)">Unidad(es)</option>
+                                                        <option value="Litros(s)">Litros(s)</option>
+                                                        <option value="Kilogramo(s)">Kilogramo(s)</option>
+                                                        <option value="Galón(es)">Galón(es)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Stock</label>
+                                                    <input type="text" name="stock_act" id="stock_act" class="form-control" value="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Serie</label>
+                                                    <input type="text" name="serie" id="serie" class="form-control" value="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Proveedor</label>
+                                                    <select id="id_proveedor" name="id_proveedor" value="" class="form-control">
+                                                        <option value="">::Selecciones una opción::</option>
+                                                        {% for lista in ProveedorController.listaproveedor %}
+                                                            <option value="{{ lista.id_proveedor }}">{{ lista.razonsocial }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Estado</label>
+                                                    <select id="estado" name="estado" value="" class="form-control">
+                                                        <option value="1">Activado</option>
+                                                        <option value="2">Desactivado</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Detalle corto</label>
+                                                    <textarea cols="40" id="detalle" name="detalle" rows="3" class="form-control"></textarea> 
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Descripción general</label>
+                                                    <textarea cols="40" id="descripcion" name="descripcion" rows="5" data-sample-short></textarea> 
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6" id="seccionfoto">
+                                                <div class="form-group">
+                                                    <label>Foto original</label>
+                                                    <img src="" class="img-responsive pad" id="fotooriginal" name="fotooriginal">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Foto</label>
+                                                    <input type="file" name="foto" id="foto"  class="dropify-es">
+                                                </div>
+                                            </div>
+
+                                            {{ csrf.field | raw }}
+
+                                        </form>
+                                    </div>
+                                    <div  class="msg"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                            <button type="button" href="#" class="btn btn-success grabarentrada">Guardar </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modalFotos" tabindex="-1" role="dialog" aria-labelledby="modalFotos">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header modalert">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title modtitle">[ Gestión de Fotos ]</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <form name="fotos" id="fotos" method="post" enctype="multipart/form-data">
+                                            <input type="hidden"  name="accionfoto" id="accionfoto" value="">
+                                            <input type="hidden"  name="cod" id="cod" value="">
+                                            <input type="hidden"  name="codigoproducto" id="codigoproducto" value="">
+
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Foto</label>
+                                                    <input type="file" name="fotoproducto" id="fotoproducto" class="form-control" value="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-6" id="seccionfotoproducto">
+                                                <div class="form-group">
+                                                    <label>Foto original</label>
+                                                    <img src="" class="img-responsive pad" id="fotoproductooriginal" name="fotoproductooriginal">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Estado</label>
+                                                    <select id="estadofoto" name="estadofoto" value="" class="form-control">
+                                                        <option value="1">Activar</option>
+                                                        <option value="2">Eliminar</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-12">
+                                            </div>
+
+                                            <div class="col-sm-12">
+                                                <div class="box">
+                                                    <div class="box-header with-border">
+                                                        <h3 class="box-title">Preguntas de encuesta</h3>
+                                                    </div>
+                                                    <div class="box-body">
+                                                        <table id="Fotos"  class="table table-bordered display compact" width="100%">
+                                                            <thead>
+                                                                <tr class="heading-table">
+                                                                    <th>Foto</th>
+                                                                    <th>Estado</th>
+                                                                    <th>Editar</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{ csrf.field | raw }}
+                                        </form>
+                                    </div>
+                                    <div  class="msg"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><i class="fa  fa-remove"></i> Cancelar</button>
+                            <button type="button" href="#" class="btn btn-success guardarfoto">Guardar </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <script type="text/javascript">
+
+                function GuardarFoto() {
+                    var formData = new FormData($("#fotos")[0]);
+                    var resultado = "";
+                    $.ajax({
+                        url: "{{ base_url() }}/admin/foto/registrar",
+                        async: false,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        enctype: 'multipart/form-data',
+                        processData: false,
+                        dataType: 'json',
+                        success: function (datos) {
+                            resultado = datos.response;
+                            mensaje = datos.message;
+                        }
+                    });
+                    return [resultado, mensaje];
+                }
+
+                function EditarFoto(codigo) {
+                    $("#seccionfotoproducto").css("display", "block");
+                    $('#accionfoto').val('editar');
+                    var codigo = codigo;
+                    return $.ajax({
+                        type: "get",
+                        url: '{{ base_url() }}/admin/foto/editar',
+                        data: {
+                            codigo: codigo
+                        },
+                        success: function (data) {
+                            $.each(data, function (i, item) {
+                                $('#cod').val(item.id_foto);
+                                $('#codigoproducto').val(item.id_producto);
+                                $('#fotoproductooriginal').attr('src', '{{base_url()}}/' + item.foto);
+                                $('#estadofoto').val(item.estado);
+                            });
+                        },
+                        error: function () {
+                        }
+                    });
+
+                }
+
+                function AgregarFotos(codigo) {
+                    $("#fotos")[0].reset();
+                    var cod = codigo;
+                    $('#modalFotos').modal('show');
+                    $('#codigoproducto').val(cod);
+                    $("#seccionfotoproducto").css("display", "none");
+                    $('#accionfoto').val('nuevo');
+                    ListaFotos(cod);
+                }
+
+                function EditarProducto(codigo) {
+                    $("#seccionfoto").css("display", "block");
+                    var codigo = codigo;
+                    $('#modalProducto').modal('show');
+                    $('#codigo').val(codigo);
+                    $('#accion').val('editar');
+                    return $.ajax({
+                        type: "get",
+                        url: '{{ base_url() }}/admin/productos/editar',
+                        data: {
+                            codigo: codigo
+                        },
+                        success: function (data) {
+                            $.each(data, function (i, item) {
+                                $('#nombre').val(item.nombre);
+                                $('#detalle').val(item.descripcion);
+                                CKEDITOR.instances.descripcion.setData(item.descripcion_html);
+                                $('#fotooriginal').attr('src', '{{base_url()}}/' + item.foto1);
+                                $('#estado').val(item.estado);
+                                $('#unimed').val(item.unimed);
+                                $('#precio').val(item.precio);
+                                $('#stock_act').val(item.stock_act);
+                                $('#serie').val(item.serie);
+                                $('#id_proveedor').val(item.id_proveedor);
+                            });
+                        },
+                        error: function () {
+                        }
+                    });
+
+                }
+
+                CKEDITOR.replace('descripcion', {
+                    height: 300,
+                    baseFloatZIndex: 10005
+                });
+
+                $(document).ready(function () {
+
+                    ListaPedidos();
+
+                    $(".cogepx").on("click", function () {
+                        var valor = $(this).data('codigo');
+                        $("#Selecciones").modal('hide');
+                        $('.foto').val(valor);
+                    });
+
+                    // Translated
+                    $('.dropify-es').dropify({
+                        messages: {
+                            default: 'Arrastra y suelta un archivo aquí o haz clic',
+                            replace: 'Arrastre y suelte un archivo o haga clic para reemplazar',
+                            remove: 'Suprimir',
+                            error: 'Lo sentimos, el archivo es demasiado grande'
+                        }
+                    });
+
+                    // Used events
+                    var drEvent = $('#input-file-events').dropify();
+
+                    drEvent.on('dropify.beforeClear', function (event, element) {
+                        return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
+                    });
+
+                    drEvent.on('dropify.afterClear', function (event, element) {
+                        alert('File deleted');
+                    });
+
+                    drEvent.on('dropify.errors', function (event, element) {
+                        console.log('Has Errors');
+                    });
+
+                    var drDestroy = $('#input-file-to-destroy').dropify();
+                    drDestroy = drDestroy.data('dropify')
+                    $('#toggleDropify').on('click', function (e) {
+                        e.preventDefault();
+                        if (drDestroy.isDropified()) {
+                            drDestroy.destroy();
+                        } else {
+                            drDestroy.init();
+                        }
+                    })
+
+                })
+
+                function format(d) {
+
+                    if (d.titulo) {
+                        return '<div class="col-md-8"><div class="col-md-12"><p style="float: left;"><strong>OBSERVACIONES: </strong> ' + d.titulo + '</p><br></div>';
+                    } else {
+                        return '<div class="col-md-8"><div class="col-md-12"><p style="float: left;"><strong>OBSERVACIONES: </strong> No se registraron observaciones.</p><br></div>';
+                    }
+
+                }
+                var childRows = null;
+
+                function ListaPedidos() {
+
+                    responsive: true
+                    var dt = $('#Pedidos').DataTable({
+                        destroy: true,
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copy', 'csv', 'excel', 'pdf', 'print'
+                        ],
+                        "buttons": [
+                            'copy', 'csv', 'excel', 'pdf'
+                        ],
+
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ registros por página",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Viendo página _PAGE_ de _PAGES_",
+                            "infoEmpty": "No se encontraron responsables",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "search": "Buscar:",
+                            "paginate": {
+                                "first": "Primero",
+                                "last": "Último",
+                                "next": "Siguiente",
+                                "previous": "Anterior"
+                            },
+                        },
+
+                        "ajax": {
+                            "type": "get",
+                            "url": "{{ base_url() }}/admin/pedidos/listar",
+                            "data": {
+                                tipo: 1
+                            }
+                        },
+                        "columns": [
+                            {"data": "numero_pedido"},
+                            {
+                                "data": "tipo_pedido",
+                                render: function (data) {
+                                    if (data == "1") {
+                                        return "Productos";
+                                    } else {
+                                        return "Servicios";
+                                    }
+                                },
+                            },
+                            {"data": "dni"},
+                            {"data": "cliente"},
+                            {"data": "total"},
+                           {
+                                "data": "estado",
+                                render: function (data) {
+                                    if (data == "1") {
+                                        return "<span class='label label-success'>Pendiente de Pago</span>";
+                                    } else if (data == "2") {
+                                        return "<span class='label label-warning'>Pagado</span>";
+                                    } else {
+                                        return "<span class='label label-primary'>Atendido</span>";
+                                    }
+                                },
+                            },
+                            {
+                                "data": "id_pedido",
+                                render: function(data) {
+                                    return "<a class='btn btn-default'"+
+                                        "style='cursor:pointer;overflow: visible;'"+
+                                        "href='{{ base_url() }}/admin/pedido/"+data+"'>"+
+                                        "Atender <i class='fa fa-search-plus'></i></a>"
+                                },
+                            },
+                        ],
+
+                        columnDefs: [
+                            {
+                                className: 'text-center',
+                                targets: [3],
+                            },
+
+                            {width: "5%",
+                                targets: [4, 5]},
+                        ]
+                    });
+
+                    var detailRows = [];
+
+                    $('#Pedidos tbody').off('click', 'tr td.details-control');
+                    $('#Pedidos tbody').on('click', 'tr td.details-control', function () {
+                        var tr = $(this).closest('tr');
+                        var row = dt.row(tr);
+
+                        if (row.child.isShown()) {
+                            row.child.hide();
+                            tr.removeClass('shown');
+                        } else {
+                            // Open this row
+                            d = row.data();
+                            row.child(format(d)).show();
+                            tr.addClass('shown');
+                        }
+                    });
+
+                    dt.on('draw', function () {
+                        if (childRows) {
+
+                            childRows.every(function (rowIdx, tableLoop, rowLoop) {
+                                d = this.data();
+                                this.child($(format(d))).show();
+                                this.nodes().to$().addClass('shown');
+                            });
+                            childRows = null;
+                        }
+                    });
+
+                }
+
+                function ListaFotos(codigo) {
+                    responsive: true
+                    var dt = $('#Fotos').DataTable({
+                        ordering: false,
+                        destroy: true,
+                        pageLength: 5,
+                        "language": {
+                            "lengthMenu": "Ver _MENU_ registros por página",
+                            "zeroRecords": "No se encontraron resultados",
+                            "info": "Viendo página _PAGE_ de _PAGES_",
+                            "infoEmpty": "No se encontraron registros",
+                            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                            "search": "Buscar:",
+                            "paginate": {
+                                "first": "Primero",
+                                "last": "Último",
+                                "next": "Siguiente",
+                                "previous": "Anterior"
+                            },
+                        },
+
+                        "ajax": {
+                            "type": "get",
+                            "url": "{{ base_url() }}/admin/foto/listar",
+                            "data": {codigo: codigo}
+                        },
+
+                        "columns": [
+                            {
+                                "data": "foto",
+                                render: function (data) {
+                                    return "<img class='btn btn-default'" +
+                                            "style='width:150px'" +
+                                            "src='../" + data + "'" +
+                                            "data-toggle='modal'" +
+                                            "data-content=''>"
+                                },
+                            },
+                            {"data": "estado",
+                                render: function (data) {
+                                    if (data == "1") {
+                                        return "<span class='label label-success'>Publicado</span>";
+                                        ;
+                                    } else {
+                                        return "<span class='label label-danger'>Eliminado</span>";
+                                    }
+                                },
+                            },
+                            {
+                                "data": "id_foto",
+                                render: function (data) {
+                                    return "<a class='btn btn-default'" +
+                                            "style='cursor:pointer;overflow: visible;'" +
+                                            "onclick='EditarFoto(" + data + ")'" +
+                                            "data-toggle='modal'" +
+                                            "data-content=''>" +
+                                            "<i class='fa fa-pencil'></i></a>"
+
+                                },
+                            },
+                        ],
+
+                        columnDefs: [
+                            {
+                                className: 'text-center',
+                                targets: [1, 2],
+                            },
+
+                            {width: "50%",
+                                targets: [0]},
+                        ]
+                    });
+                }
+
+                //Nueva noticia
+                function NuevoProducto() {
+                    var tipo = 1;
+                    $('#modalProducto').modal('show');
+                    $("#noticia")[0].reset();
+                    CKEDITOR.instances.descripcion.setData();
+                    $("#seccionfoto").css("display", "none");
+                    $('#accion').val('nuevo');
+                    $('#codigo').val('');
+                }
+
+
+                function GuardarProducto() {
+                    var formData = new FormData($("#noticia")[0]);
+                    formData.append('descripcion', CKEDITOR.instances.descripcion.getData());
+                    var resultado = "";
+                    $.ajax({
+                        url: "{{ base_url() }}/admin/productos/registrar",
+                        async: false,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        enctype: 'multipart/form-data',
+                        processData: false,
+                        dataType: 'json',
+                        success: function (datos) {
+                            resultado = datos.response;
+                            mensaje = datos.message;
+                        }
+                    });
+                    return [resultado, mensaje];
+                }
+
+
+                $(".grabarentrada").on("click", function (event) {
+
+                    event.preventDefault();
+
+                    var nombre = $('#nombre').val();
+                    var detalle = $('#detalle').val();
+                    var descripcion = CKEDITOR.instances.descripcion.getData();
+                    var precio = $('#precio').val();
+                    var unimed = $('#unimed').val();
+                    var stock_act = $('#stock_act').val();
+                    var serie = $('#serie').val();
+                    var id_proveedor = $('#id_proveedor').val();
+                    var foto = $('#foto').val();
+
+                    if (nombre == "") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: 'Debes ingresar un titular',
+                        })
+                    } else {
+                        if (precio == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe ingresar el detalle corto.',
+                            })
+                        } else {
+                            if (detalle == "") {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: '¡Advertencia!',
+                                    text: 'Debe ingresar el detalle.',
+                                })
+                            } else {
+                                if (descripcion == "") {
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: '¡Advertencia!',
+                                        text: 'Debe ingresar la decripción completa.',
+                                    })
+                                } else {
+                                    if (unimed == "") {
+                                        Swal.fire({
+                                            icon: 'warning',
+                                            title: '¡Advertencia!',
+                                            text: 'Debe ingresar la unidad de medida.',
+                                        })
+                                    } else {
+                                        if (stock_act == "") {
+                                            Swal.fire({
+                                                icon: 'warning',
+                                                title: '¡Advertencia!',
+                                                text: 'Debe ingresar el stock actual.',
+                                            })
+                                        } else {
+                                            if (serie == "") {
+                                                Swal.fire({
+                                                    icon: 'warning',
+                                                    title: '¡Advertencia!',
+                                                    text: 'Debe ingresar la serie.',
+                                                })
+                                            } else {
+                                                if (id_proveedor == "") {
+                                                    Swal.fire({
+                                                        icon: 'warning',
+                                                        title: '¡Advertencia!',
+                                                        text: 'Debe seleccionar el proveedor.',
+                                                    })
+                                                } else {
+                                                    if (foto == "" && accion == "nuevo") {
+                                                        Swal.fire({
+                                                            icon: 'warning',
+                                                            title: '¡Advertencia!',
+                                                            text: 'Debe seleccionar una foto.',
+                                                        })
+                                                    } else {
+                                                        Swal.fire({
+                                                            title: 'Está seguro?',
+                                                            icon: 'warning',
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: '#3085d6',
+                                                            cancelButtonColor: '#d33',
+                                                            confirmButtonText: 'Sí, guardar!'
+                                                        }).then((result) => {
+                                                            if (result.value) {
+                                                                var resp = GuardarProducto();
+                                                                //resp = JSON.parse(resp);
+                                                                if (resp[0] == "success") {
+                                                                    Swal.fire({
+                                                                        icon: 'success',
+                                                                        title: '¡Éxito!',
+                                                                        text: resp[1],
+                                                                    }).then((result) => {
+                                                                        if (result.value) {
+                                                                            $('#modalProducto').modal('hide');
+                                                                            var drEvent = $('#foto').dropify();
+                                                                            drEvent = drEvent.data('dropify');
+                                                                            drEvent.resetPreview();
+                                                                            drEvent.clearElement();
+                                                                            ListaPedidos();
+                                                                        }
+                                                                    });
+                                                                } else {
+                                                                    Swal.fire({
+                                                                        icon: 'error',
+                                                                        title: '¡Error!',
+                                                                        text: resp[1],
+                                                                    })
+                                                                }
+                                                            }
+                                                        })
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                $(".guardarfoto").on("click", function (event) {
+                    event.preventDefault();
+                    var accionfoto = $('#accionfoto').val();
+                    var codigoproducto = $('#codigoproducto').val();
+                    var estadofoto = $('#estadofoto').val();
+                    var foto = $('#fotoproducto').val();
+
+                    if (foto == "" && accionfoto == "nuevo") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '¡Advertencia!',
+                            text: 'Debe seleccionar una foto.',
+                        })
+                    } else {
+                        if (estadofoto == "") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '¡Advertencia!',
+                                text: 'Debe seleccionar un estado.',
+                            })
+                        } else {
+                            Swal.fire({
+                                title: 'Está seguro?',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Sí, guardar!'
+                            }).then((result) => {
+                                if (result.value) {
+                                    var resp = GuardarFoto();
+                                    //resp = JSON.parse(resp);
+                                    if (resp[0] == "success") {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: '¡Éxito!',
+                                            text: resp[1],
+                                        }).then((result) => {
+                                            if (result.value) {
+                                                $("#fotos")[0].reset();
+                                                $('#cod').val("");
+                                                $("#seccionfotoproducto").css("display", "none");
+                                                ListaFotos(codigoproducto);
+                                            }
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: '¡Error!',
+                                            text: resp[1],
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                    }
+                });
+            </script>
+        {% endblock content %}
