@@ -39,5 +39,7 @@ $app->group('', function () {
     
      $this->get('/pedido/pagar', 'PagoController:Registrar');
      $this->get('/pedido/historial', 'PedidoController:Historial');
+
+     $this->get('/historial/mascota', 'HistoriaController:Historial');
         
 })->add(new AuthMiddleware($container));

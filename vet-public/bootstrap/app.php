@@ -143,12 +143,19 @@ $container['PagoController'] = function ($container) {
     return new \App\Controllers\PagoController($container);
 };
 
+$container['HistoriaController'] = function ($container) {
+    return new \App\Controllers\HistoriaController($container);
+};
+
 $container['csrf'] = function ($container) {
     // return new \Slim\Csrf\Guard;
     $guard = new \Slim\Csrf\Guard();
     $guard->setPersistentTokenMode(true);
     return $guard;
 };
+
+
+
 
 $app->add(new \App\Middleware\ValidationErrorsMiddleware($container));
 $app->add(new \App\Middleware\OldInputMiddleware($container));

@@ -59,45 +59,7 @@
                                 <div class="row">
                                     <div class="col-md-12 layout-left">
                                         <div class="course-syllabus-title underline">Mis mascotas</div>
-
-
-                                        {# <div class="table-responsive bg-w-form  ">
-                                            <table id="ListOrganizaciones" class="table table-bordered responsive">
-                                                <thead>
-                                                    <tr class="heading-table">
-                                                        <th>Nombre</th>
-                                                        <th>Tipo</th>
-                                                        <th>Fecha de nacimiento</th>
-                                                        <th>Descripción</th>
-                                                        <th>Editar</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for mascotas in MascotasController.listamascotas %}
-                                                        <tr>
-                                                            <td>{{ mascotas.nombre }}</td>
-                                                            <td>{{ mascotas.tipo }}</td>
-                                                            <td>{{ mascotas.edad }}</td>
-                                                            <td>{{ mascotas.descripcion }}</td>
-                                                            <td>
-                                                                <a class="btn btn-default"
-                                                                   onclick="EditarMascota({{ mascotas.id_mascota }})"
-                                                                   data-toggle="modal">
-                                                                    <i class="fa fa-pencil"></i></a>
-                                                            </td>
-                                                        </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div> #}
-
-
                                     </div>
-
-
-                                    
-
-
                                     <div class="col-12">
                                         <br>
                                         {% for mascotas in MascotasController.listamascotas %}
@@ -105,7 +67,7 @@
                                         <div class="col-md-4">
                                             <div class="card p-2 py-3 text-center">
                                                 <div class="img mb-2">
-                                                    <img src="http://localhost/pit-veterinaria/vet-public/public/{{mascotas.foto}}" width="150" height="200" class="fadeInDown animated">
+                                                    <img src="{{base_url()}}/public/{{mascotas.foto}}" width="150" height="200" class="fadeInDown animated">
                                                 </div>
                                                 <h2 class="mb-0">{{mascotas.nombre}}</h2>
                                                 <h5 class="mb-0">{{mascotas.descripcion}}</h5>
@@ -114,7 +76,8 @@
                                                 data-toggle="modal">
                                                     <i class="fa fa-pencil"></i> Editar
                                                 </a>
-                                                <a class="btn btn-info btn-lg" onclick="VerHistorial()"
+                                                <a class="btn btn-info btn-lg" 
+                                                   onclick="VerHistorial('{{mascotas.id_mascota}}')"
                                                 data-toggle="modal">
                                                     <i class="fa fa-medkit" aria-hidden="true"></i> Historial Médico
                                                 </a>
@@ -122,10 +85,6 @@
                                         </div>
                                         {% endfor %}
                                     </div>
-
-
-
-
                                 </div>
                             </div>
                         </div>
@@ -263,7 +222,7 @@
     </div>
     
     <!--INICIO MODAL HISTORIAL-->
-    <div class="modal fade" id="VerHistorial" tabindex="-1" role="dialog" aria-labelledby="VerHistorial">
+    <div class="modal fade" id="HistorialMedico" tabindex="-1" role="dialog" aria-labelledby="HistorialMedico">
         <div class="modal-dialog modal-info fade in" role="document">
             <div class="modal-content">
 
@@ -274,35 +233,17 @@
                 </div>
 
                 <div class="modal-body">
-                    <form method="post" autccomplete="off" class="contact-form" id="FormHistorial" name="FormHistorial">
-
-
-                        <div class="table-responsive bg-w-form  ">
-                            <table id="ListOrganizaciones" class="table table-bordered responsive">
-                                <thead>
-                                    <tr class="heading-table">
-                                        <th># Historial</th>
-                                        <th>Mascota</th>
-                                        <th>Veterinario</th>
-                                        <th>Incidencia</th>
-                                        <th>Fecha</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
+                        <div class="modal-body">
+                            <table id="dethistoria" class="table table-bordered responsive">
+                               <thead>
+                                  <tr class="heading-table">
+                                     <th>Fecha</th>
+                                     <th>Veterinario</th>
+                                     <th>Registro</th>
+                                  </tr>
+                               </thead>
                             </table>
-                        </div>
-
-                        {{ csrf.field | raw }}
-
-                    </form>
+                      </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" href="#" class="btn btn-success registrarpedido">Guardar </button> 
@@ -327,9 +268,50 @@
             $('#AgregarPedido').modal('show');
         }
         
-        function VerHistorial() {
-            $("#FormHistorial")[0].reset();
-            $('#VerHistorial').modal('show');
+        function VerHistorial(codigo) {
+
+       var codigo = codigo;
+       $('#HistorialMedico').modal('show');
+       $('#codigo').val(codigo);
+       
+        var dt = $('#dethistoria').DataTable({
+
+           "destroy": true,
+            "ordering": false,
+               "bPaginate": false,
+               "searching": false,
+               "bInfo" : false,
+           "language": {
+               "lengthMenu": "Ver MENU registros por página",
+               "zeroRecords": "No se encontraron resultados",
+               "info": "Viendo página PAGE de PAGES",
+               "infoEmpty": "No se encontraron registros",
+               "infoFiltered": "(filtrado de un total de MAX registros)",
+               "search": "Buscar:",
+               "paginate": {
+                   "first": "Primero",
+                   "last": "Último",
+                   "next": "Siguiente",
+                   "previous": "Anterior"
+               },
+           },
+
+           "ajax": {
+               "type": "get",
+               "url": "{{ base_url() }}/historial/mascota",
+               "data": {
+                   codigo: codigo
+               }
+           },
+
+           "columns": [
+               {"data": "fecha"},
+               {"data": "veterinario"},
+               {"data": "incidencia"},
+           ],
+
+       });
+  
         }
         
         function EditarMascota(codigo) {
@@ -843,7 +825,6 @@
                 }
             });
         }
-
-
+        
     </script>         
 {% endblock content %}
